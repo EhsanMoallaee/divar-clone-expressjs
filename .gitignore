@@ -1,0 +1,14 @@
+node_modules
+config
+secret
+stock-computer-errors.log
+static
+log
+.log
+.env
+node_modules
+static
+log
+.log
+.env
+.VSCodeCounter
