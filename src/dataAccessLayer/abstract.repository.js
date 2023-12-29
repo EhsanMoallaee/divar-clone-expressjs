@@ -10,7 +10,7 @@ export default class AbstractRepository {
 			...document,
 			_id: new Types.ObjectId(),
 		});
-		return (await newDocument.save()).toJson();
+		return await newDocument.save();
 	};
 
 	findOne = async (filterQuery) => {
