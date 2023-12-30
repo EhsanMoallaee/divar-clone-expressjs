@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import mainRouter from './routes/main.routes.js';
+import errorController from './modules/errorHandling/error.controller.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,5 +17,7 @@ app.use(express.json());
 app.use('/static', express.static(path.join(__dirname, '..', 'static')));
 
 app.use('/api', mainRouter);
+
+app.use(errorController);
 
 export default app;

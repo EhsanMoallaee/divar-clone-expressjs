@@ -1,9 +1,9 @@
-import authService from './auth.service.js';
+import AuthService from './auth.service.js';
 
 class AuthController {
 	#AuthService;
 	constructor() {
-		this.#AuthService = authService;
+		this.#AuthService = AuthService;
 	}
 
 	register = async (req, res) => {
