@@ -10,7 +10,7 @@
 	},
 	"scripts": {
 		"dev-test": "SET NODE_ENV=test&& node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
-		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+		"test": "SET NODE_ENV=test &&node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
 		"watch": "SET NODE_ENV=development&& nodemon main.js",
 		"start": "SET NODE_ENV=production&& node main.js"
 	},
