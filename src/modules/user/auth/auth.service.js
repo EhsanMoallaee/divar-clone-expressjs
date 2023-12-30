@@ -10,6 +10,8 @@ class AuthService {
 		const user = await this.#UserRepository.create(userData);
 		return user;
 	};
+
+	// sendOTP = async (mobile) => {};
 }
 
 export default new AuthService();
