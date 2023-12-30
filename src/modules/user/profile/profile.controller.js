@@ -1,5 +1,7 @@
-import ProfileService from './profile.service.js';
+import AppError from '../../errorHandling/app.error.js';
 import catchAsyncErrors from '../../errorHandling/catch.asyncErrors.js';
+import profileErrorMessages from './errorMessages/profile.errorMessages.js';
+import ProfileService from './profile.service.js';
 
 class ProfileController {
 	#ProfileService;
@@ -9,12 +11,17 @@ class ProfileController {
 
 	findOneUser = catchAsyncErrors(async (req, res) => {
 		const filterQuery = {};
-		const queries = req.body;
+		const queries = req.query;
 		for (let key in queries) {
 			if (Object.hasOwn(queries, key)) {
 				filterQuery[key] = queries[key];
 			}
 		}
+		if (Object.keys(filterQuery).length === 0)
+			throw new AppError(
+				profileErrorMessages.EmptyFilterQuery['message'],
+				profileErrorMessages.EmptyFilterQuery['statusCode']
+			);
 		const user = await this.#ProfileService.findOneUser(filterQuery);
 		return res.status(200).json(user);
 	});

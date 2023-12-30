@@ -13,7 +13,9 @@ export class ConnectMongodb {
 		if (!ConnectMongodb.instance) {
 			mongoose.connect(this.DB_URL);
 			this.connection = mongoose.connection;
-			this.connection.on('open', () => console.log('Connected to database successfully'));
+			this.connection.on('open', () =>
+				console.log(`Connected to < ${process.env.NODE_ENV} > database successfully`)
+			);
 			this.connection.on('error', (err) => {
 				console.log(chalk.red(`Database connection error : ${err?.message}`));
 				process.exit(1);

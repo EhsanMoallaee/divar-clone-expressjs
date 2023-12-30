@@ -1,6 +1,7 @@
 const sendErrorDevelopmentMode = (err, res) => {
 	const statusCode = err.statusCode || 500;
 	return res.status(statusCode).json({
+		status: 'Error',
 		message: err.message,
 		stack: err.stack,
 	});
@@ -9,6 +10,7 @@ const sendErrorDevelopmentMode = (err, res) => {
 const sendErrorProductionMode = (err, res) => {
 	const statusCode = err.statusCode || 500;
 	return res.status(statusCode).json({
+		status: 'Error',
 		message: err.message,
 	});
 };
