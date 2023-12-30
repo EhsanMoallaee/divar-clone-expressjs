@@ -1,6 +1,6 @@
 node_modules
 config
-secret
+secrets
 stock-computer-errors.log
 static
 log
