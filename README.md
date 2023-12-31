@@ -1,6 +1,6 @@
 # Divar-Clone-Expressjs
 
-This is a clone of Persian Divar marketplace.It's not a replica, and it doesn't have all the features of Divar web app. it's a similar version of Divar with my own design touch, showing my abilities in Nodejs to build something advanced like Divar.
+This is a clone of Persian Divar marketplace.It's not a replica, and it doesn't have all the features of Divar web app. it's a similar version of Divar backend with my own design touch, showing my abilities in Nodejs to build something advanced like Divar.
 
 ## Badges
 
@@ -44,6 +44,12 @@ Install dependencies
 
 ```bash
   npm install
+```
+
+or
+
+```bash
+  yarn install
 ```
 
 Start the server
