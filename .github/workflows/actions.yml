@@ -23,7 +23,7 @@ jobs:
                 mongodb-version: ['6.0']
         env:
             NODE_ENV: 'test'
-            # TEST_DB: ${{secrets.MONGO_URI}}
+            TEST_DB: ${{secrets.TEST_DB}}
         # Steps represent a sequence of tasks that will be executed as part of the job
         steps:
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
