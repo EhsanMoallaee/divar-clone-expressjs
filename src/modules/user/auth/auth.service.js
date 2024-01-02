@@ -17,7 +17,6 @@ class AuthService {
 
 		if (!user) {
 			const getRedisValue = await redisSingletonInstance.getData(mobile);
-			console.log('getRedisValue : ', getRedisValue);
 			if (getRedisValue)
 				throw new AppError(authErrorMessages.SpamAttack['message'], authErrorMessages.SpamAttack['statusCode']);
 			const optCode = randomInt(10000, 99999);
