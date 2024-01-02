@@ -57,3 +57,9 @@ Start the server
 ```bash
   npm run start
 ```
+
+or
+
+```bash
+  yarn start
+```

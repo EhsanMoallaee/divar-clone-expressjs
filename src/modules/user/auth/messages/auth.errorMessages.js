@@ -7,6 +7,10 @@ const authErrorMessages = {
 		message: '!شما اجازه دسترسی به این بخش را ندارید',
 		statusCode: 403,
 	},
+	SpamAttack: {
+		message: 'کد یکبار مصرف برای شما ارسال شده و هنوز معتبر است',
+		statusCode: 400,
+	},
 	UnAuthorized: {
 		message: '!شما اجازه دسترسی به این بخش را ندارید',
 		statusCode: 403,
