@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 import mainRouter from './routes/main.routes.js';
 import errorController from './modules/errorHandling/error.controller.js';
-import swaggerConfig from './swagger/swagger.config.js';
+import swaggerConfig from './config/swagger/swagger.config.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +16,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/static', express.static(path.join(__dirname, '..', 'static')));
+
 swaggerConfig(app);
 
 app.use('/api', mainRouter);

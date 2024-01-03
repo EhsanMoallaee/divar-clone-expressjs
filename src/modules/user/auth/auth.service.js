@@ -11,7 +11,7 @@ class AuthService {
 		this.#UserRepository = UserRepository;
 	}
 
-	register = async (userData) => {
+	registerationRequest = async (userData) => {
 		const { mobile } = userData;
 		const user = await this.checkUserExist(mobile);
 
