@@ -12,20 +12,47 @@ class AuthService {
 	}
 
 	registerationRequest = async (userData) => {
-		const { mobile } = userData;
+		const { mobile, firstname, lastname } = userData;
 		const user = await this.checkUserExist(mobile);
 
 		if (!user) {
 			const getRedisValue = await redisSingletonInstance.getData(mobile);
 			if (getRedisValue)
 				throw new AppError(authErrorMessages.SpamAttack['message'], authErrorMessages.SpamAttack['statusCode']);
-			const optCode = randomInt(10000, 99999);
-			await redisSingletonInstance.setData(mobile, optCode, 10);
-			this.sendOTP(mobile, optCode);
-			return { message: authSuccessMessages.OTPSentSuccessfully['message'], optCode };
+			const otpCode = randomInt(10000, 99999);
+			const data = {
+				firstname,
+				lastname,
+				mobile,
+				otpCode,
+			};
+			await redisSingletonInstance.setData(mobile, data, 30);
+			this.sendOTP(mobile, otpCode);
+			return { message: authSuccessMessages.OTPSentSuccessfully['message'], otpCode };
 		}
 
 		return user;
+	};
+
+	register = async (data) => {
+		const { mobile, otpCode } = data;
+		const getRedisValue = JSON.parse(await redisSingletonInstance.getData(mobile));
+		if (!getRedisValue)
+			throw new AppError(authErrorMessages.wrongOtpCode['message'], authErrorMessages.wrongOtpCode['statusCode']);
+		if (getRedisValue.otpCode == otpCode) {
+			const userExist = await this.checkUserExist(mobile);
+			if (userExist)
+				throw new AppError(authErrorMessages.SpamAttack['message'], authErrorMessages.SpamAttack['statusCode']);
+			const userData = {
+				firstname: getRedisValue.firstname,
+				lastname: getRedisValue.lastname,
+				mobile: getRedisValue.mobile,
+				verifiedMobile: true,
+			};
+			const user = await this.#UserRepository.create(userData);
+			return user;
+		}
+		throw new AppError(authErrorMessages.wrongOtpCode['message'], authErrorMessages.wrongOtpCode['statusCode']);
 	};
 
 	async sendOTP(mobile, optCode) {

@@ -22,7 +22,7 @@ class RedisSingleton {
 	}
 
 	async setData(key, value, seconds) {
-		await this.#redisClient.set(key, value, 'EX', seconds);
+		await this.#redisClient.set(key, JSON.stringify(value), 'EX', seconds);
 	}
 
 	async getData(key) {
@@ -30,10 +30,10 @@ class RedisSingleton {
 		return data;
 	}
 
-	async setExpire(key, seconds) {
-		const data = await this.#redisClient.expire(key, seconds);
-		return data;
-	}
+	// async setExpire(key, seconds) {
+	// 	const data = await this.#redisClient.expire(key, seconds);
+	// 	return data;
+	// }
 }
 
 const redisSingletonInstance = new RedisSingleton();
