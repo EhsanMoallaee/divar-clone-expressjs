@@ -52,8 +52,8 @@ class AuthService {
 				mobile: getRedisValue.mobile,
 				verifiedMobile: true,
 			};
-			const user = await this.#UserRepository.create(userData);
-			return user;
+			await this.#UserRepository.create(userData);
+			return { message: authSuccessMessages.RegisteredSuccessfully['message'] };
 		}
 		throw new AppError(authErrorMessages.wrongOtpCode['message'], authErrorMessages.wrongOtpCode['statusCode']);
 	};

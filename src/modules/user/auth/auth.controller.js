@@ -16,7 +16,7 @@ class AuthController {
 	register = catchAsyncErrors(async (req, res) => {
 		const data = req.body;
 		const result = await this.#AuthService.register(data);
-		return res.status(200).json(result);
+		return res.status(201).json(result);
 	});
 }
 
