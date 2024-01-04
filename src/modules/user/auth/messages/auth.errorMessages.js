@@ -23,6 +23,10 @@ const authErrorMessages = {
 		message: 'اکانت کاربری شما غیرفعال است، لطفا با پشتیبانی سایت تماس بگیرید',
 		statusCode: 403,
 	},
+	DuplicateMobile: {
+		message: 'این شماره موبایل قبلا ثبت شده است',
+		statusCode: 409,
+	},
 };
 
 export default authErrorMessages;

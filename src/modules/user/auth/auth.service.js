@@ -1,4 +1,5 @@
 import { randomInt } from 'crypto';
+import config from 'config';
 import AppError from '../../errorHandling/app.error.js';
 import UserRepository from '../user.repository.js';
 import authErrorMessages from './messages/auth.errorMessages.js';
@@ -26,12 +27,14 @@ class AuthService {
 				mobile,
 				otpCode,
 			};
-			await redisSingletonInstance.setData(mobile, data, 30);
+			await redisSingletonInstance.setData(mobile, data, config.get('registrationOTPCode.validDuration'));
 			this.sendOTP(mobile, otpCode);
 			return { message: authSuccessMessages.OTPSentSuccessfully['message'], otpCode };
 		}
-
-		return user;
+		throw new AppError(
+			authErrorMessages.DuplicateMobile['message'],
+			authErrorMessages.DuplicateMobile['statusCode']
+		);
 	};
 
 	register = async (data) => {

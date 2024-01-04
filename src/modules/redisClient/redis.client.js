@@ -29,11 +29,6 @@ class RedisSingleton {
 		const data = await this.#redisClient.get(key);
 		return data;
 	}
-
-	// async setExpire(key, seconds) {
-	// 	const data = await this.#redisClient.expire(key, seconds);
-	// 	return data;
-	// }
 }
 
 const redisSingletonInstance = new RedisSingleton();
