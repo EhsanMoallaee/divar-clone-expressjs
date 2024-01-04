@@ -1,4 +1,5 @@
 import http from 'http';
+import GracefulShutdown from 'http-graceful-shutdown';
 
 import app from './app.js';
 import { ConnectMongodb } from './dataAccessLayer/connect.database.js';
@@ -18,6 +19,7 @@ class Application {
 		const server = http.createServer(app);
 
 		server.listen(PORT, () => console.log(`Server is running on:  http://localhost:${PORT}`));
+		GracefulShutdown(server);
 	}
 }
 
