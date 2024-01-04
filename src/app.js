@@ -19,6 +19,11 @@ app.use('/static', express.static(path.join(__dirname, '..', 'static')));
 
 swaggerConfig(app);
 
+// Health check route
+app.get('/_health', (req, res) => {
+	return res.status(200).json({ message: 'ok' });
+});
+
 app.use('/api', mainRouter);
 
 app.use(errorController);
