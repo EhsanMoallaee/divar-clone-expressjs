@@ -2512,6 +2512,11 @@ kareem@2.5.1:
   resolved "https://registry.yarnpkg.com/kareem/-/kareem-2.5.1.tgz#7b8203e11819a8e77a34b3517d3ead206764d15d"
   integrity sha512-7jFxRVm+jD+rkq3kY0iZDJfsO2/t4BBPeEb2qKn2lR/9KhuksYk5hxzfRYWMPV8P/x2d0kHD306YyWLzjjH+uA==
 
+kavenegar@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/kavenegar/-/kavenegar-1.1.4.tgz#7697599f6d31b5faaa3dccb3108d711b1fac9667"
+  integrity sha512-t7oqXS1zZjlFkeofF2J0qSKQeYAmCYogfqROCl/ZQZ3hvCnq9fBBiZIThGnozQ5mMEAJPI5TwWh9RyQ3bOqH3Q==
+
 keyv@^4.5.3:
   version "4.5.4"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-4.5.4.tgz#a879a99e29452f942439f2a405e3af8b31d4de93"

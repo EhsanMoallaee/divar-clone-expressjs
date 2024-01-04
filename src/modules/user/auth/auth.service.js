@@ -1,10 +1,12 @@
 import { randomInt } from 'crypto';
 import config from 'config';
+
 import AppError from '../../errorHandling/app.error.js';
 import UserRepository from '../user.repository.js';
 import authErrorMessages from './messages/auth.errorMessages.js';
 import redisSingletonInstance from '../../redisClient/redis.client.js';
 import authSuccessMessages from './messages/auth.successMessages.js';
+import kavenegarSmsSender from '../../../common/kavenegar.sendOtpCode.js';
 
 class AuthService {
 	#UserRepository;
@@ -28,8 +30,13 @@ class AuthService {
 				otpCode,
 			};
 			await redisSingletonInstance.setData(mobile, data, config.get('registrationOTPCode.validDuration'));
-			this.sendOTP(mobile, otpCode);
-			return { message: authSuccessMessages.OTPSentSuccessfully['message'], otpCode };
+			const otpSentResult = await kavenegarSmsSender(mobile, otpCode);
+			if (otpSentResult != 200)
+				throw new AppError(
+					authErrorMessages.OtpcodeSendingFailed['message'],
+					authErrorMessages.OtpcodeSendingFailed['statusCode']
+				);
+			return { message: authSuccessMessages.OTPSentSuccessfully['message'], otpCode }; // otpcode for develop
 		}
 		throw new AppError(
 			authErrorMessages.DuplicateMobile['message'],
@@ -57,11 +64,6 @@ class AuthService {
 		}
 		throw new AppError(authErrorMessages.wrongOtpCode['message'], authErrorMessages.wrongOtpCode['statusCode']);
 	};
-
-	async sendOTP(mobile, optCode) {
-		console.log('sendOTP :', optCode);
-		return mobile;
-	}
 
 	async checkUserExist(mobile) {
 		const user = await this.#UserRepository.findOne({ mobile });

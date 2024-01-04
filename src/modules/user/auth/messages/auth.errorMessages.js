@@ -27,6 +27,10 @@ const authErrorMessages = {
 		message: 'این شماره موبایل قبلا ثبت شده است',
 		statusCode: 409,
 	},
+	OtpcodeSendingFailed: {
+		message: 'در ارسال پیامک کد تایید خطایی به وجود آمو، لطفا لحظاتی دیگر مجددا اقدام بفرمایدد',
+		statusCode: 500,
+	},
 };
 
 export default authErrorMessages;

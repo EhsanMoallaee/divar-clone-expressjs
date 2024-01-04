@@ -25,6 +25,7 @@
 		"http-graceful-shutdown": "^3.1.13",
 		"ioredis": "^5.3.2",
 		"joi": "^17.11.0",
+		"kavenegar": "^1.1.4",
 		"mongoose": "^8.0.3",
 		"path": "^0.12.7",
 		"swagger-jsdoc": "^6.2.8",
