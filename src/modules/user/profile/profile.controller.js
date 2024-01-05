@@ -9,6 +9,17 @@ class ProfileController {
 		this.#ProfileService = ProfileService;
 	}
 
+	whoami = catchAsyncErrors(async (req, res) => {
+		const user = req.user;
+		if (!user) {
+			throw new AppError(
+				profileErrorMessages.UserNotFound['message'],
+				profileErrorMessages.UserNotFound['statusCode']
+			);
+		}
+		return res.status(200).json(user);
+	});
+
 	findOneUser = catchAsyncErrors(async (req, res) => {
 		const filterQuery = {};
 		const queries = req.query;

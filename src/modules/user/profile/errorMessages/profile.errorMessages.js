@@ -1,5 +1,5 @@
 const profileErrorMessages = {
-	NotFound: {
+	UserNotFound: {
 		message: 'کاربر مورد نظر پیدا نشد',
 		statusCode: 404,
 	},

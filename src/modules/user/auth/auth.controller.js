@@ -17,8 +17,8 @@ class AuthController {
 	register = catchAsyncErrors(async (req, res) => {
 		const data = req.body;
 		const result = await this.#AuthService.register(data);
-		const XAuthCookieOption = config.get('cookieOption.login');
-		res.cookie('x-auth-token', result.token, XAuthCookieOption);
+		const xAuthCookieOption = config.get('cookieOptions.login');
+		res.cookie('x-auth-token', result.token, xAuthCookieOption);
 		return res.status(201).json(result);
 	});
 }

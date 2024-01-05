@@ -15,8 +15,7 @@ const app = express();
 
 app.use(helmet());
 app.disable('x-powered-by');
-
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use('/static', express.static(path.join(__dirname, '..', 'static')));

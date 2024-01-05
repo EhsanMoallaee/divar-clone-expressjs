@@ -13,18 +13,18 @@ export default class AbstractRepository {
 		return await newDocument.save();
 	};
 
-	findOne = async (filterQuery) => {
-		const document = await this.model.findOne(filterQuery, {}, { lean: true });
+	findOne = async (filterQuery, options = {}) => {
+		const document = await this.model.findOne(filterQuery, options, { lean: true });
 		return document;
 	};
 
-	findOneById = async (id) => {
-		const document = await this.model.findById(id, {}, { lean: true });
+	findOneById = async (id, options = {}) => {
+		const document = await this.model.findById(id, options, { lean: true });
 		return document;
 	};
 
-	find = async (filterQuery) => {
-		const documents = await this.model.find(filterQuery, {}, { lean: true });
+	find = async (filterQuery, options = {}) => {
+		const documents = await this.model.find(filterQuery, options, { lean: true });
 		return documents;
 	};
 }
