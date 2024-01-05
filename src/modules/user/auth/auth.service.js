@@ -30,12 +30,19 @@ class AuthService {
 				otpCode,
 			};
 			await redisSingletonInstance.setData(mobile, data, config.get('registrationOTPCode.validDuration'));
+			console.log('otpSentResult');
 			const otpSentResult = await kavenegarSmsSender(mobile, otpCode);
-			if (otpSentResult != 200)
+			if (otpSentResult != 200) {
+				if (otpSentResult == 411)
+					throw new AppError(
+						authErrorMessages.WrongMobileNumber['message'],
+						authErrorMessages.WrongMobileNumber['statusCode']
+					);
 				throw new AppError(
 					authErrorMessages.OtpcodeSendingFailed['message'],
 					authErrorMessages.OtpcodeSendingFailed['statusCode']
 				);
+			}
 			return { message: authSuccessMessages.OTPSentSuccessfully['message'], otpCode }; // otpcode for develop
 		}
 		throw new AppError(
@@ -48,7 +55,7 @@ class AuthService {
 		const { mobile, otpCode } = data;
 		const getRedisValue = JSON.parse(await redisSingletonInstance.getData(mobile));
 		if (!getRedisValue)
-			throw new AppError(authErrorMessages.wrongOtpCode['message'], authErrorMessages.wrongOtpCode['statusCode']);
+			throw new AppError(authErrorMessages.WrongOtpCode['message'], authErrorMessages.WrongOtpCode['statusCode']);
 		if (getRedisValue.otpCode == otpCode) {
 			const userExist = await this.checkUserExist(mobile);
 			if (userExist)

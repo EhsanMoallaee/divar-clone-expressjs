@@ -11,7 +11,7 @@ const authErrorMessages = {
 		message: 'کد یکبار مصرف برای شما ارسال شده و هنوز معتبر است',
 		statusCode: 400,
 	},
-	wrongOtpCode: {
+	WrongOtpCode: {
 		message: 'کد ارسال شده صحیح نمیباشد یا زمان اعتبار آن منقضی شده است',
 		statusCode: 400,
 	},
@@ -30,6 +30,10 @@ const authErrorMessages = {
 	OtpcodeSendingFailed: {
 		message: 'در ارسال پیامک کد تایید خطایی به وجود آمو، لطفا لحظاتی دیگر مجددا اقدام بفرمایدد',
 		statusCode: 500,
+	},
+	WrongMobileNumber: {
+		message: 'شماره موبایل وارد شده نامعتبر است',
+		statusCode: 400,
 	},
 };
 

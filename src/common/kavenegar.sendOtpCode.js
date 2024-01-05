@@ -8,17 +8,13 @@ export default async function KavenegarSmsSender(receiverMobile, otpCode) {
 	const sentResult = new Promise((resolve, reject) =>
 		api.Send(
 			{
-				message: `کد تایید شماره موبایل در سایت :
+				message: `کد تایید شماره موبایل شما :
 	            ${otpCode}`,
-				sender: '10008663',
+				sender: config.get('kavenegar.sender'),
 				receptor: receiverMobile,
 			},
 			async function (response, status) {
-				if (status == 200) {
-					resolve(200);
-				} else {
-					reject(status);
-				}
+				resolve(status);
 			}
 		)
 	);
