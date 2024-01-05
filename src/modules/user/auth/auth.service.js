@@ -6,7 +6,8 @@ import UserRepository from '../user.repository.js';
 import authErrorMessages from './messages/auth.errorMessages.js';
 import redisSingletonInstance from '../../redisClient/redis.client.js';
 import authSuccessMessages from './messages/auth.successMessages.js';
-import kavenegarSmsSender from '../../../common/kavenegar.sendOtpCode.js';
+import kavenegarSmsSender from '../../../common/kavenegarSmsSender/kavenegar.sendOtpCode.js';
+import tokenGenerator from '../../../common/jwtToken/jwtToken.generator.js';
 
 class AuthService {
 	#UserRepository;
@@ -30,7 +31,6 @@ class AuthService {
 				otpCode,
 			};
 			await redisSingletonInstance.setData(mobile, data, config.get('registrationOTPCode.validDuration'));
-			console.log('otpSentResult');
 			const otpSentResult = await kavenegarSmsSender(mobile, otpCode);
 			if (otpSentResult != 200) {
 				if (otpSentResult == 411)
@@ -66,8 +66,15 @@ class AuthService {
 				mobile: getRedisValue.mobile,
 				verifiedMobile: true,
 			};
-			await this.#UserRepository.create(userData);
-			return { message: authSuccessMessages.RegisteredSuccessfully['message'] };
+			const user = await this.#UserRepository.create(userData);
+			const tokenSecretKey = config.get('secrets.login.secretKey');
+			const tokenOptions = config.get('secrets.login.tokenOption');
+			const payload = {
+				mobile,
+				id: user._id,
+			};
+			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
+			return { message: authSuccessMessages.RegisteredSuccessfully['message'], token };
 		}
 		throw new AppError(authErrorMessages.wrongOtpCode['message'], authErrorMessages.wrongOtpCode['statusCode']);
 	};
