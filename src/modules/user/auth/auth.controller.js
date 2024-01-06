@@ -10,8 +10,8 @@ class AuthController {
 
 	registerationRequest = catchAsyncErrors(async (req, res) => {
 		const userData = req.body;
-		const user = await this.#AuthService.registerationRequest(userData);
-		return res.json(user);
+		const result = await this.#AuthService.registerationRequest(userData);
+		return res.status(200).json(result);
 	});
 
 	register = catchAsyncErrors(async (req, res) => {

@@ -43,7 +43,7 @@ class AuthService {
 					authErrorMessages.OtpcodeSendingFailed['statusCode']
 				);
 			}
-			return { message: authSuccessMessages.OTPSentSuccessfully['message'], otpCode }; // otpcode for develop
+			return { message: authSuccessMessages.OTPSentSuccessfully['message'] };
 		}
 		throw new AppError(
 			authErrorMessages.DuplicateMobile['message'],
