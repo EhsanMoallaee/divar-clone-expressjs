@@ -2,10 +2,10 @@ import mongoose from 'mongoose';
 import chalk from 'chalk';
 
 export class ConnectMongodb {
-	#DB_URL = process.env.DB_URL;
+	DB_URL = process.env.DB_URL;
 	constructor() {
 		if (!ConnectMongodb.instance) {
-			mongoose.connect(this.#DB_URL);
+			mongoose.connect(this.DB_URL);
 			this.connection = mongoose.connection;
 			this.connection.on('open', () =>
 				console.log(`Connected to < ${process.env.NODE_ENV} > mongodb database successfully`)
