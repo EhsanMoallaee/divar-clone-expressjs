@@ -5,7 +5,7 @@ stock-computer-errors.log
 static
 log
 .log
-.env
+.env.*
 node_modules
 static
 log

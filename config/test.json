@@ -1,1 +1,27 @@
-{}
+{
+	"secrets": {
+		"login": {
+			"tokenOption": { "expiresIn": 300000 },
+			"tokenSecretKey": "a4522c522539c81cd9552ccd7b74a2e77f9fa4966e7b6891d43c729a2d3d9852"
+		}
+	},
+	"cookieOptions": {
+		"login": {
+			"maxAge": 86400000,
+			"secure": true,
+			"httpOnly": true,
+			"signed": true,
+			"sameSite": "none"
+		}
+	},
+	"userCorrectCredentials": {
+		"firstname": "Ehsan",
+		"lastname": "Moallaee",
+		"mobile": "09375338875"
+	},
+	"userIncorrectCredentials": {
+		"firstname": "user",
+		"lastname": "user",
+		"mobile": "123456"
+	}
+}

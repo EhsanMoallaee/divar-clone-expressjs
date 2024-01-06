@@ -67,7 +67,7 @@ class AuthService {
 				verifiedMobile: true,
 			};
 			const user = await this.#UserRepository.create(userData);
-			const tokenSecretKey = config.get('secrets.login.secretKey');
+			const tokenSecretKey = config.get('secrets.login.tokenSecretKey');
 			const tokenOptions = config.get('secrets.login.tokenOption');
 			const payload = {
 				mobile,
@@ -76,7 +76,7 @@ class AuthService {
 			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
 			return { message: authSuccessMessages.RegisteredSuccessfully['message'], token };
 		}
-		throw new AppError(authErrorMessages.wrongOtpCode['message'], authErrorMessages.wrongOtpCode['statusCode']);
+		throw new AppError(authErrorMessages.WrongOtpCode['message'], authErrorMessages.WrongOtpCode['statusCode']);
 	};
 
 	async checkUserExist(mobile) {

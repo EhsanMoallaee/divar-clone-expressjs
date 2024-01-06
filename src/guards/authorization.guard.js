@@ -12,7 +12,7 @@ const authorizationGuard = catchAsyncErrors(async (req, res, next) => {
 			authorizationErrorMessages.UnAuthorized['message'],
 			authorizationErrorMessages.UnAuthorized['statusCode']
 		);
-	const tokenSecretKey = config.get('secrets.login.secretKey');
+	const tokenSecretKey = config.get('secrets.login.tokenSecretKey');
 	const decodedData = await tokenVerifier(xAuthCookie, tokenSecretKey);
 	if (!decodedData)
 		throw new AppError(

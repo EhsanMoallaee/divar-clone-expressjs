@@ -29,6 +29,10 @@ class RedisSingleton {
 		const data = await this.#redisClient.get(key);
 		return data;
 	}
+
+	async flushAll() {
+		await this.#redisClient.flushall();
+	}
 }
 
 const redisSingletonInstance = new RedisSingleton();
