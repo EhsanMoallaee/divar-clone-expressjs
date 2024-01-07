@@ -81,6 +81,8 @@ class AuthService {
 		throw new AppError(authErrorMessages.WrongOtpCode['message'], authErrorMessages.WrongOtpCode['statusCode']);
 	};
 
+	login = async (data) => {};
+
 	async checkUserExist(mobile) {
 		const user = await this.#UserRepository.findOne({ mobile });
 		return user;

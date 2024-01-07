@@ -21,6 +21,14 @@ class AuthController {
 		res.cookie('x-auth-token', result.token, xAuthCookieOption);
 		return res.status(201).json(result);
 	});
+
+	login = catchAsyncErrors(async (req, res) => {
+		const data = req.body;
+		const result = await this.#AuthService.login(data);
+		const xAuthCookieOption = config.get('cookieOptions.login');
+		res.cookie('x-auth-token', result.token, xAuthCookieOption);
+		return res.status(201).json(result);
+	});
 }
 
 export default new AuthController();

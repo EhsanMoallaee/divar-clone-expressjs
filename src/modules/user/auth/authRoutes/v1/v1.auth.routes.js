@@ -5,5 +5,6 @@ const authRouter_v1 = Router();
 
 authRouter_v1.post('/registerationRequest', authController.registerationRequest); // <domain>/api/users/auth/v1/registerationRequest
 authRouter_v1.post('/register', authController.register); // <domain>/api/users/auth/v1/register
+authRouter_v1.post('/login', authController.login); // <domain>/api/users/auth/v1/login
 
 export default authRouter_v1;
