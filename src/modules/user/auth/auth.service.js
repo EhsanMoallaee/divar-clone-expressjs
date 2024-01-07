@@ -38,6 +38,7 @@ class AuthService {
 						authErrorMessages.WrongMobileNumber['message'],
 						authErrorMessages.WrongMobileNumber['statusCode']
 					);
+
 				throw new AppError(
 					authErrorMessages.OtpcodeSendingFailed['message'],
 					authErrorMessages.OtpcodeSendingFailed['statusCode']
@@ -67,13 +68,14 @@ class AuthService {
 				verifiedMobile: true,
 			};
 			const user = await this.#UserRepository.create(userData);
-			const tokenSecretKey = config.get('secrets.login.tokenSecretKey');
-			const tokenOptions = config.get('secrets.login.tokenOption');
+			const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
+			const tokenOptions = config.get('tokenOption');
 			const payload = {
 				mobile,
 				id: user._id,
 			};
 			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
+			await redisSingletonInstance.deleteData(mobile);
 			return { message: authSuccessMessages.RegisteredSuccessfully['message'], token };
 		}
 		throw new AppError(authErrorMessages.WrongOtpCode['message'], authErrorMessages.WrongOtpCode['statusCode']);

@@ -1,12 +1,11 @@
-import config from 'config';
 import request from 'supertest';
 
 import app from '../../src/app.js';
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
-import UserModel from '../../src/modules/user/model/user.model.js';
 import authSuccessMessages from '../../src/modules/user/auth/messages/auth.successMessages.js';
 import authErrorMessages from '../../src/modules/user/auth/messages/auth.errorMessages.js';
 import redisSingletonInstance from '../../src/modules/redisClient/redis.client.js';
+import UserModel from '../../src/modules/user/model/user.model.js';
 
 beforeAll(async () => {
 	new ConnectMongodb();
@@ -17,8 +16,16 @@ afterEach(async () => {
 	await redisSingletonInstance.flushAll();
 });
 
-const correctCredentials = config.get('userCorrectCredentials');
-const incorrectCredentials = config.get('userIncorrectCredentials');
+const correctCredentials = {
+	firstname: 'user',
+	lastname: 'user',
+	mobile: '09375338875',
+};
+const incorrectCredentials = {
+	firstname: 'user',
+	lastname: 'user',
+	mobile: '123456',
+};
 const registerationRequestURL = '/api/users/auth/v1/registerationRequest';
 const registerURL = '/api/users/auth/v1/register';
 

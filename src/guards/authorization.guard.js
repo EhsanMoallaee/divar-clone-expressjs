@@ -1,9 +1,10 @@
-import config from 'config';
+import dotenv from 'dotenv';
 import AppError from '../modules/errorHandling/app.error.js';
 import authorizationErrorMessages from './errorMessages/authorization.errorMessages.js';
 import catchAsyncErrors from '../modules/errorHandling/catch.asyncErrors.js';
 import tokenVerifier from '../common/jwtToken/jwtToken.verifier.js';
 import userRepository from '../modules/user/user.repository.js';
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const authorizationGuard = catchAsyncErrors(async (req, res, next) => {
 	const xAuthCookie = req.signedCookies['x-auth-token'];
@@ -12,7 +13,7 @@ const authorizationGuard = catchAsyncErrors(async (req, res, next) => {
 			authorizationErrorMessages.UnAuthorized['message'],
 			authorizationErrorMessages.UnAuthorized['statusCode']
 		);
-	const tokenSecretKey = config.get('secrets.login.tokenSecretKey');
+	const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
 	const decodedData = await tokenVerifier(xAuthCookie, tokenSecretKey);
 	if (!decodedData)
 		throw new AppError(

@@ -1,13 +1,13 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
 import helmet from 'helmet';
 import path from 'path';
-import { fileURLToPath } from 'url';
 
 import mainRouter from './routes/main.routes.js';
 import errorController from './modules/errorHandling/error.controller.js';
-import swaggerConfig from './swaggerConfig/swagger.config.js';
+import swaggerConfig from './common/swaggerConfig/swagger.config.js';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 const __filename = fileURLToPath(import.meta.url);

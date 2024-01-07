@@ -30,6 +30,10 @@ class RedisSingleton {
 		return data;
 	}
 
+	async deleteData(key) {
+		await this.#redisClient.del(key);
+	}
+
 	async flushAll() {
 		await this.#redisClient.flushall();
 	}

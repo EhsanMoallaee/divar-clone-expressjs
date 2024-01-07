@@ -1,14 +1,16 @@
-import config from 'config';
+import dotenv from 'dotenv';
 import request from 'supertest';
 import { sign } from 'cookie-signature';
 
 import app from '../../src/app.js';
-import profileErrorMessages from '../../src/modules/user/profile/errorMessages/profile.errorMessages.js';
+import authErrorMessages from '../../src/modules/user/auth/messages/auth.errorMessages.js';
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
+import profileErrorMessages from '../../src/modules/user/profile/errorMessages/profile.errorMessages.js';
+import tokenGenerator from '../../src/common/jwtToken/jwtToken.generator.js';
 import userRepository from '../../src/modules/user/user.repository.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
-import tokenGenerator from '../../src/common/jwtToken/jwtToken.generator.js';
-import authErrorMessages from '../../src/modules/user/auth/messages/auth.errorMessages.js';
+
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 beforeAll(async () => {
 	new ConnectMongodb();
@@ -28,7 +30,7 @@ const addUsers = async (userCount) => {
 		const user = await userRepository.create({
 			firstname: `user${i}`,
 			lastname: `user${i}`,
-			mobile: `0937533111${i}`,
+			mobile: `0931111111${i}`,
 		});
 		users.push(user);
 	}
@@ -36,8 +38,8 @@ const addUsers = async (userCount) => {
 };
 
 const generateToken = async (payload) => {
-	const tokenSecretKey = config.get('secrets.login.tokenSecretKey');
-	const tokenOptions = config.get('secrets.login.tokenOption');
+	const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
+	const tokenOptions = { expiresIn: 300000 };
 	const xAuthToken = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
 	return xAuthToken;
 };
@@ -92,7 +94,8 @@ describe('User profile tests', () => {
 
 	it('return 200 for whoami route', async () => {
 		const users = await addUsers(1);
-		const response = await requestWithAuth({}, {}, whoAmIURL);
+		const findOneOption = { mobile: users[0].mobile };
+		const response = await requestWithAuth(findOneOption, {}, whoAmIURL);
 		expect(response.body.mobile).toBe(users[0].mobile);
 		expect(response.body.firstname).toBe(users[0].firstname);
 		expect(response.status).toBe(200);
