@@ -20,7 +20,19 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Registeration_Request_Response'
+ *                          $ref: '#/definitions/Registeration-Request-Response'
+ *          400:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Server-Error'
  */
 
 // Register (check OTPCode)
@@ -45,7 +57,19 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Register_Response'
+ *                          $ref: '#/definitions/Register-Response'
+ *          400:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Server-Error'
  */
 
 // Login Request (Send OTPCode)
@@ -70,7 +94,19 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Login_Request_Response'
+ *                          $ref: '#/definitions/Login-Request-Response-Success'
+ *          400:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Server-Error'
  */
 
 // Login (check OTPCode)
@@ -95,7 +131,19 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Login_Response'
+ *                          $ref: '#/definitions/Login-Response-Success'
+ *          400:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Server-Error'
  */
 
 // Logout
@@ -111,5 +159,17 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Logout_Response'
+ *                          $ref: '#/definitions/Logout-Response'
+ *          400:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed-Response-Server-Error'
  */

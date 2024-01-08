@@ -1,7 +1,7 @@
 /**
  * @swagger
  *  definitions:
- *      Logout_Response:
+ *      Logout-Response:
  *          type: object
  *          properties:
  *              message:

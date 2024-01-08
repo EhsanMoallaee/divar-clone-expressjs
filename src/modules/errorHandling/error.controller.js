@@ -1,7 +1,8 @@
 const sendErrorDevelopmentMode = (err, res) => {
 	const statusCode = err.statusCode || 500;
 	return res.status(statusCode).json({
-		status: statusCode,
+		statusCode: statusCode,
+		success: false,
 		message: err.message,
 		stack: err.stack,
 	});
@@ -10,8 +11,9 @@ const sendErrorDevelopmentMode = (err, res) => {
 const sendErrorProductionMode = (err, res) => {
 	const statusCode = err.statusCode || 500;
 	return res.status(statusCode).json({
-		status: statusCode,
-		message: err.message,
+		statusCode: statusCode,
+		success: false,
+		message: statusCode == 500 ? 'خطایی سمت سرور ایجاد شده است لطفا لحظاتی دیگر مجددا تلاش بفرمایید' : err.message,
 	});
 };
 
