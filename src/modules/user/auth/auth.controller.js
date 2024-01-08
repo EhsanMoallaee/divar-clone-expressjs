@@ -1,9 +1,7 @@
 import config from 'config';
 import AuthService from './auth.service.js';
-import authErrorMessages from './messages/auth.errorMessages.js';
 import catchAsyncErrors from '../../errorHandling/catch.asyncErrors.js';
-import AppError from '../../errorHandling/app.error.js';
-import tokenVerifier from '../../../common/jwtToken/jwtToken.verifier.js';
+import preventCSRFAttack from '../functions/preventCsrfAttck/prevent.csrfAttack.js';
 
 class AuthController {
 	#AuthService;
@@ -26,6 +24,8 @@ class AuthController {
 	});
 
 	loginRequest = catchAsyncErrors(async (req, res) => {
+		const xAuthCookie = req.signedCookies['x-auth-token'];
+		if (xAuthCookie) await preventCSRFAttack(xAuthCookie);
 		const { mobile } = req.body;
 		const result = await this.#AuthService.loginRequest(mobile);
 		return res.status(200).json(result);
@@ -33,12 +33,7 @@ class AuthController {
 
 	login = catchAsyncErrors(async (req, res) => {
 		const xAuthCookie = req.signedCookies['x-auth-token'];
-		if (xAuthCookie) {
-			const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
-			const decodedData = await tokenVerifier(xAuthCookie, tokenSecretKey);
-			if (decodedData)
-				throw new AppError(authErrorMessages.CSRFAttack['message'], authErrorMessages.CSRFAttack['statusCode']);
-		}
+		if (xAuthCookie) await preventCSRFAttack(xAuthCookie);
 		const data = req.body;
 		const result = await this.#AuthService.login(data);
 		const xAuthCookieOption = config.get('cookieOptions.login');

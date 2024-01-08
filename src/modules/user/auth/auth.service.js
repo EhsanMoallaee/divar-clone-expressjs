@@ -4,9 +4,9 @@ import config from 'config';
 import AppError from '../../errorHandling/app.error.js';
 import authErrorMessages from './messages/auth.errorMessages.js';
 import authSuccessMessages from './messages/auth.successMessages.js';
-import kavenegarSmsSender from '../../../common/kavenegarSmsSender/kavenegar.sendOtpCode.js';
+import kavenegarSmsSender from '../functions/kavenegarSmsSender/kavenegar.sendOtpCode.js';
 import redisSingletonInstance from '../../redisClient/redis.client.js';
-import tokenGenerator from '../../../common/jwtToken/jwtToken.generator.js';
+import tokenGenerator from '../functions/jwtToken/jwtToken.generator.js';
 import UserRepository from '../user.repository.js';
 
 class AuthService {
