@@ -20,7 +20,7 @@ class AuthController {
 		const result = await this.#AuthService.register(data);
 		const xAuthCookieOption = config.get('cookieOptions.login');
 		res.cookie('x-auth-token', result.token, xAuthCookieOption);
-		return res.status(201).json(result.message);
+		return res.status(201).json({ message: result.message });
 	});
 
 	loginRequest = catchAsyncErrors(async (req, res) => {

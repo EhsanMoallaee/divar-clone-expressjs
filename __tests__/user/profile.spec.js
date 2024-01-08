@@ -90,6 +90,7 @@ describe('User profile tests', () => {
 		const filterQuery = { firstname: users[0].firstname, mobile: users[0].mobile };
 		const response = await requestWithAuth(findOneOption, filterQuery, findOneURL);
 		expect(response.status).toBe(200);
+		expect(response.body.mobile).toBe(users[0].mobile);
 	});
 
 	it('return 200 for whoami route', async () => {

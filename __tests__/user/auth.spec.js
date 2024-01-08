@@ -12,9 +12,11 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 beforeAll(async () => {
 	new ConnectMongodb();
+	await UserModel.deleteMany({});
+	await redisSingletonInstance.flushAll();
 });
 
-beforeEach(async () => {
+afterEach(async () => {
 	await UserModel.deleteMany({});
 	await redisSingletonInstance.flushAll();
 });
@@ -37,60 +39,90 @@ const loginURL = '/api/users/auth/v1/login';
 describe('Authentication Register tests', () => {
 	it('Registeration request: returns 200 with correct mobile,first and last name values', async () => {
 		const response = await request(app).post(registerationRequestURL).send(correctCredentials);
-		expect(response.status).toBe(200);
+		expect(response.status).toBe(authSuccessMessages.OTPSentSuccessfully['statusCode']);
 		expect(response.body.message).toBe(authSuccessMessages.OTPSentSuccessfully['message']);
 	});
+
 	it('Registeration request: returns 400 with incorrect mobile', async () => {
 		const response = await request(app).post(registerationRequestURL).send(incorrectCredentials);
-		expect(response.status).toBe(400);
+		expect(response.status).toBe(authErrorMessages.WrongMobileNumber['statusCode']);
 		expect(response.body.message).toBe(authErrorMessages.WrongMobileNumber['message']);
 	});
+
 	it('Registeration request: returns 400 if before otpCode expiration,user sends request again', async () => {
 		await request(app).post(registerationRequestURL).send(correctCredentials);
 		const response = await request(app).post(registerationRequestURL).send(correctCredentials);
-		expect(response.status).toBe(400);
+		expect(response.status).toBe(authErrorMessages.SpamAttack['statusCode']);
 		expect(response.body.message).toBe(authErrorMessages.SpamAttack['message']);
 	});
+
 	it('Register: returns 200 with correct otpCode', async () => {
 		await request(app).post(registerationRequestURL).send(correctCredentials);
 		const data = await redisSingletonInstance.getData(correctCredentials.mobile);
 		const otpCode = JSON.parse(data).otpCode;
 		const response = await request(app).post(registerURL).send({ mobile: correctCredentials.mobile, otpCode });
-		expect(response.status).toBe(201);
+		expect(response.status).toBe(authSuccessMessages.RegisteredSuccessfully['statusCode']);
 		expect(response.body.message).toBe(authSuccessMessages.RegisteredSuccessfully['message']);
 	});
+
 	it('Register: returns 400 with incorrect otpCode', async () => {
 		await request(app).post(registerationRequestURL).send(correctCredentials);
 		const data = await redisSingletonInstance.getData(correctCredentials.mobile);
 		const otpCode = JSON.parse(data).otpCode + 1;
 		const response = await request(app).post(registerURL).send({ mobile: correctCredentials.mobile, otpCode });
-		expect(response.status).toBe(400);
+		expect(response.status).toBe(authErrorMessages.WrongOtpCode['statusCode']);
 		expect(response.body.message).toBe(authErrorMessages.WrongOtpCode['message']);
 	});
+
 	it('Register request: returns 400 with incorrect mobile', async () => {
 		await request(app).post(registerationRequestURL).send(correctCredentials);
 		const data = await redisSingletonInstance.getData(correctCredentials.mobile);
 		const otpCode = JSON.parse(data).otpCode;
 		const response = await request(app).post(registerURL).send({ mobile: incorrectCredentials.mobile, otpCode });
-		expect(response.status).toBe(400);
+		expect(response.status).toBe(authErrorMessages.WrongOtpCode['statusCode']);
 		expect(response.body.message).toBe(authErrorMessages.WrongOtpCode['message']);
 	});
 });
 
 describe('Authentication Login tests', () => {
 	it('Login request: returns 200 with correct mobile number', async () => {
-		const response = await request(app).post(loginRequestURL).send(correctCredentials.mobile);
-		expect(response.status).toBe(200);
+		await UserRepository.create(correctCredentials);
+		const response = await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
+		expect(response.status).toBe(authSuccessMessages.OTPSentSuccessfully['statusCode']);
 		expect(response.body.message).toBe(authSuccessMessages.OTPSentSuccessfully['message']);
 	});
 
-	it('Login: returns 400 with incorrect otp code', async () => {
+	it('Login request: returns 400 if user doesnt exist', async () => {
+		const response = await request(app).post(loginRequestURL).send(incorrectCredentials.mobile);
+		expect(response.status).toBe(authErrorMessages.RegisterFirst['statusCode']);
+		expect(response.body.message).toBe(authErrorMessages.RegisterFirst['message']);
+	});
+
+	it('Login request: returns 400 if user send login request again before otp code expire', async () => {
+		await UserRepository.create(correctCredentials);
+		await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
+		const response = await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
+		expect(response.status).toBe(authErrorMessages.SpamAttack['statusCode']);
+		expect(response.body.message).toBe(authErrorMessages.SpamAttack['message']);
+	});
+
+	it('Login (Confirm): returns 200 with correct otp code', async () => {
+		const user = await UserRepository.create(correctCredentials);
+		await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
+		const data = await redisSingletonInstance.getData(user.mobile);
+		const otpCode = JSON.parse(data).otpCode;
+		const response = await request(app).post(loginURL).send({ mobile: user.mobile, otpCode });
+		expect(response.status).toBe(authSuccessMessages.LoggedInSuccessfully['statusCode']);
+		expect(response.body.message).toBe(authSuccessMessages.LoggedInSuccessfully['message']);
+	});
+
+	it('Login (Confirm): returns 400 with incorrect otp code', async () => {
 		const user = await UserRepository.create(correctCredentials);
 		await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
 		const data = await redisSingletonInstance.getData(user.mobile);
 		const otpCode = JSON.parse(data).otpCode + 1;
 		const response = await request(app).post(loginURL).send({ mobile: user.mobile, otpCode });
-		expect(response.status).toBe(400);
+		expect(response.status).toBe(authErrorMessages.WrongOtpCode['statusCode']);
 		expect(response.body.message).toBe(authErrorMessages.WrongOtpCode['message']);
 	});
 });

@@ -131,7 +131,7 @@ class AuthService {
 				id: userExist._id,
 			};
 			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
-			// await redisSingletonInstance.deleteData(mobile);
+			await redisSingletonInstance.deleteData(mobile);
 			return { message: authSuccessMessages.LoggedInSuccessfully['message'], token };
 		}
 		throw new AppError(authErrorMessages.WrongOtpCode['message'], authErrorMessages.WrongOtpCode['statusCode']);
