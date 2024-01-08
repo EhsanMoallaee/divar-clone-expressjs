@@ -11,6 +11,10 @@ const authSuccessMessages = {
 		message: 'ورود به سایت با موفقیت انجام شد',
 		statusCode: 200,
 	},
+	LoggedOutSuccessfully: {
+		message: 'خروج از سایت با موفقیت انجام شد',
+		statusCode: 200,
+	},
 };
 
 export default authSuccessMessages;

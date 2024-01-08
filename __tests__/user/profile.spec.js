@@ -5,6 +5,7 @@ import { sign } from 'cookie-signature';
 import app from '../../src/app.js';
 import authErrorMessages from '../../src/modules/user/auth/messages/auth.errorMessages.js';
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
+import CookieNames from '../../src/common/constants/cookies.enum.js';
 import profileErrorMessages from '../../src/modules/user/profile/messages/profile.errorMessages.js';
 import tokenGenerator from '../../src/modules/user/functions/jwtToken/jwtToken.generator.js';
 import UserRepository from '../../src/modules/user/user.repository.js';
@@ -16,7 +17,7 @@ beforeAll(async () => {
 	new ConnectMongodb();
 });
 
-beforeEach(async () => {
+afterEach(async () => {
 	await UserModel.deleteMany({});
 });
 
@@ -54,7 +55,7 @@ const requestWithAuth = async (findOneOption = {}, filterQuery = {}, url) => {
 	const xAuthToken = await generateToken({ id: user._id });
 	const response = await getUsers(url)
 		.query(filterQuery)
-		.set('Cookie', `x-auth-token=s:${sign(xAuthToken, cookieSecretKey)}`);
+		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
 	return response;
 };
 
