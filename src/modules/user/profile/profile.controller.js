@@ -24,7 +24,7 @@ class ProfileController {
 		const filterQuery = {};
 		const queries = req.query;
 		for (let key in queries) {
-			if (Object.hasOwn(queries, key)) {
+			if (Object.hasOwn(queries, key) && queries[key]) {
 				filterQuery[key] = queries[key];
 			}
 		}

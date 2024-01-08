@@ -20,19 +20,19 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Registeration-Request-Response'
+ *                          $ref: '#/definitions/Registeration_Request_Response'
  *          400:
  *              description: Bad request
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *                          $ref: '#/definitions/Failed_Response_Client_Error'
  *          500:
  *              description: Internal server error
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Server-Error'
+ *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
 // Register (check OTPCode)
@@ -57,19 +57,19 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Register-Response'
+ *                          $ref: '#/definitions/Register_Response'
  *          400:
  *              description: Bad request
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *                          $ref: '#/definitions/Failed_Response_Client_Error'
  *          500:
  *              description: Internal server error
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Server-Error'
+ *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
 // Login Request (Send OTPCode)
@@ -94,19 +94,19 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Login-Request-Response-Success'
+ *                          $ref: '#/definitions/Login_Request_Response_Success'
  *          400:
  *              description: Bad request
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *                          $ref: '#/definitions/Failed_Response_Client_Error'
  *          500:
  *              description: Internal server error
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Server-Error'
+ *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
 // Login (check OTPCode)
@@ -131,26 +131,26 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Login-Response-Success'
+ *                          $ref: '#/definitions/Login_Response_Success'
  *          400:
  *              description: Bad request
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *                          $ref: '#/definitions/Failed_Response_Client_Error'
  *          500:
  *              description: Internal server error
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Server-Error'
+ *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
 // Logout
 /**
  * @swagger
  * /api/users/auth/v1/logout:
- *  post:
+ *  get:
  *      tags: [--Auth]
  *      summary: logout user
  *      responses:
@@ -159,17 +159,17 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Logout-Response'
+ *                          $ref: '#/definitions/Logout_Response'
  *          400:
  *              description: Bad request
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Client-Error'
+ *                          $ref: '#/definitions/Failed_Response_Client_Error'
  *          500:
  *              description: Internal server error
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Failed-Response-Server-Error'
+ *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */

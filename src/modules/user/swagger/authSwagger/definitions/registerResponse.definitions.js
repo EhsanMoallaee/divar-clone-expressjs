@@ -1,7 +1,7 @@
 /**
  * @swagger
  *  definitions:
- *      Registeration-Request-Response:
+ *      Registeration_Request_Response:
  *          type: object
  *          properties:
  *              message:
@@ -12,7 +12,7 @@
 /**
  * @swagger
  *  definitions:
- *      Register-Response:
+ *      Register_Response:
  *          type: object
  *          properties:
  *              message:

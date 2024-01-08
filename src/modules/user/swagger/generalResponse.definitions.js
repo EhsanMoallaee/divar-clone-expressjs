@@ -2,7 +2,7 @@
 /**
  * @swagger
  *  definitions:
- *      Success-Response-With-Message:
+ *      Success_Response_With_Message:
  *          type: object
  *          properties:
  *              message:
@@ -14,7 +14,7 @@
 /**
  * @swagger
  *  definitions:
- *      Success-Response-Without-Message:
+ *      Success_Response_Without_Message:
  *          type: object
  *          properties:
  *              statusCode:
@@ -29,7 +29,7 @@
 /**
  * @swagger
  *  definitions:
- *      Failed-Response-Client-Error:
+ *      Failed_Response_Client_Error:
  *          type: object
  *          properties:
  *              statusCode:
@@ -47,7 +47,7 @@
 /**
  * @swagger
  *  definitions:
- *      Failed-Response-Server-Error:
+ *      Failed_Response_Server_Error:
  *          type: object
  *          properties:
  *              statusCode:
@@ -65,7 +65,7 @@
 /**
  * @swagger
  *  definitions:
- *      Not-Found-Response:
+ *      Not_Found_Response:
  *          type: object
  *          properties:
  *              statusCode:
@@ -77,4 +77,22 @@
  *              message:
  *                  type: string
  *                  example: "Item not found"
+ */
+
+// Info: Failed Response UnAuthorized
+/**
+ * @swagger
+ *  definitions:
+ *      UnAuthorized_Response:
+ *          type: object
+ *          properties:
+ *              statusCode:
+ *                  type: integer
+ *                  example: 401
+ *              success:
+ *                  type: boolean
+ *                  example: false
+ *              message:
+ *                  type: string
+ *                  example: "لطفا ابتدا وارد حساب کاربری خود شوید"
  */

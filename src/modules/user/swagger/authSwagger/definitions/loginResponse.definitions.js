@@ -1,7 +1,7 @@
 /**
  * @swagger
  *  definitions:
- *      Login-Request-Response-Success:
+ *      Login_Request_Response_Success:
  *          type: object
  *          properties:
  *              message:
@@ -12,7 +12,7 @@
 /**
  * @swagger
  *  definitions:
- *      Login-Response-Success:
+ *      Login_Response_Success:
  *          type: object
  *          properties:
  *              message:
