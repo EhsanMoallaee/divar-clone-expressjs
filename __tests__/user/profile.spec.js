@@ -6,7 +6,7 @@ import app from '../../src/app.js';
 import authErrorMessages from '../../src/modules/user/auth/messages/auth.errorMessages.js';
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import profileErrorMessages from '../../src/modules/user/profile/messages/profile.errorMessages.js';
-import tokenGenerator from '../../src/common/jwtToken/jwtToken.generator.js';
+import tokenGenerator from '../../src/modules/user/functions/jwtToken/jwtToken.generator.js';
 import UserRepository from '../../src/modules/user/user.repository.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
 
