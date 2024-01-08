@@ -1,11 +1,11 @@
-import userRepository from '../user.repository.js';
+import UserRepository from '../user.repository.js';
 import AppError from '../../errorHandling/app.error.js';
-import profileErrorMessages from './errorMessages/profile.errorMessages.js';
+import profileErrorMessages from './messages/profile.errorMessages.js';
 
 class ProfileService {
 	#UserRepository;
 	constructor() {
-		this.#UserRepository = userRepository;
+		this.#UserRepository = UserRepository;
 	}
 
 	findOneUser = async (filterQuery) => {

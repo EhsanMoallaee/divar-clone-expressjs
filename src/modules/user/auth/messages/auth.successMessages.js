@@ -7,6 +7,10 @@ const authSuccessMessages = {
 		message: 'ثبت نام شما با موفقیت انجام شد',
 		statusCode: 201,
 	},
+	LoggedInSuccessfully: {
+		message: 'ورود به سایت با موفقیت انجام شد',
+		statusCode: 200,
+	},
 };
 
 export default authSuccessMessages;

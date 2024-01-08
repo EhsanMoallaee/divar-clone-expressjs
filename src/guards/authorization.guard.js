@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 import AppError from '../modules/errorHandling/app.error.js';
-import authorizationErrorMessages from './errorMessages/authorization.errorMessages.js';
+import authorizationErrorMessages from './messages/authorization.errorMessages.js';
 import catchAsyncErrors from '../modules/errorHandling/catch.asyncErrors.js';
 import tokenVerifier from '../common/jwtToken/jwtToken.verifier.js';
-import userRepository from '../modules/user/user.repository.js';
+import UserRepository from '../modules/user/user.repository.js';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 const authorizationGuard = catchAsyncErrors(async (req, res, next) => {
@@ -20,7 +20,7 @@ const authorizationGuard = catchAsyncErrors(async (req, res, next) => {
 			authorizationErrorMessages.UnAuthorized['message'],
 			authorizationErrorMessages.UnAuthorized['statusCode']
 		);
-	const user = await userRepository.findOneById(decodedData.id, { __v: 0, verifiedMobile: 0 });
+	const user = await UserRepository.findOneById(decodedData.id, { __v: 0, verifiedMobile: 0 });
 	if (!user)
 		throw new AppError(
 			authorizationErrorMessages.UnAuthorized['message'],

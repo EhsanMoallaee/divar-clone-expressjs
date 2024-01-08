@@ -5,9 +5,9 @@ import { sign } from 'cookie-signature';
 import app from '../../src/app.js';
 import authErrorMessages from '../../src/modules/user/auth/messages/auth.errorMessages.js';
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
-import profileErrorMessages from '../../src/modules/user/profile/errorMessages/profile.errorMessages.js';
+import profileErrorMessages from '../../src/modules/user/profile/messages/profile.errorMessages.js';
 import tokenGenerator from '../../src/common/jwtToken/jwtToken.generator.js';
-import userRepository from '../../src/modules/user/user.repository.js';
+import UserRepository from '../../src/modules/user/user.repository.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
@@ -16,7 +16,7 @@ beforeAll(async () => {
 	new ConnectMongodb();
 });
 
-afterEach(async () => {
+beforeEach(async () => {
 	await UserModel.deleteMany({});
 });
 
@@ -27,7 +27,7 @@ const whoAmIURL = '/api/users/profile/v1/whoami';
 const addUsers = async (userCount) => {
 	const users = [];
 	for (let i = 0; i < userCount; i++) {
-		const user = await userRepository.create({
+		const user = await UserRepository.create({
 			firstname: `user${i}`,
 			lastname: `user${i}`,
 			mobile: `0931111111${i}`,
@@ -50,7 +50,7 @@ const getUsers = (url) => {
 };
 
 const requestWithAuth = async (findOneOption = {}, filterQuery = {}, url) => {
-	const user = await userRepository.findOne(findOneOption);
+	const user = await UserRepository.findOne(findOneOption);
 	const xAuthToken = await generateToken({ id: user._id });
 	const response = await getUsers(url)
 		.query(filterQuery)

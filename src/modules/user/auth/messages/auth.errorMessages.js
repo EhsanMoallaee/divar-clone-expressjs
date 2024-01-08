@@ -35,6 +35,10 @@ const authErrorMessages = {
 		message: 'شماره موبایل وارد شده نامعتبر است',
 		statusCode: 400,
 	},
+	RegisterFirst: {
+		message: 'ابتدا باید در سایت ثبت نام نمایید',
+		statusCode: 400,
+	},
 };
 
 export default authErrorMessages;

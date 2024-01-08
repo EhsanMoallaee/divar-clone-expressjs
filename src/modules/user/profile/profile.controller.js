@@ -1,6 +1,6 @@
 import AppError from '../../errorHandling/app.error.js';
 import catchAsyncErrors from '../../errorHandling/catch.asyncErrors.js';
-import profileErrorMessages from './errorMessages/profile.errorMessages.js';
+import profileErrorMessages from './messages/profile.errorMessages.js';
 import ProfileService from './profile.service.js';
 
 class ProfileController {

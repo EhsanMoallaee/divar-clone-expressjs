@@ -9,7 +9,7 @@
 			"sameSite": "none"
 		}
 	},
-	"registrationOTPCode": {
+	"authOTPCode": {
 		"validDuration": "120"
 	},
 	"kaveNegarSenderNumber": 10008663
