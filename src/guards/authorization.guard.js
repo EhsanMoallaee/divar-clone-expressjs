@@ -3,7 +3,7 @@ import AppError from '../modules/errorHandling/app.error.js';
 import authorizationErrorMessages from './messages/authorization.errorMessages.js';
 import catchAsyncErrors from '../modules/errorHandling/catch.asyncErrors.js';
 import tokenVerifier from '../modules/user/functions/jwtToken/jwtToken.verifier.js';
-import UserRepository from '../modules/user/user.repository.js';
+import UserRepository from '../modules/user/model/user.repository.js';
 import CookieNames from '../common/constants/cookies.enum.js';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 

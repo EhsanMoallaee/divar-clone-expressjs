@@ -1,5 +1,5 @@
 import AppError from '../../../errorHandling/app.error.js';
-import authErrorMessages from '../../auth/messages/auth.errorMessages.js';
+import authErrorMessages from '../../authModule/messages/auth.errorMessages.js';
 import tokenVerifier from '../jwtToken/jwtToken.verifier.js';
 
 export default async function preventCSRFAttack(cookie) {

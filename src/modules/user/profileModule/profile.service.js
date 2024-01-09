@@ -1,6 +1,6 @@
-import UserRepository from '../user.repository.js';
 import AppError from '../../errorHandling/app.error.js';
 import profileErrorMessages from './messages/profile.errorMessages.js';
+import UserRepository from '../model/user.repository.js';
 
 class ProfileService {
 	#UserRepository;

@@ -7,7 +7,7 @@ import authSuccessMessages from './messages/auth.successMessages.js';
 import kavenegarSmsSender from '../functions/kavenegarSmsSender/kavenegar.sendOtpCode.js';
 import redisSingletonInstance from '../../redisClient/redis.client.js';
 import tokenGenerator from '../functions/jwtToken/jwtToken.generator.js';
-import UserRepository from '../user.repository.js';
+import UserRepository from '../model/user.repository.js';
 
 class AuthService {
 	#UserRepository;

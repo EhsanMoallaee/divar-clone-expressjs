@@ -3,13 +3,13 @@ import request from 'supertest';
 import { sign } from 'cookie-signature';
 
 import app from '../../src/app.js';
-import authErrorMessages from '../../src/modules/user/auth/messages/auth.errorMessages.js';
+import authErrorMessages from '../../src/modules/user/authModule/messages/auth.errorMessages.js';
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import CookieNames from '../../src/common/constants/cookies.enum.js';
-import profileErrorMessages from '../../src/modules/user/profile/messages/profile.errorMessages.js';
+import profileErrorMessages from '../../src/modules/user/profileModule/messages/profile.errorMessages.js';
 import tokenGenerator from '../../src/modules/user/functions/jwtToken/jwtToken.generator.js';
-import UserRepository from '../../src/modules/user/user.repository.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
+import UserRepository from '../../src/modules/user/model/user.repository.js';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 

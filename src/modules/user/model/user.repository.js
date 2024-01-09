@@ -1,5 +1,5 @@
-import AbstractRepository from '../../dataAccessLayer/abstract.repository.js';
-import UserModel from './model/user.model.js';
+import AbstractRepository from '../../../dataAccessLayer/abstract.repository.js';
+import UserModel from './user.model.js';
 
 class UserRepository extends AbstractRepository {
 	constructor() {

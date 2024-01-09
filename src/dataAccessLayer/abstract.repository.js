@@ -23,7 +23,7 @@ export default class AbstractRepository {
 		return document;
 	};
 
-	find = async (filterQuery, options = {}) => {
+	find = async (filterQuery = {}, options = {}) => {
 		const documents = await this.model.find(filterQuery, options, { lean: true });
 		return documents;
 	};

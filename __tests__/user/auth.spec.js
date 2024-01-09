@@ -1,16 +1,17 @@
 import dotenv from 'dotenv';
 import request from 'supertest';
+import { sign } from 'cookie-signature';
 
 import app from '../../src/app.js';
-import authErrorMessages from '../../src/modules/user/auth/messages/auth.errorMessages.js';
-import authSuccessMessages from '../../src/modules/user/auth/messages/auth.successMessages.js';
+import authErrorMessages from '../../src/modules/user/authModule/messages/auth.errorMessages.js';
+import authSuccessMessages from '../../src/modules/user/authModule/messages/auth.successMessages.js';
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import CookieNames from '../../src/common/constants/cookies.enum.js';
 import redisSingletonInstance from '../../src/modules/redisClient/redis.client.js';
-import { sign } from 'cookie-signature';
 import tokenGenerator from '../../src/modules/user/functions/jwtToken/jwtToken.generator.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
-import UserRepository from '../../src/modules/user/user.repository.js';
+import UserRepository from '../../src/modules/user/model/user.repository.js';
+
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 beforeAll(async () => {
