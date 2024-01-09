@@ -12,20 +12,7 @@ const sendErrorDevelopmentMode = (err, res) => {
 	} else if (err && (err.message.startsWith('invalid signature') || err.message === 'jwt malformed')) {
 		err.message = 'خطای رمزنگاری توکن';
 		console.error(chalk.red('Token Signature :', err.message));
-		res.header('access_token', '');
 		res.cookie('x-auth-token', '', {
-			maxAge: 0,
-			httpOnly: true,
-			sameSite: 'none',
-			secure: true,
-		});
-		res.cookie('register-token', '', {
-			maxAge: 0,
-			httpOnly: true,
-			sameSite: 'none',
-			secure: true,
-		});
-		res.cookie('login-token', '', {
 			maxAge: 0,
 			httpOnly: true,
 			sameSite: 'none',
@@ -53,25 +40,10 @@ const sendErrorProductionMode = (err, res) => {
 	} else if (err && err.message.startsWith('Cast to ObjectId failed for value')) {
 		err.message = 'مقادیر مورد نیاز به درستی ارسال نشده است';
 		statusCode = 400;
-		console.error(chalk.red('ObjectId failed :', err.message));
 	} else if (err && (err.message.startsWith('invalid signature') || err.message === 'jwt malformed')) {
 		err.message =
 			'مشکلی سمت سرور به وجود آمده است، لطفا لحظاتی دیگر مجددا تلاش بفرمایید ، درصورت برطرف نشدن مشکل با پشتیبانی تماس بگیرید';
-		console.error(chalk.red('Token Signature :', err.message));
-		res.header('access_token', '');
 		res.cookie('x-auth-token', '', {
-			maxAge: 0,
-			httpOnly: true,
-			sameSite: 'none',
-			secure: true,
-		});
-		res.cookie('register-token', '', {
-			maxAge: 0,
-			httpOnly: true,
-			sameSite: 'none',
-			secure: true,
-		});
-		res.cookie('login-token', '', {
 			maxAge: 0,
 			httpOnly: true,
 			sameSite: 'none',
