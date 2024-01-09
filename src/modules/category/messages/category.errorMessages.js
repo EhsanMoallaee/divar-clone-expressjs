@@ -15,6 +15,10 @@ const categoryErrorMessages = {
 		message: 'دسته بندی مورد نظر پیدا نشد',
 		statusCode: 404,
 	},
+	CategoriesDidntFound: {
+		message: 'دسته بندی ای پیدا نشد',
+		statusCode: 404,
+	},
 	CategoryIdRequired: {
 		message: 'ارسال آی دی دسته بندی موردنظر الزامیست',
 		statusCode: 400,

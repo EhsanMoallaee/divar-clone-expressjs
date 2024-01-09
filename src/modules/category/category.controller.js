@@ -16,8 +16,7 @@ class CategoryController {
 
 	fetchAll = catchAsyncErrors(async (req, res) => {
 		const categories = await this.#CategoryService.fetchAll();
-		return res.status(categorySuccessMessages.CategoryCreatedSuccessfully['statusCode']).json({
-			message: categorySuccessMessages.CategoryCreatedSuccessfully['message'],
+		return res.status(200).json({
 			categories,
 		});
 	});
