@@ -1,11 +1,12 @@
 import chalk from 'chalk';
 
 const sendErrorDevelopmentMode = (err, res) => {
-	const statusCode = err.statusCode || 500;
+	let statusCode = err.statusCode || 500;
 	if (err && err.message.startsWith('E11000 duplicate key')) {
 		const duplicateMessage = err.message.split('{')[1].replace('}', ' ').replace('"', '').replace('"', '').trim();
 		console.error(chalk.red('Duplicate :', duplicateMessage));
 		err.message = `قبلا ثبت شده و نمیتواند تکراری باشد ${duplicateMessage} مقدار فیلد`;
+		statusCode = 409;
 	} else if (err && err.message.includes('Cast to ObjectId failed for value')) {
 		err.message = 'آی دی ارسال شده صحیح نمیباشد';
 		console.error(chalk.red('ObjectId failed :', err.message));

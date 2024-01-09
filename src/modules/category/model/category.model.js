@@ -4,7 +4,8 @@ const categorySchema = new Schema(
 	{
 		title: { type: String, required: true, unique: true },
 		slug: { type: String, required: true, unique: true, index: true },
-		desc: { type: String, required: true },
+		description: { type: String, required: true },
+		icon: { type: String },
 		parentId: {
 			type: Types.ObjectId,
 			default: null,

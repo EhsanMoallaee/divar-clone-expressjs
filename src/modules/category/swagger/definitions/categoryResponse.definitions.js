@@ -13,7 +13,7 @@
  *              slug:
  *                  type: string
  *                  example: "Category slug"
- *              desc:
+ *              description:
  *                  type: string
  *                  example: "Category desc"
  *              icon:

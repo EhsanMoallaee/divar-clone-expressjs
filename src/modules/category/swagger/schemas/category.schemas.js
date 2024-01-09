@@ -6,8 +6,8 @@
  *              type: object
  *              required:
  *                  -   title
- *                  -   desc
- *                  -   icon
+ *                  -   slug
+ *                  -   description
  *              properties:
  *                  title:
  *                      type: string
@@ -15,7 +15,7 @@
  *                  slug:
  *                      type: string
  *                      description: category slug
- *                  desc:
+ *                  description:
  *                      type: string
  *                      description: category desc
  *                  icon:

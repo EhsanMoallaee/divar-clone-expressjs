@@ -11,29 +11,29 @@ const authorizationGuard = catchAsyncErrors(async (req, res, next) => {
 	const xAuthCookie = req.signedCookies[CookieNames.XAuthToken];
 	if (!xAuthCookie)
 		throw new AppError(
-			authorizationErrorMessages.UnAuthorized['message'],
-			authorizationErrorMessages.UnAuthorized['statusCode']
+			authorizationErrorMessages.UnAuthorized.message,
+			authorizationErrorMessages.UnAuthorized.statusCode
 		);
 	const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
 	const decodedData = await tokenVerifier(xAuthCookie, tokenSecretKey);
 	if (!decodedData)
 		throw new AppError(
-			authorizationErrorMessages.UnAuthorized['message'],
-			authorizationErrorMessages.UnAuthorized['statusCode']
+			authorizationErrorMessages.UnAuthorized.message,
+			authorizationErrorMessages.UnAuthorized.statusCode
 		);
 	if (typeof decodedData === 'object' && 'id' in decodedData) {
 		const user = await UserRepository.findOneById(decodedData.id, { __v: 0, updatedAt: 0 });
 		if (!user)
 			throw new AppError(
-				authorizationErrorMessages.UnAuthorized['message'],
-				authorizationErrorMessages.UnAuthorized['statusCode']
+				authorizationErrorMessages.UnAuthorized.message,
+				authorizationErrorMessages.UnAuthorized.statusCode
 			);
 		req.user = user;
 		return next();
 	}
 	throw new AppError(
-		authorizationErrorMessages.UnAuthorized['message'],
-		authorizationErrorMessages.UnAuthorized['statusCode']
+		authorizationErrorMessages.UnAuthorized.message,
+		authorizationErrorMessages.UnAuthorized.statusCode
 	);
 });
 

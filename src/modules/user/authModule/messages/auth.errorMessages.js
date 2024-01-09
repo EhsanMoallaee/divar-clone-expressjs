@@ -39,6 +39,10 @@ const authErrorMessages = {
 		message: 'ابتدا باید در سایت ثبت نام نمایید',
 		statusCode: 400,
 	},
+	ExceptionError: {
+		message: 'درخواست معتبر نمیباشد',
+		statusCode: 40,
+	},
 };
 
 export default authErrorMessages;

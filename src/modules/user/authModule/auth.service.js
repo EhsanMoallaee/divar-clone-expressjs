@@ -21,7 +21,7 @@ class AuthService {
 		if (!user) {
 			const getRedisValue = await redisSingletonInstance.getData(mobile);
 			if (getRedisValue)
-				throw new AppError(authErrorMessages.SpamAttack['message'], authErrorMessages.SpamAttack['statusCode']);
+				throw new AppError(authErrorMessages.SpamAttack.message, authErrorMessages.SpamAttack.statusCode);
 			const otpCode = randomInt(10000, 99999);
 			const data = {
 				firstname,
@@ -34,32 +34,29 @@ class AuthService {
 			if (otpSentResult != 200) {
 				if (otpSentResult == 411)
 					throw new AppError(
-						authErrorMessages.WrongMobileNumber['message'],
-						authErrorMessages.WrongMobileNumber['statusCode']
+						authErrorMessages.WrongMobileNumber.message,
+						authErrorMessages.WrongMobileNumber.statusCode
 					);
 
 				throw new AppError(
-					authErrorMessages.OtpcodeSendingFailed['message'],
-					authErrorMessages.OtpcodeSendingFailed['statusCode']
+					authErrorMessages.OtpcodeSendingFailed.message,
+					authErrorMessages.OtpcodeSendingFailed.statusCode
 				);
 			}
-			return { message: authSuccessMessages.OTPSentSuccessfully['message'] };
+			return { message: authSuccessMessages.OTPSentSuccessfully.message };
 		}
-		throw new AppError(
-			authErrorMessages.DuplicateMobile['message'],
-			authErrorMessages.DuplicateMobile['statusCode']
-		);
+		throw new AppError(authErrorMessages.DuplicateMobile.message, authErrorMessages.DuplicateMobile.statusCode);
 	};
 
 	register = async (data) => {
 		const { mobile, otpCode } = data;
 		const getRedisValue = JSON.parse(await redisSingletonInstance.getData(mobile));
 		if (!getRedisValue)
-			throw new AppError(authErrorMessages.WrongOtpCode['message'], authErrorMessages.WrongOtpCode['statusCode']);
+			throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
 		if (getRedisValue.otpCode == otpCode) {
 			const userExist = await this.checkUserExist(mobile);
 			if (userExist)
-				throw new AppError(authErrorMessages.SpamAttack['message'], authErrorMessages.SpamAttack['statusCode']);
+				throw new AppError(authErrorMessages.SpamAttack.message, authErrorMessages.SpamAttack.statusCode);
 			const userData = {
 				firstname: getRedisValue.firstname,
 				lastname: getRedisValue.lastname,
@@ -75,21 +72,18 @@ class AuthService {
 			};
 			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
 			await redisSingletonInstance.deleteData(mobile);
-			return { message: authSuccessMessages.RegisteredSuccessfully['message'], token };
+			return { message: authSuccessMessages.RegisteredSuccessfully.message, token };
 		}
-		throw new AppError(authErrorMessages.WrongOtpCode['message'], authErrorMessages.WrongOtpCode['statusCode']);
+		throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
 	};
 
 	loginRequest = async (mobile) => {
 		const user = await this.checkUserExist(mobile);
 		if (!user)
-			throw new AppError(
-				authErrorMessages.RegisterFirst['message'],
-				authErrorMessages.RegisterFirst['statusCode']
-			);
+			throw new AppError(authErrorMessages.RegisterFirst.message, authErrorMessages.RegisterFirst.statusCode);
 		const getRedisValue = await redisSingletonInstance.getData(mobile);
 		if (getRedisValue)
-			throw new AppError(authErrorMessages.SpamAttack['message'], authErrorMessages.SpamAttack['statusCode']);
+			throw new AppError(authErrorMessages.SpamAttack.message, authErrorMessages.SpamAttack.statusCode);
 		const otpCode = randomInt(10000, 99999);
 		const data = {
 			mobile,
@@ -100,30 +94,27 @@ class AuthService {
 		if (otpSentResult != 200) {
 			if (otpSentResult == 411)
 				throw new AppError(
-					authErrorMessages.WrongMobileNumber['message'],
-					authErrorMessages.WrongMobileNumber['statusCode']
+					authErrorMessages.WrongMobileNumber.message,
+					authErrorMessages.WrongMobileNumber.statusCode
 				);
 
 			throw new AppError(
-				authErrorMessages.OtpcodeSendingFailed['message'],
-				authErrorMessages.OtpcodeSendingFailed['statusCode']
+				authErrorMessages.OtpcodeSendingFailed.message,
+				authErrorMessages.OtpcodeSendingFailed.statusCode
 			);
 		}
-		return { message: authSuccessMessages.OTPSentSuccessfully['message'] };
+		return { message: authSuccessMessages.OTPSentSuccessfully.message };
 	};
 
 	login = async (data) => {
 		const { mobile, otpCode } = data;
 		const getRedisValue = JSON.parse(await redisSingletonInstance.getData(mobile));
 		if (!getRedisValue)
-			throw new AppError(authErrorMessages.WrongOtpCode['message'], authErrorMessages.WrongOtpCode['statusCode']);
+			throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
 		if (getRedisValue.otpCode == otpCode) {
 			const userExist = await this.checkUserExist(mobile);
 			if (!userExist)
-				throw new AppError(
-					authErrorMessages.WrongOtpCode['message'],
-					authErrorMessages.WrongOtpCode['statusCode']
-				);
+				throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
 			const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
 			const tokenOptions = config.get('tokenOption');
 			const payload = {
@@ -132,9 +123,9 @@ class AuthService {
 			};
 			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
 			await redisSingletonInstance.deleteData(mobile);
-			return { message: authSuccessMessages.LoggedInSuccessfully['message'], token };
+			return { message: authSuccessMessages.LoggedInSuccessfully.message, token };
 		}
-		throw new AppError(authErrorMessages.WrongOtpCode['message'], authErrorMessages.WrongOtpCode['statusCode']);
+		throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
 	};
 
 	async checkUserExist(mobile) {

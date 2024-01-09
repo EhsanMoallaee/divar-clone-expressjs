@@ -63,8 +63,8 @@ describe('User profile tests', () => {
 	it('return 401 for request without logged in credentials', async () => {
 		await addUsers(1);
 		const response = await getUsers(findOneURL);
-		expect(response.status).toBe(authErrorMessages.UnAuthenticated['statusCode']);
-		expect(response.body.message).toBe(authErrorMessages.UnAuthenticated['message']);
+		expect(response.status).toBe(authErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authErrorMessages.UnAuthenticated.message);
 	});
 
 	it('return 400 for find one user with empty filter queries', async () => {
@@ -72,8 +72,8 @@ describe('User profile tests', () => {
 		const findOneOption = { mobile: users[0].mobile };
 		const filterQuery = {};
 		const response = await requestWithAuth(findOneOption, filterQuery, findOneURL);
-		expect(response.status).toBe(profileErrorMessages.EmptyFilterQuery['statusCode']);
-		expect(response.body.message).toBe(profileErrorMessages.EmptyFilterQuery['message']);
+		expect(response.status).toBe(profileErrorMessages.EmptyFilterQuery.statusCode);
+		expect(response.body.message).toBe(profileErrorMessages.EmptyFilterQuery.message);
 	});
 
 	it('return 404 for find one user with wrong filter queries', async () => {
@@ -81,8 +81,8 @@ describe('User profile tests', () => {
 		const findOneOption = { mobile: users[0].mobile };
 		const filterQuery = { firstname: 'wrong firstname' };
 		const response = await requestWithAuth(findOneOption, filterQuery, findOneURL);
-		expect(response.status).toBe(profileErrorMessages.UserNotFound['statusCode']);
-		expect(response.body.message).toBe(profileErrorMessages.UserNotFound['message']);
+		expect(response.status).toBe(profileErrorMessages.UserNotFound.statusCode);
+		expect(response.body.message).toBe(profileErrorMessages.UserNotFound.message);
 	});
 
 	it('return 200 for find one user with correct filter queries', async () => {

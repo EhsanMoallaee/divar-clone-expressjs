@@ -46,8 +46,8 @@ class AuthController {
 	logout = catchAsyncErrors(async (req, res) => {
 		return res
 			.clearCookie(CookieNames.XAuthToken)
-			.status(authSuccessMessages.LoggedOutSuccessfully['statusCode'])
-			.json({ message: authSuccessMessages.LoggedOutSuccessfully['message'] });
+			.status(authSuccessMessages.LoggedOutSuccessfully.statusCode)
+			.json({ message: authSuccessMessages.LoggedOutSuccessfully.message });
 	});
 }
 
