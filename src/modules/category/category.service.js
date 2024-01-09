@@ -1,3 +1,4 @@
+import { isValidObjectId } from 'mongoose';
 import AppError from '../errorHandling/app.error.js';
 import categoryErrorMessages from './messages/category.errorMessages.js';
 import CategoryRepository from './model/category.repository.js';
@@ -9,8 +10,8 @@ class CategoryService {
 		this.#CategoryRepository = CategoryRepository;
 	}
 
-	create = async (data) => {
-		const { error } = CategoryValidator.addCategoryValidator(data);
+	create = async (categoryDTO) => {
+		const { error } = CategoryValidator.addCategoryValidator(categoryDTO);
 		if (error) {
 			const errorMessage = error.message;
 			if (errorMessage.endsWith('is not allowed')) {
@@ -25,7 +26,26 @@ class CategoryService {
 				);
 			}
 		}
-		const category = await this.#CategoryRepository.create(data);
+		if (categoryDTO?.parentId && isValidObjectId(categoryDTO.parentId)) {
+			const foundCategory = await this.checkExistCategory(categoryDTO?.parentId);
+			if (!foundCategory)
+				throw new AppError(
+					categoryErrorMessages.ParentCategoryDidntFound['message'],
+					categoryErrorMessages.ParentCategoryDidntFound['statusCode']
+				);
+			categoryDTO.parentsIdArray = [...foundCategory.parentsIdArray, categoryDTO.parentId];
+		}
+		const category = await this.#CategoryRepository.create(categoryDTO);
+		return category;
+	};
+
+	findById = async (categoryId) => {
+		const category = await this.checkExistCategory(categoryId);
+		if (!category)
+			throw new AppError(
+				categoryErrorMessages.CategoryDidntFound['message'],
+				categoryErrorMessages.CategoryDidntFound['statusCode']
+			);
 		return category;
 	};
 
@@ -38,6 +58,11 @@ class CategoryService {
 			);
 		}
 		return categoryies;
+	};
+
+	checkExistCategory = async (categoryId) => {
+		const category = await this.#CategoryRepository.findOneById(categoryId);
+		return category;
 	};
 }
 

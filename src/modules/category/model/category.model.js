@@ -3,7 +3,7 @@ import { Schema, model, Types } from 'mongoose';
 const categorySchema = new Schema(
 	{
 		title: { type: String, required: true, unique: true },
-		slug: { type: String, required: true, unique: true },
+		slug: { type: String, required: true, unique: true, index: true },
 		desc: { type: String, required: true },
 		parentId: {
 			type: Types.ObjectId,

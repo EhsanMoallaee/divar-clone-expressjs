@@ -1,6 +1,6 @@
 import catchAsyncErrors from '../errorHandling/catch.asyncErrors.js';
 import categoryService from './category.service.js';
-import categorySuccessMessages from './messages/category.successMessages.js';
+// import categorySuccessMessages from './messages/category.successMessages.js';
 
 class CategoryController {
 	#CategoryService;
@@ -9,8 +9,8 @@ class CategoryController {
 	}
 
 	create = catchAsyncErrors(async (req, res) => {
-		const data = req.body;
-		const result = await this.#CategoryService.create(data);
+		const categoryDTO = req.body;
+		const result = await this.#CategoryService.create(categoryDTO);
 		return res.status(201).json(result);
 	});
 

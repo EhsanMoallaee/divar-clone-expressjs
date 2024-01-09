@@ -6,7 +6,7 @@ const sendErrorDevelopmentMode = (err, res) => {
 		const duplicateMessage = err.message.split('{')[1].replace('}', ' ').replace('"', '').replace('"', '').trim();
 		console.error(chalk.red('Duplicate :', duplicateMessage));
 		err.message = `قبلا ثبت شده و نمیتواند تکراری باشد ${duplicateMessage} مقدار فیلد`;
-	} else if (err && err.message.startsWith('Cast to ObjectId failed for value')) {
+	} else if (err && err.message.includes('Cast to ObjectId failed for value')) {
 		err.message = 'آی دی ارسال شده صحیح نمیباشد';
 		console.error(chalk.red('ObjectId failed :', err.message));
 	} else if (err && (err.message.startsWith('invalid signature') || err.message === 'jwt malformed')) {
@@ -37,7 +37,7 @@ const sendErrorProductionMode = (err, res) => {
 		const duplicateMessage = err.message.split('{')[1].replace('}', ' ').replace('"', '').replace('"', '').trim();
 		err.message = `قبلا ثبت شده و نمیتواند تکراری باشد ${duplicateMessage} مقدار فیلد`;
 		statusCode = 409;
-	} else if (err && err.message.startsWith('Cast to ObjectId failed for value')) {
+	} else if (err && err.message.includes('Cast to ObjectId failed for value')) {
 		err.message = 'مقادیر مورد نیاز به درستی ارسال نشده است';
 		statusCode = 400;
 	} else if (err && (err.message.startsWith('invalid signature') || err.message === 'jwt malformed')) {
