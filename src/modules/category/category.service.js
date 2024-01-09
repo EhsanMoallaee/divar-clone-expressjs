@@ -1,4 +1,6 @@
 import { isValidObjectId } from 'mongoose';
+import slugify from 'slugify';
+
 import AppError from '../errorHandling/app.error.js';
 import categoryErrorMessages from './messages/category.errorMessages.js';
 import CategoryRepository from './model/category.repository.js';
@@ -35,6 +37,7 @@ class CategoryService {
 				);
 			categoryDTO.parentsIdArray = [...foundCategory.parentsIdArray, categoryDTO.parentId];
 		}
+		categoryDTO.slug = slugify(categoryDTO.slug, { remove: /[*+~.()'"!?_^#&:@]/g });
 		const category = await this.#CategoryRepository.create(categoryDTO);
 		return category;
 	};
