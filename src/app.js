@@ -1,5 +1,6 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import helmet from 'helmet';
@@ -15,6 +16,7 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(helmet());
+app.use(cors());
 app.disable('x-powered-by');
 app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 app.use(express.urlencoded({ extended: true }));
