@@ -8,7 +8,7 @@ const categorySchema = new Schema(
 		icon: { type: String },
 		parentId: {
 			type: Types.ObjectId,
-			default: null,
+			default: undefined,
 			ref: 'category',
 		},
 		parentsIdArray: { type: [Types.ObjectId], default: [] },
@@ -21,6 +21,13 @@ categorySchema.virtual('children', {
 	localField: '_id',
 	foreignField: 'parentId',
 });
+
+function autoPopulate(next) {
+	this.populate([{ path: 'children' }]);
+	next();
+}
+
+categorySchema.pre('find', autoPopulate).pre('findOne', autoPopulate);
 
 const CategoryModel = model('category', categorySchema);
 

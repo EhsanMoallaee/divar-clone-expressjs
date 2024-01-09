@@ -54,7 +54,10 @@ class CategoryService {
 	};
 
 	fetchAll = async () => {
-		const categoryies = await this.#CategoryRepository.find({}, { __v: 0, createdAt: 0, updatedAt: 0 });
+		const categoryies = await this.#CategoryRepository.find(
+			{ parentId: { $exists: false } },
+			{ __v: 0, createdAt: 0, updatedAt: 0 }
+		);
 		if (!categoryies || categoryies.length == 0) {
 			throw new AppError(
 				categoryErrorMessages.CategoriesDidntFound.message,
