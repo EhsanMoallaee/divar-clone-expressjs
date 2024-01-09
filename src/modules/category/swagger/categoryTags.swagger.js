@@ -1,0 +1,5 @@
+/**
+ * @swagger
+ * tags:
+ *   -  name: Category
+ */

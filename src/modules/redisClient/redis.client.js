@@ -1,6 +1,5 @@
 import Redis from 'ioredis';
-import dotenv from 'dotenv';
-dotenv.config();
+
 const { REDIS_HOST, REDIS_PORT, REDIS_DB, REDIS_USERNAME, REDIS_PASSWORD } = process.env;
 
 class RedisSingleton {

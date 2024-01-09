@@ -16,7 +16,7 @@ function swaggerConfig(app) {
 				},
 			],
 		},
-		apis: ['./src/modules/**/*.swagger.js', './src/modules/**/*.schemas.js', './src/modules/**/*.definitions.js'],
+		apis: ['./src/**/*.swagger.js', './src/**/*.schemas.js', './src/**/*.definitions.js'],
 	});
 
 	const swagger = swaggerUi.setup(swaggerDocument, {});

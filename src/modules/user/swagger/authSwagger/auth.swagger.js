@@ -109,7 +109,7 @@
  *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
-// Login (check OTPCode)
+// Login (Confirm - check OTPCode)
 /**
  * @swagger
  * /api/users/auth/v1/login:
