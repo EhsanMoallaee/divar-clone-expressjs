@@ -1,19 +1,88 @@
+import chalk from 'chalk';
+
 const sendErrorDevelopmentMode = (err, res) => {
 	const statusCode = err.statusCode || 500;
+	if (err && err.message.startsWith('E11000 duplicate key')) {
+		const duplicateMessage = err.message.split('{')[1].replace('}', ' ').replace('"', '').replace('"', '').trim();
+		console.error(chalk.red('Duplicate :', duplicateMessage));
+		err.message = `قبلا ثبت شده و نمیتواند تکراری باشد ${duplicateMessage} مقدار فیلد`;
+	} else if (err && err.message.startsWith('Cast to ObjectId failed for value')) {
+		err.message = 'آی دی ارسال شده صحیح نمیباشد';
+		console.error(chalk.red('ObjectId failed :', err.message));
+	} else if (err && (err.message.startsWith('invalid signature') || err.message === 'jwt malformed')) {
+		err.message = 'خطای رمزنگاری توکن';
+		console.error(chalk.red('Token Signature :', err.message));
+		res.header('access_token', '');
+		res.cookie('x-auth-token', '', {
+			maxAge: 0,
+			httpOnly: true,
+			sameSite: 'none',
+			secure: true,
+		});
+		res.cookie('register-token', '', {
+			maxAge: 0,
+			httpOnly: true,
+			sameSite: 'none',
+			secure: true,
+		});
+		res.cookie('login-token', '', {
+			maxAge: 0,
+			httpOnly: true,
+			sameSite: 'none',
+			secure: true,
+		});
+	} else {
+		console.error(chalk.red(err.message));
+	}
 	return res.status(statusCode).json({
-		statusCode: statusCode,
-		success: false,
 		message: err.message,
 		stack: err.stack,
 	});
 };
 
 const sendErrorProductionMode = (err, res) => {
-	const statusCode = err.statusCode || 500;
+	let statusCode = err.statusCode || 500;
+	if (err.isOperational) {
+		return res.status(statusCode).json({
+			message: err.message,
+		});
+	} else if (err.message.startsWith('E11000 duplicate key')) {
+		const duplicateMessage = err.message.split('{')[1].replace('}', ' ').replace('"', '').replace('"', '').trim();
+		err.message = `قبلا ثبت شده و نمیتواند تکراری باشد ${duplicateMessage} مقدار فیلد`;
+		statusCode = 409;
+	} else if (err && err.message.startsWith('Cast to ObjectId failed for value')) {
+		err.message = 'مقادیر مورد نیاز به درستی ارسال نشده است';
+		statusCode = 400;
+		console.error(chalk.red('ObjectId failed :', err.message));
+	} else if (err && (err.message.startsWith('invalid signature') || err.message === 'jwt malformed')) {
+		err.message =
+			'مشکلی سمت سرور به وجود آمده است، لطفا لحظاتی دیگر مجددا تلاش بفرمایید ، درصورت برطرف نشدن مشکل با پشتیبانی تماس بگیرید';
+		console.error(chalk.red('Token Signature :', err.message));
+		res.header('access_token', '');
+		res.cookie('x-auth-token', '', {
+			maxAge: 0,
+			httpOnly: true,
+			sameSite: 'none',
+			secure: true,
+		});
+		res.cookie('register-token', '', {
+			maxAge: 0,
+			httpOnly: true,
+			sameSite: 'none',
+			secure: true,
+		});
+		res.cookie('login-token', '', {
+			maxAge: 0,
+			httpOnly: true,
+			sameSite: 'none',
+			secure: true,
+		});
+	} else {
+		err.message =
+			'مشکلی سمت سرور به وجود آمده است، لطفا لحظاتی دیگر مجددا تلاش بفرمایید ، درصورت برطرف نشدن مشکل با پشتیبانی تماس بگیرید';
+	}
 	return res.status(statusCode).json({
-		statusCode: statusCode,
-		success: false,
-		message: statusCode == 500 ? 'خطایی سمت سرور ایجاد شده است لطفا لحظاتی دیگر مجددا تلاش بفرمایید' : err.message,
+		message: err.message,
 	});
 };
 

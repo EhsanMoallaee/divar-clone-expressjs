@@ -1,5 +1,6 @@
 import catchAsyncErrors from '../errorHandling/catch.asyncErrors.js';
 import categoryService from './category.service.js';
+import categorySuccessMessages from './messages/category.successMessages.js';
 
 class CategoryController {
 	#CategoryService;
@@ -15,7 +16,10 @@ class CategoryController {
 
 	fetchAll = catchAsyncErrors(async (req, res) => {
 		const categories = await this.#CategoryService.fetchAll();
-		return res.status(200).json({ categories });
+		return res.status(categorySuccessMessages.CategoryCreatedSuccessfully['statusCode']).json({
+			message: categorySuccessMessages.CategoryCreatedSuccessfully['message'],
+			categories,
+		});
 	});
 }
 
