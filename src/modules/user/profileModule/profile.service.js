@@ -9,7 +9,7 @@ class ProfileService {
 	}
 
 	findOneUser = async (filterQuery) => {
-		const user = await this.#UserRepository.findOne(filterQuery);
+		const user = await this.#UserRepository.findOne(filterQuery, { __v: 0, updatedAt: 0 });
 		if (!user)
 			throw new AppError(profileErrorMessages.UserNotFound.message, profileErrorMessages.UserNotFound.statusCode);
 		return user;

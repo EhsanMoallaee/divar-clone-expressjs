@@ -1,4 +1,4 @@
-// Registeration Request (Send OTPCode)
+// Info: Registeration Request (Send OTPCode)
 /**
  * @swagger
  * /api/users/auth/v1/registerationRequest:
@@ -35,7 +35,7 @@
  *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
-// Register (check OTPCode)
+// Info: Register (check OTPCode)
 /**
  * @swagger
  * /api/users/auth/v1/register:
@@ -72,7 +72,7 @@
  *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
-// Login Request (Send OTPCode)
+// Info: Login Request (Send OTPCode)
 /**
  * @swagger
  * /api/users/auth/v1/loginRequest:
@@ -109,7 +109,7 @@
  *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
-// Login (Confirm - check OTPCode)
+// Info: Login (Confirm - check OTPCode)
 /**
  * @swagger
  * /api/users/auth/v1/login:
@@ -146,7 +146,7 @@
  *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
-// Logout
+// Info: Logout
 /**
  * @swagger
  * /api/users/auth/v1/logout:

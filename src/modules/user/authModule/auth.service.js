@@ -43,7 +43,10 @@ class AuthService {
 					authErrorMessages.OtpcodeSendingFailed.statusCode
 				);
 			}
-			return { message: authSuccessMessages.OTPSentSuccessfully.message };
+			return {
+				message: authSuccessMessages.OTPSentSuccessfully.message,
+				statusCode: authSuccessMessages.OTPSentSuccessfully.statusCode,
+			};
 		}
 		throw new AppError(authErrorMessages.DuplicateMobile.message, authErrorMessages.DuplicateMobile.statusCode);
 	};
@@ -72,7 +75,11 @@ class AuthService {
 			};
 			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
 			await redisSingletonInstance.deleteData(mobile);
-			return { message: authSuccessMessages.RegisteredSuccessfully.message, token };
+			return {
+				message: authSuccessMessages.RegisteredSuccessfully.message,
+				statusCode: authSuccessMessages.OTPSentSuccessfully.statusCode,
+				token,
+			};
 		}
 		throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
 	};
@@ -103,7 +110,10 @@ class AuthService {
 				authErrorMessages.OtpcodeSendingFailed.statusCode
 			);
 		}
-		return { message: authSuccessMessages.OTPSentSuccessfully.message };
+		return {
+			message: authSuccessMessages.OTPSentSuccessfully.message,
+			statusCode: authSuccessMessages.OTPSentSuccessfully.statusCode,
+		};
 	};
 
 	login = async (data) => {
@@ -123,7 +133,11 @@ class AuthService {
 			};
 			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
 			await redisSingletonInstance.deleteData(mobile);
-			return { message: authSuccessMessages.LoggedInSuccessfully.message, token };
+			return {
+				message: authSuccessMessages.LoggedInSuccessfully.message,
+				statusCode: authSuccessMessages.OTPSentSuccessfully.statusCode,
+				token,
+			};
 		}
 		throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
 	};

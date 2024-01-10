@@ -1,6 +1,5 @@
 import catchAsyncErrors from '../errorHandling/catch.asyncErrors.js';
 import categoryService from './category.service.js';
-// import categorySuccessMessages from './messages/category.successMessages.js';
 
 class CategoryController {
 	#CategoryService;

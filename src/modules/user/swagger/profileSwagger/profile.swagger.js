@@ -1,4 +1,4 @@
-// Who am I?
+// Info: Who am I?
 /**
  * @swagger
  * /api/users/profile/v1/whoami:
@@ -26,7 +26,7 @@
  *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
-// Find one user
+// Info: Find one user
 /**
  * @swagger
  * /api/users/profile/v1/findOne:

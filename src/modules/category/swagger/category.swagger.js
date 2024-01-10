@@ -1,4 +1,4 @@
-// Create New Category
+// Info: Create New Category
 /**
  * @swagger
  * /api/category/v1/create:
@@ -35,7 +35,7 @@
  *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
 
-// Fetch All Categories
+// Info: Fetch All Categories
 /**
  * @swagger
  * /api/category/v1/fetchAll:

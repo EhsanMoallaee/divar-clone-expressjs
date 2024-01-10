@@ -1,3 +1,4 @@
+// Info: Registeration Request
 /**
  * @swagger
  *  definitions:
@@ -9,6 +10,7 @@
  *                  example: "رمز یکبار مصرف به شماره موبایل شما ارسال گردید"
  */
 
+// Info: Register
 /**
  * @swagger
  *  definitions:

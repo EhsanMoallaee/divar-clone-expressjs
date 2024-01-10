@@ -1,3 +1,4 @@
+// Info: Registeration Request
 /**
  * @swagger
  *  components:
@@ -20,6 +21,7 @@
  *                      description: mobile number 09...
  */
 
+// Info: Register
 /**
  * @swagger
  *  components:

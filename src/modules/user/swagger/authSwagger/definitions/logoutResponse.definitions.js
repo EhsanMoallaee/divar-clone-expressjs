@@ -1,3 +1,4 @@
+// Info: Logout
 /**
  * @swagger
  *  definitions:

@@ -1,9 +1,10 @@
 import config from 'config';
+
 import AuthService from './auth.service.js';
-import catchAsyncErrors from '../../errorHandling/catch.asyncErrors.js';
-import preventCSRFAttack from '../functions/preventCsrfAttck/prevent.csrfAttack.js';
-import CookieNames from '../../../common/constants/cookies.enum.js';
 import authSuccessMessages from './messages/auth.successMessages.js';
+import catchAsyncErrors from '../../errorHandling/catch.asyncErrors.js';
+import CookieNames from '../../../common/constants/cookies.enum.js';
+import preventCSRFAttack from '../functions/preventCsrfAttck/prevent.csrfAttack.js';
 
 class AuthController {
 	#AuthService;
@@ -13,34 +14,34 @@ class AuthController {
 
 	registerationRequest = catchAsyncErrors(async (req, res) => {
 		const userData = req.body;
-		const result = await this.#AuthService.registerationRequest(userData);
-		return res.status(200).json(result);
+		const { message, statusCode } = await this.#AuthService.registerationRequest(userData);
+		return res.status(statusCode).json({ message });
 	});
 
 	register = catchAsyncErrors(async (req, res) => {
 		const data = req.body;
-		const result = await this.#AuthService.register(data);
+		const { message, statusCode, token } = await this.#AuthService.register(data);
 		const xAuthCookieOption = config.get('cookieOptions.login');
-		res.cookie(CookieNames.XAuthToken, result.token, xAuthCookieOption);
-		return res.status(201).json({ message: result.message });
+		res.cookie(CookieNames.XAuthToken, token, xAuthCookieOption);
+		return res.status(statusCode).json({ message });
 	});
 
 	loginRequest = catchAsyncErrors(async (req, res) => {
 		const xAuthCookie = req.signedCookies[CookieNames.XAuthToken];
 		if (xAuthCookie) await preventCSRFAttack(xAuthCookie);
 		const { mobile } = req.body;
-		const result = await this.#AuthService.loginRequest(mobile);
-		return res.status(200).json(result);
+		const { message, statusCode } = await this.#AuthService.loginRequest(mobile);
+		return res.status(statusCode).json({ message });
 	});
 
 	login = catchAsyncErrors(async (req, res) => {
 		const xAuthCookie = req.signedCookies[CookieNames.XAuthToken];
 		if (xAuthCookie) await preventCSRFAttack(xAuthCookie);
 		const data = req.body;
-		const result = await this.#AuthService.login(data);
+		const { message, statusCode, token } = await this.#AuthService.login(data);
 		const xAuthCookieOption = config.get('cookieOptions.login');
-		res.cookie(CookieNames.XAuthToken, result.token, xAuthCookieOption);
-		return res.status(200).json({ message: result.message });
+		res.cookie(CookieNames.XAuthToken, token, xAuthCookieOption);
+		return res.status(statusCode).json({ message });
 	});
 
 	logout = catchAsyncErrors(async (req, res) => {

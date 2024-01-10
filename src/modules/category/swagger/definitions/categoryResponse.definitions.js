@@ -1,3 +1,4 @@
+// Info: Create Category Response Success (response format):
 /**
  * @swagger
  *  definitions:
@@ -29,7 +30,7 @@
  *                  example: ["parentId-1", "parentId-2", "parentId-3"]
  */
 
-// List Of Categories (response format):
+// Info: List Of Categories (response format):
 /**
  * @swagger
  *  definitions:

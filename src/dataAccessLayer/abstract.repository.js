@@ -1,12 +1,13 @@
 import { Types } from 'mongoose';
 
 export default class AbstractRepository {
+	#model;
 	constructor(model) {
-		this.model = model;
+		this.#model = model;
 	}
 
 	create = async (document) => {
-		const newDocument = this.model({
+		const newDocument = this.#model({
 			...document,
 			_id: new Types.ObjectId(),
 		});
@@ -14,17 +15,17 @@ export default class AbstractRepository {
 	};
 
 	findOne = async (filterQuery, options = {}) => {
-		const document = await this.model.findOne(filterQuery, options, { lean: true });
+		const document = await this.#model.findOne(filterQuery, options, { lean: true });
 		return document;
 	};
 
 	findOneById = async (id, options = {}) => {
-		const document = await this.model.findById(id, options, { lean: true });
+		const document = await this.#model.findById(id, options, { lean: true });
 		return document;
 	};
 
 	find = async (filterQuery = {}, options = {}) => {
-		const documents = await this.model.find(filterQuery, options, { lean: true });
+		const documents = await this.#model.find(filterQuery, options, { lean: true });
 		return documents;
 	};
 }
