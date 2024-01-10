@@ -1,21 +1,21 @@
-import dotenv from 'dotenv';
 import request from 'supertest';
-import { sign } from 'cookie-signature';
 
 import app from '../../src/app.js';
 import authErrorMessages from '../../src/modules/user/authModule/messages/auth.errorMessages.js';
 import authSuccessMessages from '../../src/modules/user/authModule/messages/auth.successMessages.js';
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
-import CookieNames from '../../src/common/constants/cookies.enum.js';
 import redisSingletonInstance from '../../src/modules/redisClient/redis.client.js';
-import tokenGenerator from '../../src/modules/user/functions/jwtToken/jwtToken.generator.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
-import UserRepository from '../../src/modules/user/model/user.repository.js';
-
+import { createUser, getRequestWithAuth } from '../../src/common/testsFunctions/request.withAuth.js';
+import dotenv from 'dotenv';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
-
 beforeAll(async () => {
 	new ConnectMongodb();
+	await UserModel.deleteMany({});
+	await redisSingletonInstance.flushAll();
+});
+
+beforeEach(async () => {
 	await UserModel.deleteMany({});
 	await redisSingletonInstance.flushAll();
 });
@@ -30,25 +30,18 @@ const correctCredentials = {
 	lastname: 'lastname',
 	mobile: '09375338875',
 };
+
 const incorrectCredentials = {
 	firstname: 'firstname',
 	lastname: 'lastname',
 	mobile: '123456',
 };
 
-const cookieSecretKey = process.env.COOKIE_SECRET_KEY;
 const registerationRequestURL = '/api/v1/users/auth/registerationRequest';
 const registerURL = '/api/v1/users/auth/register';
 const loginRequestURL = '/api/v1/users/auth/loginRequest';
 const loginURL = '/api/v1/users/auth/login';
 const logoutURL = '/api/v1/users/auth/logout';
-
-const generateToken = async (payload) => {
-	const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
-	const tokenOptions = { expiresIn: 300000 };
-	const xAuthToken = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
-	return xAuthToken;
-};
 
 describe('Authentication Register tests', () => {
 	it('Registeration request: returns 200 with correct mobile,first and last name values', async () => {
@@ -100,7 +93,7 @@ describe('Authentication Register tests', () => {
 
 describe('Authentication Login tests', () => {
 	it('Login request: returns 200 with correct mobile number', async () => {
-		await UserRepository.create(correctCredentials);
+		await createUser(correctCredentials);
 		const response = await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
 		expect(response.status).toBe(authSuccessMessages.OTPSentSuccessfully.statusCode);
 		expect(response.body.message).toBe(authSuccessMessages.OTPSentSuccessfully.message);
@@ -113,7 +106,7 @@ describe('Authentication Login tests', () => {
 	});
 
 	it('Login request: returns 400 if user send login request again before otp code expire', async () => {
-		await UserRepository.create(correctCredentials);
+		await createUser(correctCredentials);
 		await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
 		const response = await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
 		expect(response.status).toBe(authErrorMessages.SpamAttack.statusCode);
@@ -121,7 +114,7 @@ describe('Authentication Login tests', () => {
 	});
 
 	it('Login (Confirm): returns 200 with correct otp code', async () => {
-		const user = await UserRepository.create(correctCredentials);
+		const user = await createUser(correctCredentials);
 		await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
 		const data = await redisSingletonInstance.getData(user.mobile);
 		const otpCode = JSON.parse(data).otpCode;
@@ -131,7 +124,7 @@ describe('Authentication Login tests', () => {
 	});
 
 	it('Login (Confirm): returns 400 with incorrect otp code', async () => {
-		const user = await UserRepository.create(correctCredentials);
+		const user = await createUser(correctCredentials);
 		await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
 		const data = await redisSingletonInstance.getData(user.mobile);
 		const otpCode = JSON.parse(data).otpCode + 1;
@@ -143,16 +136,8 @@ describe('Authentication Login tests', () => {
 
 describe('Authentication Logout tests', () => {
 	it('Logout: returns 200 when user was logged in', async () => {
-		const user = await UserRepository.create(correctCredentials);
-		await request(app).post(loginRequestURL).send({ mobile: correctCredentials.mobile });
-		const data = await redisSingletonInstance.getData(user.mobile);
-		const otpCode = JSON.parse(data).otpCode;
-		await request(app).post(loginURL).send({ mobile: user.mobile, otpCode });
-
-		const xAuthToken = await generateToken({ id: user._id });
-		const response = await request(app)
-			.get(logoutURL)
-			.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+		const user = await createUser(correctCredentials);
+		const response = await getRequestWithAuth(user._id, {}, logoutURL);
 		expect(response.status).toBe(authSuccessMessages.LoggedOutSuccessfully.statusCode);
 		expect(response.body.message).toBe(authSuccessMessages.LoggedOutSuccessfully.message);
 	});

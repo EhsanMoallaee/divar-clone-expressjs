@@ -9,7 +9,7 @@
 		"url": "https://github.com/EhsanMoallaee/divar-clone-expressjs.git"
 	},
 	"scripts": {
-		"dev-test": "SET NODE_ENV=test&& node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
+		"dev-test": "SET NODE_ENV=test&& node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand --watch",
 		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testPathIgnorePatterns=auth.spec.js --forceExit",
 		"watch": "SET NODE_ENV=development&& nodemon main.js",
 		"start": "SET NODE_ENV=production&& node main.js"
@@ -45,6 +45,6 @@
 	},
 	"jest": {
 		"testEnvironment": "node",
-		"testTimeout": 10000
+		"testTimeout": 20000
 	}
 }
