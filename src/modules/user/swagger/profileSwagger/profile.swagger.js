@@ -1,7 +1,7 @@
 // Info: Who am I?
 /**
  * @swagger
- * /api/users/profile/v1/whoami:
+ * /api/v1/users/profile/whoami:
  *  get:
  *      tags: [--Profile]
  *      summary: Check user is online, return his profile
@@ -29,7 +29,7 @@
 // Info: Find one user
 /**
  * @swagger
- * /api/users/profile/v1/findOne:
+ * /api/v1/users/profile/findOne:
  *  get:
  *      tags: [--Profile]
  *      summary: Find one user with conditions in query params

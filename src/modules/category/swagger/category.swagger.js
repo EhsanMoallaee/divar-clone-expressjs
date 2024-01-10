@@ -1,7 +1,7 @@
 // Info: Create New Category
 /**
  * @swagger
- * /api/category/v1/create:
+ * /api/v1/category:
  *  post:
  *      tags: [Category]
  *      summary: Create category
@@ -38,7 +38,7 @@
 // Info: Fetch All Categories
 /**
  * @swagger
- * /api/category/v1/fetchAll:
+ * /api/v1/category:
  *  get:
  *      tags: [Category]
  *      summary: Fetch all categories

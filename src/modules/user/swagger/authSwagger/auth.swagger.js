@@ -1,7 +1,7 @@
 // Info: Registeration Request (Send OTPCode)
 /**
  * @swagger
- * /api/users/auth/v1/registerationRequest:
+ * /api/v1/users/auth/registerationRequest:
  *  post:
  *      tags: [--Auth]
  *      summary: User request for registration
@@ -38,7 +38,7 @@
 // Info: Register (check OTPCode)
 /**
  * @swagger
- * /api/users/auth/v1/register:
+ * /api/v1/users/auth/register:
  *  post:
  *      tags: [--Auth]
  *      summary: Rregister user
@@ -75,7 +75,7 @@
 // Info: Login Request (Send OTPCode)
 /**
  * @swagger
- * /api/users/auth/v1/loginRequest:
+ * /api/v1/users/auth/loginRequest:
  *  post:
  *      tags: [--Auth]
  *      summary: User request for login
@@ -112,7 +112,7 @@
 // Info: Login (Confirm - check OTPCode)
 /**
  * @swagger
- * /api/users/auth/v1/login:
+ * /api/v1/users/auth/login:
  *  post:
  *      tags: [--Auth]
  *      summary: Login user
@@ -149,7 +149,7 @@
 // Info: Logout
 /**
  * @swagger
- * /api/users/auth/v1/logout:
+ * /api/v1/users/auth/logout:
  *  get:
  *      tags: [--Auth]
  *      summary: logout user
