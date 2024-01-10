@@ -11,6 +11,8 @@ categoryRouter_v1.post(
 	[authenticationGuard, authorizationGuard([Roles.SUPERADMIN, Roles.ADMIN])],
 	categoryController.create
 ); // <domain>/api/v1/category
+categoryRouter_v1.get('/:catId', categoryController.findById); // <domain>/api/v1/category/catId
 categoryRouter_v1.get('/', categoryController.fetchAll); // <domain>/api/v1/category
+categoryRouter_v1.delete('/:catId', categoryController.deleteById); // <domain>/api/v1/category/catId
 
 export default categoryRouter_v1;

@@ -1,5 +1,6 @@
 import catchAsyncErrors from '../errorHandling/catch.asyncErrors.js';
 import categoryService from './category.service.js';
+import categorySuccessMessages from './messages/category.successMessages.js';
 
 class CategoryController {
 	#CategoryService;
@@ -24,6 +25,14 @@ class CategoryController {
 		return res.status(200).json({
 			categories,
 		});
+	});
+
+	deleteById = catchAsyncErrors(async (req, res) => {
+		const { catId } = req.params;
+		await this.#CategoryService.deleteById(catId);
+		return res
+			.status(categorySuccessMessages.CategoryDeletedSuccessfully.statusCode)
+			.json({ message: categorySuccessMessages.CategoryDeletedSuccessfully.message });
 	});
 }
 

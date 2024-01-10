@@ -59,17 +59,27 @@ class CategoryService {
 	};
 
 	fetchAll = async () => {
-		const categoryies = await this.#CategoryRepository.find(
+		const categories = await this.#CategoryRepository.find(
 			{ parentId: { $exists: false } },
 			{ __v: 0, createdAt: 0, updatedAt: 0 }
 		);
-		if (!categoryies || categoryies.length == 0) {
+		if (!categories || categories.length == 0) {
 			throw new AppError(
 				categoryErrorMessages.CategoriesDidntFound.message,
 				categoryErrorMessages.CategoriesDidntFound.statusCode
 			);
 		}
-		return categoryies;
+		return categories;
+	};
+
+	deleteById = async (catId) => {
+		const category = await this.#CategoryRepository.deleteOneById(catId);
+		if (!category) {
+			throw new AppError(
+				categoryErrorMessages.CategoriesDidntFound.message,
+				categoryErrorMessages.CategoriesDidntFound.statusCode
+			);
+		}
 	};
 
 	checkExistCategory = async (categoryId) => {
