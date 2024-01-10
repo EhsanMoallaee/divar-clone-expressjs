@@ -1,7 +1,7 @@
 const authorizationErrorMessages = {
 	UnAuthorized: {
-		message: 'لطفا ابتدا وارد حساب کاربری خود شوید',
-		statusCode: 401,
+		message: '!شما اجازه دسترسی به این بخش را ندارید',
+		statusCode: 403,
 	},
 };
 
