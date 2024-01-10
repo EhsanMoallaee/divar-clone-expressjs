@@ -13,6 +13,12 @@ class CategoryController {
 		return res.status(201).json(category);
 	});
 
+	findById = catchAsyncErrors(async (req, res) => {
+		const { catId } = req.params;
+		const category = await this.#CategoryService.findById(catId);
+		return res.status(200).json({ category });
+	});
+
 	fetchAll = catchAsyncErrors(async (req, res) => {
 		const categories = await this.#CategoryService.fetchAll();
 		return res.status(200).json({

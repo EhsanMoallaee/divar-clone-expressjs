@@ -37,11 +37,11 @@ const incorrectCredentials = {
 };
 
 const cookieSecretKey = process.env.COOKIE_SECRET_KEY;
-const registerationRequestURL = '/api/users/auth/v1/registerationRequest';
-const registerURL = '/api/users/auth/v1/register';
-const loginRequestURL = '/api/users/auth/v1/loginRequest';
-const loginURL = '/api/users/auth/v1/login';
-const logoutURL = '/api/users/auth/v1/logout';
+const registerationRequestURL = '/api/v1/users/auth/registerationRequest';
+const registerURL = '/api/v1/users/auth/register';
+const loginRequestURL = '/api/v1/users/auth/loginRequest';
+const loginURL = '/api/v1/users/auth/login';
+const logoutURL = '/api/v1/users/auth/logout';
 
 const generateToken = async (payload) => {
 	const tokenSecretKey = process.env.TOKEN_SECRET_KEY;

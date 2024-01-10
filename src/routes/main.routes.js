@@ -1,10 +1,8 @@
 import { Router } from 'express';
-import userRouter from '../modules/user/routes/user.routes.js';
-import categoryRouter from '../modules/category/routes/category.routes.js';
+import v1_Router from './v1/v1.routes.js';
 
 const mainRouter = Router();
 
-mainRouter.use('/users', userRouter); // <domain>/api/users
-mainRouter.use('/category', categoryRouter); // <domain>/api/category
+mainRouter.use('/v1', v1_Router); // <domain>/api/v1
 
 export default mainRouter;

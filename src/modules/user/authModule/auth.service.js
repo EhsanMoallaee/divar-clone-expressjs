@@ -77,7 +77,7 @@ class AuthService {
 			await redisSingletonInstance.deleteData(mobile);
 			return {
 				message: authSuccessMessages.RegisteredSuccessfully.message,
-				statusCode: authSuccessMessages.OTPSentSuccessfully.statusCode,
+				statusCode: authSuccessMessages.RegisteredSuccessfully.statusCode,
 				token,
 			};
 		}

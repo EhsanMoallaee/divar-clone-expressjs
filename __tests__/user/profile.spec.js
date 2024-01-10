@@ -22,8 +22,8 @@ afterEach(async () => {
 });
 
 const cookieSecretKey = process.env.COOKIE_SECRET_KEY;
-const findOneURL = '/api/users/profile/v1/findOne';
-const whoAmIURL = '/api/users/profile/v1/whoami';
+const findOneURL = '/api/v1/users/profile/findOne';
+const whoAmIURL = '/api/v1/users/profile/whoami';
 
 const addUsers = async (userCount) => {
 	const users = [];

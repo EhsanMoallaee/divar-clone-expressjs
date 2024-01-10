@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../../src/app.js';
 import categoryErrorMessages from '../../src/modules/category/messages/category.errorMessages.js';
-import categorySuccessMessages from '../../src/modules/category/messages/category.successMessages.js';
+// import categorySuccessMessages from '../../src/modules/category/messages/category.successMessages.js';
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import CategoryModel from '../../src/modules/category/model/category.model.js';
 
@@ -35,12 +35,12 @@ const correctParentCategory = {
 	slug: 'category-parent-slug',
 	description: 'category-parent-description',
 };
-const createCategoryURL = '/api/category/v1/create';
+const createCategoryURL = '/api/v1/category';
 
 describe('Create Category tests', () => {
 	it('Create category: returns 201 with correct values', async () => {
 		const response = await request(app).post(createCategoryURL).send(correctCategory);
-		expect(response.status).toBe(categorySuccessMessages.CategoryCreatedSuccessfully.statusCode);
+		expect(response.status).toBe(201);
 		expect(response.body.title).toBe(correctCategory.title);
 		expect(response.body.slug).toBe(correctCategory.slug);
 	});
