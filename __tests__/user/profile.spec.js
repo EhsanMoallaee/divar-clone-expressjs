@@ -31,27 +31,24 @@ describe('User profile tests', () => {
 
 	it('return 400 for find one user with empty filter queries', async () => {
 		const user = await createUser();
-		const findOneOption = { mobile: user.mobile };
 		const filterQuery = {};
-		const response = await getRequestWithAuth(findOneOption, filterQuery, findOneURL);
+		const response = await getRequestWithAuth(user._id, filterQuery, findOneURL);
 		expect(response.status).toBe(profileErrorMessages.EmptyFilterQuery.statusCode);
 		expect(response.body.message).toBe(profileErrorMessages.EmptyFilterQuery.message);
 	});
 
 	it('return 404 for find one user with wrong filter queries', async () => {
 		const user = await createUser();
-		const findOneOption = { mobile: user.mobile };
 		const filterQuery = { firstname: 'wrong firstname' };
-		const response = await getRequestWithAuth(findOneOption, filterQuery, findOneURL);
+		const response = await getRequestWithAuth(user._id, filterQuery, findOneURL);
 		expect(response.status).toBe(profileErrorMessages.UserNotFound.statusCode);
 		expect(response.body.message).toBe(profileErrorMessages.UserNotFound.message);
 	});
 
 	it('return 200 for find one user with correct filter queries', async () => {
 		const user = await createUser();
-		const findOneOption = { mobile: user.mobile };
 		const filterQuery = { firstname: user.firstname, mobile: user.mobile };
-		const response = await getRequestWithAuth(findOneOption, filterQuery, findOneURL);
+		const response = await getRequestWithAuth(user._id, filterQuery, findOneURL);
 		expect(response.status).toBe(200);
 		expect(response.body.mobile).toBe(user.mobile);
 	});

@@ -27,7 +27,6 @@ const generateToken = async (payload) => {
 
 export const createUser = async (userData = userAdminData) => {
 	const user = await UserRepository.create(userData);
-	console.log('🚀 ~ createUser ~ user:', user);
 	return user;
 };
 
