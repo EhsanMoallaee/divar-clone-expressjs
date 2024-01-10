@@ -9,8 +9,8 @@ class CategoryController {
 
 	create = catchAsyncErrors(async (req, res) => {
 		const categoryDTO = req.body;
-		const result = await this.#CategoryService.create(categoryDTO);
-		return res.status(201).json(result);
+		const category = await this.#CategoryService.create(categoryDTO);
+		return res.status(201).json(category);
 	});
 
 	fetchAll = catchAsyncErrors(async (req, res) => {

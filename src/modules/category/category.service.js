@@ -21,6 +21,11 @@ class CategoryService {
 					categoryErrorMessages.FieldIsNotAllowed.message,
 					categoryErrorMessages.FieldIsNotAllowed.statusCode
 				);
+			} else if (categoryErrorMessages[errorMessage]) {
+				throw new AppError(
+					categoryErrorMessages[errorMessage].message,
+					categoryErrorMessages[errorMessage].statusCode
+				);
 			} else {
 				throw new AppError(
 					categoryErrorMessages.ExceptionError.message,
