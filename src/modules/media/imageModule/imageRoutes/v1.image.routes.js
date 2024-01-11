@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import imageController from '../image.controller.js';
+import MediaStoragePathCheck from '../../../../middlewares/mediaPathCheck.middleware.js';
 
 const imageRouter_v1 = Router();
 
-// <domain>/api/v1/users/auth
+// <domain>/api/v1/media/image
 imageRouter_v1.get('/', imageController.fetchAll);
+imageRouter_v1.post('/uploadImage', [MediaStoragePathCheck('image')], imageController.uploadImage);
 
 export default imageRouter_v1;
