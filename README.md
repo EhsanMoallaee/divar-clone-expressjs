@@ -27,6 +27,10 @@ To run this project, you will need to add the following environment variables to
 
 `REDIS_PORT`
 
+`REDIS_USERNAME`
+
+`REDIS_PASSWORD`
+
 `COOKIE_SECRET_KEY`
 
 `TOKEN_SECRET_KEY`
@@ -60,6 +64,7 @@ or
 ```
 
 Start the server
+
 (For production mode)
 
 ```bash
@@ -82,4 +87,16 @@ or
 
 ```bash
   npm run watch
+```
+
+(For test mode)
+
+```bash
+  yarn dev-test
+```
+
+or
+
+```bash
+  npm run dev-test
 ```
