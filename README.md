@@ -21,11 +21,17 @@ To run this project, you will need to add the following environment variables to
 
 `PORT`
 
-`TEST_DB`
+`DB_URL`
 
-`DEV_DB`
+`REDIS_HOST`
 
-`PROD_DB`
+`REDIS_PORT`
+
+`COOKIE_SECRET_KEY`
+
+`TOKEN_SECRET_KEY`
+
+`KAVENEGAR_API_KEY`
 
 ## Run Locally
 
@@ -54,13 +60,14 @@ or
 ```
 
 Start the server
+(For production mode)
 
 ```bash
-  npm run start
+  npm/yarn run start
 ```
 
-or
+(For development mode)
 
 ```bash
-  yarn start
+  npm/yarn watch
 ```
