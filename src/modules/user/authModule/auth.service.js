@@ -8,6 +8,7 @@ import kavenegarSmsSender from '../functions/kavenegarSmsSender/kavenegar.sendOt
 import redisSingletonInstance from '../../redisClient/redis.client.js';
 import tokenGenerator from '../functions/jwtToken/jwtToken.generator.js';
 import UserRepository from '../model/user.repository.js';
+import { Roles } from '../model/user.model.js';
 
 class AuthService {
 	#UserRepository;
@@ -65,6 +66,7 @@ class AuthService {
 				lastname: getRedisValue.lastname,
 				mobile: getRedisValue.mobile,
 				verifiedMobile: true,
+				role: Roles.USER,
 			};
 			const user = await this.#UserRepository.create(userData);
 			const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
