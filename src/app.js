@@ -6,8 +6,8 @@ import { fileURLToPath } from 'url';
 import helmet from 'helmet';
 import path from 'path';
 
-import mainRouter from './routes/main.routes.js';
 import errorController from './modules/errorHandling/error.controller.js';
+import mainRouter from './routes/main.routes.js';
 import swaggerConfig from './common/swaggerConfig/swagger.config.js';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });

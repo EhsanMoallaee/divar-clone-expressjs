@@ -58,6 +58,16 @@ class CategoryService {
 		return category;
 	};
 
+	findBySlug = async (slug) => {
+		const category = await this.#CategoryRepository.findOne({ slug }, { __v: 0, createdAt: 0, updatedAt: 0 });
+		if (!category)
+			throw new AppError(
+				categoryErrorMessages.CategoryDidntFound.message,
+				categoryErrorMessages.CategoryDidntFound.statusCode
+			);
+		return category;
+	};
+
 	fetchAll = async () => {
 		const categories = await this.#CategoryRepository.find(
 			{ parentId: { $exists: false } },
