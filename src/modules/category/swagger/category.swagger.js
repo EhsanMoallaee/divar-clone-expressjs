@@ -142,3 +142,43 @@
  *                      schema:
  *                          $ref: '#/definitions/Failed_Response_Server_Error'
  */
+
+// Info: Delete One Category By Id
+/**
+ * @swagger
+ * /api/v1/category/{catId}:
+ *  delete:
+ *      tags: [Category]
+ *      summary: Delete category by id
+ *      parameters:
+ *          -   in: path
+ *              name: catId
+ *              type: string
+ *              required: true
+ *              description: Category slug
+ *      responses:
+ *          200:
+ *              description: Success
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Success_Response_Without_Message'
+ *          400:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed_Response_Client_Error'
+ *          404:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Not_Found_Response'
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed_Response_Server_Error'
+ */
