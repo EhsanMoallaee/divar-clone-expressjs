@@ -23,6 +23,10 @@ const categoryErrorMessages = {
 		message: 'ارسال آی دی دسته بندی موردنظر الزامیست',
 		statusCode: 400,
 	},
+	CategorySlugRequired: {
+		message: 'ارسال اسلاگ دسته بندی موردنظر الزامیست',
+		statusCode: 400,
+	},
 	FieldIsNotAllowed: {
 		message: 'لطفا با پشتیبانی سایت تماس بگیرید',
 		statusCode: 403,

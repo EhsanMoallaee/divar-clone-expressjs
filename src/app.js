@@ -33,5 +33,9 @@ app.get('/_health', (req, res) => {
 app.use('/api', mainRouter);
 
 app.use(errorController);
+// eslint-disable-next-line no-unused-vars
+app.use((req, res, next) => {
+	res.status(404).json({ message: 'Page not found' });
+});
 
 export default app;

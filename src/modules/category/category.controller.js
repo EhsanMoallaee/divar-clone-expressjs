@@ -1,5 +1,7 @@
+import AppError from '../errorHandling/app.error.js';
 import catchAsyncErrors from '../errorHandling/catch.asyncErrors.js';
 import categoryService from './category.service.js';
+import categoryErrorMessages from './messages/category.errorMessages.js';
 import categorySuccessMessages from './messages/category.successMessages.js';
 
 class CategoryController {
@@ -16,6 +18,11 @@ class CategoryController {
 
 	findById = catchAsyncErrors(async (req, res) => {
 		const { catId } = req.params;
+		if (!catId)
+			throw new AppError(
+				categoryErrorMessages.CategoryIdRequired.message,
+				categoryErrorMessages.CategoryIdRequired.statusCode
+			);
 		const category = await this.#CategoryService.findById(catId);
 		return res.status(200).json({ category });
 	});

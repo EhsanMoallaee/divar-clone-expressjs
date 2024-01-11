@@ -2,7 +2,7 @@
 /**
  * @swagger
  *  definitions:
- *      Category_Create_Response_Success:
+ *      Category_Response_Success:
  *          type: object
  *          properties:
  *              _id:
@@ -28,6 +28,11 @@
  *                  items:
  *                      type: string
  *                  example: ["parentId-1", "parentId-2", "parentId-3"]
+ *              children:
+ *                  type: array
+ *                  items:
+ *                      type: string
+ *                  example: ["category-1", "category-2", "category-3"]
  */
 
 // Info: List Of Categories (response format):
@@ -40,5 +45,5 @@
  *              categories:
  *                  type: array
  *                  items:
- *                      $ref: '#/definitions/Category_Create_Response_Success'
+ *                      $ref: '#/definitions/Category_Response_Success'
  */

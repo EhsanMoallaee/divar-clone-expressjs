@@ -20,7 +20,7 @@
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/definitions/Category_Create_Response_Success'
+ *                          $ref: '#/definitions/Category_Response_Success'
  *          400:
  *              description: Bad request
  *              content:
@@ -55,6 +55,86 @@
  *                  application/json:
  *                      schema:
  *                          $ref: '#/definitions/Failed_Response_Client_Error'
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed_Response_Server_Error'
+ */
+
+// Info: Find One Category By Id
+/**
+ * @swagger
+ * /api/v1/category/findById/{catId}:
+ *  get:
+ *      tags: [Category]
+ *      summary: Find category by id
+ *      parameters:
+ *          -   in: path
+ *              name: catId
+ *              type: string
+ *              required: true
+ *              description: Category id
+ *      responses:
+ *          200:
+ *              description: Success
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Category_Response_Success'
+ *          400:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed_Response_Client_Error'
+ *          404:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Not_Found_Response'
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed_Response_Server_Error'
+ */
+
+// Info: Find One Category By Slug
+/**
+ * @swagger
+ * /api/v1/category/findBySlug/{slug}:
+ *  get:
+ *      tags: [Category]
+ *      summary: Find category by slug
+ *      parameters:
+ *          -   in: path
+ *              name: slug
+ *              type: string
+ *              required: true
+ *              description: Category slug
+ *      responses:
+ *          200:
+ *              description: Success
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Category_Response_Success'
+ *          400:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Failed_Response_Client_Error'
+ *          404:
+ *              description: Bad request
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/definitions/Not_Found_Response'
  *          500:
  *              description: Internal server error
  *              content:

@@ -9,6 +9,7 @@ const sendErrorDevelopmentMode = (err, res) => {
 		statusCode = 409;
 	} else if (err && err.message.includes('Cast to ObjectId failed for value')) {
 		err.message = 'آی دی ارسال شده صحیح نمیباشد';
+		statusCode = 400;
 		console.error(chalk.red('ObjectId failed :', err.message));
 	} else if (err && (err.message.startsWith('invalid signature') || err.message === 'jwt malformed')) {
 		err.message = 'خطای رمزنگاری توکن';
@@ -23,6 +24,8 @@ const sendErrorDevelopmentMode = (err, res) => {
 		console.error(chalk.red(err.message));
 	}
 	return res.status(statusCode).json({
+		statusCode,
+		success: false,
 		message: err.message,
 		stack: err.stack,
 	});
@@ -32,6 +35,8 @@ const sendErrorProductionMode = (err, res) => {
 	let statusCode = err.statusCode || 500;
 	if (err.isOperational) {
 		return res.status(statusCode).json({
+			statusCode,
+			success: false,
 			message: err.message,
 		});
 	} else if (err.message.startsWith('E11000 duplicate key')) {
@@ -55,6 +60,8 @@ const sendErrorProductionMode = (err, res) => {
 			'مشکلی سمت سرور به وجود آمده است، لطفا لحظاتی دیگر مجددا تلاش بفرمایید ، درصورت برطرف نشدن مشکل با پشتیبانی تماس بگیرید';
 	}
 	return res.status(statusCode).json({
+		statusCode,
+		success: false,
 		message: err.message,
 	});
 };

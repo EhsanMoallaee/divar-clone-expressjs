@@ -93,7 +93,7 @@ class CategoryService {
 	};
 
 	checkExistCategory = async (categoryId) => {
-		const category = await this.#CategoryRepository.findOneById(categoryId);
+		const category = await this.#CategoryRepository.findOneById(categoryId, { __v: 0, createdAt: 0, updatedAt: 0 });
 		return category;
 	};
 }
