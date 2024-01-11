@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import categoryRouter_v1 from '../../modules/category/routes/v1.category.routes.js';
-import mediaRouter_v1 from '../../modules/mediaLibrary/routes/v1.media.routes.js';
+import mediaRouter_v1 from '../../modules/media/routes/v1.media.routes.js';
 import userRouter_v1 from '../../modules/user/routes/v1.user.routes.js';
 
 const v1_Router = Router();
