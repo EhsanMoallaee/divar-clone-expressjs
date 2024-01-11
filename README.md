@@ -63,11 +63,23 @@ Start the server
 (For production mode)
 
 ```bash
-  npm/yarn run start
+  yarn start
+```
+
+or
+
+```bash
+  npm start
 ```
 
 (For development mode)
 
 ```bash
-  npm/yarn watch
+  yarn watch
+```
+
+or
+
+```bash
+  npm run watch
 ```
