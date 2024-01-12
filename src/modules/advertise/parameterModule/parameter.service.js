@@ -34,6 +34,17 @@ class ParameterService {
 		return parameter;
 	};
 
+	findByCategoryId = async (categoryId) => {
+		const populate = [{ path: 'category', select: { title: 1, slug: 1 } }];
+		const parameters = await this.#ParameterRepository.find({ category: categoryId }, { __v: 0 }, populate);
+		if (!parameters || parameters.length === 0)
+			throw new AppError(
+				parameterErrorMessages.ParametersDidntFound.message,
+				parameterErrorMessages.ParametersDidntFound.statusCode
+			);
+		return parameters;
+	};
+
 	fetchAll = async () => {
 		const populate = [{ path: 'category', select: { title: 1, slug: 1 } }];
 		const parameters = await this.#ParameterRepository.find({}, { __v: 0 }, populate);

@@ -19,6 +19,12 @@ class ParameterController {
 		return res.status(200).json({ parameter });
 	});
 
+	findByCategoryId = catchAsyncErrors(async (req, res) => {
+		const { categoryId } = req.params;
+		const parameters = await this.#ParameterService.findByCategoryId(categoryId);
+		return res.status(200).json({ parameters });
+	});
+
 	fetchAll = catchAsyncErrors(async (req, res) => {
 		const parameters = await this.#ParameterService.fetchAll();
 		return res.status(200).json({ parameters });
