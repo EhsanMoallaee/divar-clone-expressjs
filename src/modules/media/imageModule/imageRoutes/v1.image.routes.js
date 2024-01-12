@@ -6,6 +6,6 @@ const imageRouter_v1 = Router();
 
 // <domain>/api/v1/media/image
 imageRouter_v1.get('/', imageController.fetchAll);
-imageRouter_v1.post('/uploadImage', [MediaStoragePathCheck('image')], imageController.uploadImage);
+imageRouter_v1.post('/upload-image', [MediaStoragePathCheck('image')], imageController.uploadImage);
 
 export default imageRouter_v1;

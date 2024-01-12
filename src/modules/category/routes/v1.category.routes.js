@@ -18,7 +18,7 @@ categoryRouter_v1.delete(
 	categoryController.deleteById
 );
 categoryRouter_v1.get('/', categoryController.fetchAll);
-categoryRouter_v1.get('/findBySlug/:slug', categoryController.findBySlug);
-categoryRouter_v1.get('/findById/:catId', categoryController.findById);
+categoryRouter_v1.get('/by-slug/:slug', categoryController.findBySlug);
+categoryRouter_v1.get('/:catId', categoryController.findById);
 
 export default categoryRouter_v1;
