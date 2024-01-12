@@ -14,12 +14,12 @@ export default class AbstractRepository {
 		return await newDocument.save();
 	};
 
-	findOne = async (filterQuery, options = {}) => {
-		return await this.#model.findOne(filterQuery, options, { lean: true });
+	findOne = async (filterQuery, options = {}, populate = undefined) => {
+		return await this.#model.findOne(filterQuery, options, { lean: true }).populate(populate);
 	};
 
-	findOneById = async (id, options = {}) => {
-		return await this.#model.findById(id, options, { lean: true });
+	findOneById = async (id, options = {}, populate = undefined) => {
+		return await this.#model.findById(id, options, { lean: true }).populate(populate);
 	};
 
 	find = async (filterQuery = {}, options = {}, populate = undefined) => {

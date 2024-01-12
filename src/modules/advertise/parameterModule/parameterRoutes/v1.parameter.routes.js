@@ -6,5 +6,6 @@ const parameterRouter_v1 = Router();
 // <domain>/api/v1/advertise/parameter
 parameterRouter_v1.post('/', parameterController.create);
 parameterRouter_v1.get('/', parameterController.fetchAll);
+parameterRouter_v1.get('/findById/:parameterId', parameterController.findById);
 
 export default parameterRouter_v1;

@@ -1,6 +1,6 @@
 import slugify from 'slugify';
-import CategoryRepository from '../../category/model/category.repository.js';
 import AppError from '../../errorHandling/app.error.js';
+import CategoryRepository from '../../category/model/category.repository.js';
 import parameterErrorMessages from './messages/parameter.errorMessages.js';
 import ParameterRepository from './model/parameter.repository.js';
 
@@ -20,6 +20,17 @@ class ParameterService {
 			parameterDTO.enum = parameterDTO.enum.split(',');
 		} else if (!Array.isArray(parameterDTO.enum)) parameterDTO.enum = [];
 		const parameter = await this.#ParameterRepository.create(parameterDTO);
+		return parameter;
+	};
+
+	findById = async (parameterId) => {
+		const populate = [{ path: 'category', select: { title: 1, slug: 1 } }];
+		const parameter = await this.#ParameterRepository.findOneById(parameterId, { __v: 0 }, populate);
+		if (!parameter)
+			throw new AppError(
+				parameterErrorMessages.ParameterDidntFound.message,
+				parameterErrorMessages.ParameterDidntFound.statusCode
+			);
 		return parameter;
 	};
 

@@ -3,6 +3,10 @@ const parameterErrorMessages = {
 		message: 'دسته بندی مورد نظر پیدا نشد',
 		statusCode: 404,
 	},
+	ParameterDidntFound: {
+		message: 'مشخصه مورد نظر پیدا نشد',
+		statusCode: 404,
+	},
 	OptionWithKeyAndCategoryAlreadyExist: {
 		message: 'این مشخصه با این دسته بندی و کلید قبلا ایجاد شده است',
 		statusCode: 409,
