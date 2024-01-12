@@ -1,7 +1,7 @@
 import { number } from 'joi';
 import { Schema, Types, model } from 'mongoose';
 
-const advertiseSchema = new Schema(
+const postSchema = new Schema(
 	{
 		title: { type: String, required: true },
 		content: { type: String, required: true },
@@ -68,6 +68,6 @@ const advertiseSchema = new Schema(
 	{ timestamps: true }
 );
 
-const AdvertiseModel = model('advertise', advertiseSchema);
+const PostModel = model('post', postSchema);
 
-export default AdvertiseModel;
+export default PostModel;
