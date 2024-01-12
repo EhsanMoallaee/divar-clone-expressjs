@@ -1,7 +1,7 @@
 // Info: Registeration Request (Send OTPCode)
 /**
  * @swagger
- * /api/v1/users/auth/registerationRequest:
+ * /api/v1/users/auth/registeration-request:
  *  post:
  *      tags: [--Auth]
  *      summary: User request for registration
@@ -75,7 +75,7 @@
 // Info: Login Request (Send OTPCode)
 /**
  * @swagger
- * /api/v1/users/auth/loginRequest:
+ * /api/v1/users/auth/login-request:
  *  post:
  *      tags: [--Auth]
  *      summary: User request for login

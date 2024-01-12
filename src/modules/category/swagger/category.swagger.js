@@ -66,7 +66,7 @@
 // Info: Find One Category By Id
 /**
  * @swagger
- * /api/v1/category/findById/{catId}:
+ * /api/v1/category/by-id/{catId}:
  *  get:
  *      tags: [Category]
  *      summary: Find category by id
@@ -106,7 +106,7 @@
 // Info: Find One Category By Slug
 /**
  * @swagger
- * /api/v1/category/findBySlug/{slug}:
+ * /api/v1/category/by-slug/{slug}:
  *  get:
  *      tags: [Category]
  *      summary: Find category by slug
