@@ -45,6 +45,47 @@ class ParameterService {
 		return parameters;
 	};
 
+	findByCategorySlug = async (categorySlug) => {
+		const aggregate = [
+			{
+				$lookup: {
+					from: 'categories',
+					localField: 'category',
+					foreignField: '_id',
+					as: 'category',
+				},
+			},
+			{
+				$unwind: '$category',
+			},
+			{
+				$addFields: {
+					categoryTitle: '$category.title',
+					categorySlug: '$category.slug',
+					categoryIcon: '$category.icon',
+				},
+			},
+			{
+				$project: {
+					category: 0,
+					__v: 0,
+				},
+			},
+			{
+				$match: {
+					categorySlug,
+				},
+			},
+		];
+		const parameters = await this.#ParameterRepository.byAggregate(aggregate);
+		if (!parameters || parameters.length === 0)
+			throw new AppError(
+				parameterErrorMessages.ParametersDidntFound.message,
+				parameterErrorMessages.ParametersDidntFound.statusCode
+			);
+		return parameters;
+	};
+
 	fetchAll = async () => {
 		const populate = [{ path: 'category', select: { title: 1, slug: 1 } }];
 		const parameters = await this.#ParameterRepository.find({}, { __v: 0 }, populate);
