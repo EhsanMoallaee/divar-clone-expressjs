@@ -4,14 +4,14 @@ import createOriginSizeData from '../functions/create.originSizeData.js';
 import createThumbnailSizeData from '../functions/create.thumbnailSizeData.js';
 import gregorianToJalali from '../functions/date/gregorianToJalali.dateConverter.js';
 import imageErrorMessages from './messages/image.errorMessages.js';
-import imageRepository from './model/image.repository.js';
+import ImageRepository from './model/image.repository.js';
 import imageResizer from '../functions/image.resizer.js';
 import imageUploader from '../functions/image.uploader.js';
 
 class ImageService {
 	#ImageRepository;
 	constructor() {
-		this.#ImageRepository = imageRepository;
+		this.#ImageRepository = ImageRepository;
 	}
 
 	uploadImageService = async (req, res, next) => {

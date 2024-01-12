@@ -22,8 +22,8 @@ export default class AbstractRepository {
 		return await this.#model.findById(id, options, { lean: true });
 	};
 
-	find = async (filterQuery = {}, options = {}) => {
-		return await this.#model.find(filterQuery, options, { lean: true });
+	find = async (filterQuery = {}, options = {}, populate = undefined) => {
+		return await this.#model.find(filterQuery, options, { lean: true }).populate(populate);
 	};
 
 	deleteOneById = async (id) => {
