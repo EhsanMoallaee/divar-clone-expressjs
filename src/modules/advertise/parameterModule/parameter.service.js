@@ -77,7 +77,7 @@ class ParameterService {
 				},
 			},
 		];
-		const parameters = await this.#ParameterRepository.byAggregate(aggregate);
+		const parameters = await this.#ParameterRepository.aggregate(aggregate);
 		if (!parameters || parameters.length === 0)
 			throw new AppError(
 				parameterErrorMessages.ParametersDidntFound.message,
@@ -89,7 +89,22 @@ class ParameterService {
 	fetchAll = async () => {
 		const populate = [{ path: 'category', select: { title: 1, slug: 1 } }];
 		const parameters = await this.#ParameterRepository.find({}, { __v: 0 }, populate);
+		if (!parameters || parameters.length === 0)
+			throw new AppError(
+				parameterErrorMessages.ParametersDidntFound.message,
+				parameterErrorMessages.ParametersDidntFound.statusCode
+			);
 		return parameters;
+	};
+
+	delete = async (parameterId) => {
+		const result = await this.#ParameterRepository.deleteOneById(parameterId);
+		if (!result)
+			throw new AppError(
+				parameterErrorMessages.ParameterDidntFound.message,
+				parameterErrorMessages.ParameterDidntFound.statusCode
+			);
+		return result;
 	};
 
 	checkExistCategory = async (categoryId) => {
@@ -109,7 +124,7 @@ class ParameterService {
 				parameterErrorMessages.OptionWithKeyAndCategoryAlreadyExist.message,
 				parameterErrorMessages.OptionWithKeyAndCategoryAlreadyExist.statusCode
 			);
-		return null;
+		return true;
 	};
 }
 

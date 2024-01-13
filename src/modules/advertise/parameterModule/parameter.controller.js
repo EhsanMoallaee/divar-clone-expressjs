@@ -1,4 +1,5 @@
 import catchAsyncErrors from '../../errorHandling/catch.asyncErrors.js';
+import parameterSuccessMessages from './messages/parameter.successMessages.js';
 import ParameterService from './parameter.service.js';
 
 class ParameterController {
@@ -34,6 +35,14 @@ class ParameterController {
 	fetchAll = catchAsyncErrors(async (req, res) => {
 		const parameters = await this.#ParameterService.fetchAll();
 		return res.status(200).json({ parameters });
+	});
+
+	delete = catchAsyncErrors(async (req, res) => {
+		const { parameterId } = req.params;
+		await this.#ParameterService.delete(parameterId);
+		return res
+			.status(parameterSuccessMessages.ParameterDeletedSuccessfully.statusCode)
+			.json({ message: parameterSuccessMessages.ParameterDeletedSuccessfully.message });
 	});
 }
 

@@ -30,7 +30,7 @@ export default class AbstractRepository {
 		return await this.#model.findByIdAndDelete(id);
 	};
 
-	byAggregate = async (aggregate) => {
+	aggregate = async (aggregate) => {
 		return await this.#model.aggregate(aggregate);
 	};
 }

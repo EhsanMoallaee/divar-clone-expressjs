@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import request from 'supertest';
 
 import app from '../../src/app.js';
@@ -7,11 +8,10 @@ import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import redisSingletonInstance from '../../src/modules/redisClient/redis.client.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
 import { createUser, getRequestWithAuth } from '../../src/common/testsFunctions/request.withAuth.js';
-import dotenv from 'dotenv';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
+
 beforeAll(async () => {
 	new ConnectMongodb();
-	await UserModel.deleteMany({});
 	await redisSingletonInstance.flushAll();
 });
 
@@ -37,9 +37,9 @@ const incorrectCredentials = {
 	mobile: '123456',
 };
 
-const registerationRequestURL = '/api/v1/users/auth/registerationRequest';
+const registerationRequestURL = '/api/v1/users/auth/registeration-request';
 const registerURL = '/api/v1/users/auth/register';
-const loginRequestURL = '/api/v1/users/auth/loginRequest';
+const loginRequestURL = '/api/v1/users/auth/login-request';
 const loginURL = '/api/v1/users/auth/login';
 const logoutURL = '/api/v1/users/auth/logout';
 
@@ -56,7 +56,7 @@ describe('Authentication Register tests', () => {
 		expect(response.body.message).toBe(authErrorMessages.WrongMobileNumber.message);
 	});
 
-	it('Registeration request: returns 400 if before otpCode expiration,user sends request again', async () => {
+	it('Registeration request: returns 400 if user sends request again before the otpCode is expired', async () => {
 		await request(app).post(registerationRequestURL).send(correctCredentials);
 		const response = await request(app).post(registerationRequestURL).send(correctCredentials);
 		expect(response.status).toBe(authErrorMessages.SpamAttack.statusCode);

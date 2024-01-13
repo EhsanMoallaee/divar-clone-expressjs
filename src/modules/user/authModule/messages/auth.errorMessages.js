@@ -28,7 +28,7 @@ const authErrorMessages = {
 		statusCode: 409,
 	},
 	OtpcodeSendingFailed: {
-		message: 'در ارسال پیامک کد تایید خطایی به وجود آمو، لطفا لحظاتی دیگر مجددا اقدام بفرمایدد',
+		message: 'در ارسال پیامک کد تایید خطایی به وجود آمد، لطفا لحظاتی دیگر مجددا اقدام بفرمایدد',
 		statusCode: 500,
 	},
 	WrongMobileNumber: {

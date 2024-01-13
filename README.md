@@ -17,8 +17,11 @@ This is a clone of Persian Divar marketplace.It's not a replica, and it doesn't 
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file.
-(Kavenegar is an Iranian sms service provider)
+To run this project,first you will need to create three .env files as:
+.env.test
+.env.development
+.env.production
+in the root of the project folder and then add the following environment variables to your .env files with your own data:
 
 `PORT`
 
@@ -37,6 +40,8 @@ To run this project, you will need to add the following environment variables to
 `TOKEN_SECRET_KEY`
 
 `KAVENEGAR_API_KEY`
+
+(Kavenegar is an Iranian sms service provider)
 
 ## Run Locally
 
