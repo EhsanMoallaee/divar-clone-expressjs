@@ -1,4 +1,4 @@
-// Info: Success Response Without Data
+// Info: Success Response With Message And Without Data
 /**
  * @swagger
  *  definitions:
