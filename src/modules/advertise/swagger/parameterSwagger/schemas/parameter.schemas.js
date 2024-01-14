@@ -23,10 +23,11 @@
  *                      type: string
  *                      description: parameter related category id
  *                  enum:
- *                      type: string
+ *                      type: array
  *                      description: parameter enum
  *                  isRequired:
  *                      type: boolean
+ *                      default: false
  *                      description: set this parameter as required or not required
  *                  guide:
  *                      type: string

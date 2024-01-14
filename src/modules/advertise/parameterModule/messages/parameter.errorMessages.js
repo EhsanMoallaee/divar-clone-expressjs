@@ -27,6 +27,10 @@ const parameterErrorMessages = {
 		message: 'وارد کردن دسته بندی برای مشخصه الزامیست',
 		statusCode: 400,
 	},
+	'"isRequired" must be a boolean': {
+		message: 'باشد و نمیتواند رشته خالی باشد true یا false مقدار فیلد الزامی بودن مشخصه فقط میتواند',
+		statusCode: 400,
+	},
 	CategoryDidntFound: {
 		message: 'دسته بندی مورد نظر پیدا نشد',
 		statusCode: 404,

@@ -10,7 +10,7 @@ class ParameterValidator {
 			title: Joi.string().required(),
 			key: Joi.string().required(),
 			type: Joi.string().valid('number', 'string', 'boolean', 'array').required(),
-			enum: Joi.array().allow(null, ''),
+			enum: Joi.alternatives().try(Joi.array(), Joi.string()),
 			guide: Joi.string().allow(null, ''),
 			isRequired: Joi.boolean(),
 			category: joiObjectId().required(),
