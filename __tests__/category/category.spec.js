@@ -6,8 +6,6 @@ import { createUser, postRequestWithAuth } from '../../src/common/testsFunctions
 
 beforeAll(async () => {
 	new ConnectMongodb();
-	await CategoryModel.deleteMany({});
-	await UserModel.deleteMany({});
 });
 
 beforeEach(async () => {

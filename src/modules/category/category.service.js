@@ -13,7 +13,7 @@ class CategoryService {
 	}
 
 	create = async (categoryDTO) => {
-		const { error } = CategoryValidator.addCategoryValidator(categoryDTO);
+		const { error } = CategoryValidator.createCategoryValidator(categoryDTO);
 		if (error) {
 			const errorMessage = error.message;
 			if (errorMessage.endsWith('is not allowed')) {

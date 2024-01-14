@@ -3,7 +3,7 @@ import Joi from 'joi';
 class CategoryValidator {
 	constructor() {}
 
-	addCategoryValidator = (data) => {
+	createCategoryValidator = (data) => {
 		const schema = Joi.object({
 			title: Joi.string().required(),
 			slug: Joi.string().required(),

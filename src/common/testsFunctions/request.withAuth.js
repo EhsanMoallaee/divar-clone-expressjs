@@ -48,6 +48,14 @@ export const postRequestWithAuth = async (data, userId, url) => {
 	return response;
 };
 
+export const deleteRequestWithAuth = async (userId, url) => {
+	const xAuthToken = await generateToken({ id: userId });
+	const response = await request(app)
+		.delete(url)
+		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+	return response;
+};
+
 // for develop
 // const addUsers = async (userCount) => {
 // 	const users = [];

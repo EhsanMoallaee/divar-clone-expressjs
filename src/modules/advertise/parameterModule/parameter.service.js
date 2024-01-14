@@ -3,6 +3,7 @@ import AppError from '../../errorHandling/app.error.js';
 import CategoryRepository from '../../category/model/category.repository.js';
 import parameterErrorMessages from './messages/parameter.errorMessages.js';
 import ParameterRepository from './model/parameter.repository.js';
+import parameterValidator from './validators/parameter.validator.js';
 
 class ParameterService {
 	#CategoryRepository;
@@ -13,6 +14,27 @@ class ParameterService {
 	}
 
 	create = async (parameterDTO) => {
+		const { error } = parameterValidator.createParameterValidator(parameterDTO);
+		if (error) {
+			const errorMessage = error.message;
+			// console.log('🚀 ~ ParameterService ~ create= ~ errorMessage:', errorMessage); // for develop
+			if (errorMessage.endsWith('is not allowed')) {
+				throw new AppError(
+					parameterErrorMessages.FieldIsNotAllowed.message,
+					parameterErrorMessages.FieldIsNotAllowed.statusCode
+				);
+			} else if (parameterErrorMessages[errorMessage]) {
+				throw new AppError(
+					parameterErrorMessages[errorMessage].message,
+					parameterErrorMessages[errorMessage].statusCode
+				);
+			} else {
+				throw new AppError(
+					parameterErrorMessages.ExceptionError.message,
+					parameterErrorMessages.ExceptionError.statusCode
+				);
+			}
+		}
 		const category = await this.checkExistCategory(parameterDTO.category);
 		parameterDTO.key = slugify(parameterDTO.key, { replacement: '_', trim: true, lower: true });
 		await this.checkExistOptionByKeyAndCategory(category, parameterDTO.key);
