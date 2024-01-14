@@ -33,4 +33,8 @@ export default class AbstractRepository {
 	aggregate = async (aggregate) => {
 		return await this.#model.aggregate(aggregate);
 	};
+
+	update = async (id, update, options = {}) => {
+		return await this.#model.findByIdAndUpdate(id, update, options);
+	};
 }

@@ -4,7 +4,11 @@ const parameterErrorMessages = {
 		statusCode: 400,
 	},
 	'"title" is not allowed to be empty': {
-		message: 'مقدار عنوان مشخصه نمیتواند خالی باشد',
+		message: 'مقدار عنوان برای مشخصه نمیتواند خالی باشد',
+		statusCode: 400,
+	},
+	'"title" contains an invalid value': {
+		message: 'مقدار عنوان برای مشخصه نمیتواند رشته خالی باشد',
 		statusCode: 400,
 	},
 	'"key" is required': {
@@ -12,7 +16,11 @@ const parameterErrorMessages = {
 		statusCode: 400,
 	},
 	'"key" is not allowed to be empty': {
-		message: 'مقدار کلید مشخصه نمیتواند خالی باشد',
+		message: 'مقدار کلید برای مشخصه نمیتواند خالی باشد',
+		statusCode: 400,
+	},
+	'"key" contains an invalid value': {
+		message: 'مقدار کلید برای مشخصه نمیتواند رشته خالی باشد',
 		statusCode: 400,
 	},
 	'"type" is required': {
@@ -34,6 +42,14 @@ const parameterErrorMessages = {
 	CategoryDidntFound: {
 		message: 'دسته بندی مورد نظر پیدا نشد',
 		statusCode: 404,
+	},
+	WrongCategoryId: {
+		message: 'آی دی دسته بندی ارسال شده صحیح نمیباشد',
+		statusCode: 400,
+	},
+	WrongParameterId: {
+		message: 'آی دی مشخصه ارسال شده صحیح نمیباشد',
+		statusCode: 400,
 	},
 	FieldIsNotAllowed: {
 		message: 'لطفا با پشتیبانی سایت تماس بگیرید',

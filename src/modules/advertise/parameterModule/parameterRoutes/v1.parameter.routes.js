@@ -32,6 +32,11 @@ parameterRouter_v1.get(
 	[authenticationGuard, authorizationGuard([Roles.SUPERADMIN, Roles.ADMIN])],
 	parameterController.fetchAll
 );
+parameterRouter_v1.patch(
+	'/:parameterId',
+	[authenticationGuard, authorizationGuard([Roles.SUPERADMIN, Roles.ADMIN])],
+	parameterController.update
+);
 parameterRouter_v1.get('/by-category-slug/:categorySlug', parameterController.findByCategorySlug);
 
 export default parameterRouter_v1;

@@ -1,4 +1,6 @@
 import slugify from 'slugify';
+import { isValidObjectId } from 'mongoose';
+
 import AppError from '../../errorHandling/app.error.js';
 import parameterErrorMessages from './messages/parameter.errorMessages.js';
 import ParameterRepository from './model/parameter.repository.js';
@@ -17,7 +19,6 @@ class ParameterService {
 		const { error } = parameterValidator.createParameterValidator(parameterDTO);
 		if (error) {
 			const errorMessage = error.message;
-			console.log('🚀 ~ ParameterService ~ create= ~ errorMessage:', errorMessage);
 			if (errorMessage.endsWith('is not allowed')) {
 				throw new AppError(
 					parameterErrorMessages.FieldIsNotAllowed.message,
@@ -43,9 +44,7 @@ class ParameterService {
 			);
 		parameterDTO.key = slugify(parameterDTO.key, { replacement: '_', trim: true, lower: true });
 		await this.checkExistOptionByKeyAndCategory(category, parameterDTO.key);
-		if (parameterDTO?.enum && typeof parameterDTO.enum === 'string') {
-			parameterDTO.enum = parameterDTO.enum.split(',');
-		} else if (!Array.isArray(parameterDTO.enum)) parameterDTO.enum = [];
+		if (parameterDTO?.enum) parameterDTO.enum = await this.convertEnumToArray(parameterDTO.enum);
 		const parameter = await this.#ParameterRepository.create(parameterDTO);
 		return parameter;
 	};
@@ -124,6 +123,60 @@ class ParameterService {
 		return parameters;
 	};
 
+	update = async (parameterId, updateDTO) => {
+		const { error } = parameterValidator.updateParameterValidator(updateDTO);
+		if (error) {
+			const errorMessage = error.message;
+			if (errorMessage.endsWith('is not allowed')) {
+				throw new AppError(
+					parameterErrorMessages.FieldIsNotAllowed.message,
+					parameterErrorMessages.FieldIsNotAllowed.statusCode
+				);
+			} else if (parameterErrorMessages[errorMessage]) {
+				throw new AppError(
+					parameterErrorMessages[errorMessage].message,
+					parameterErrorMessages[errorMessage].statusCode
+				);
+			} else {
+				throw new AppError(
+					parameterErrorMessages.ExceptionError.message,
+					parameterErrorMessages.ExceptionError.statusCode
+				);
+			}
+		}
+		let parameter;
+		if (!isValidObjectId(parameterId)) {
+			throw new AppError(
+				parameterErrorMessages.WrongParameterId.message,
+				parameterErrorMessages.WrongParameterId.statusCode
+			);
+		} else {
+			parameter = await this.findById(parameterId);
+		}
+		if (updateDTO.category && isValidObjectId(updateDTO.category)) {
+			const category = await this.#CategoryService.checkExistCategory(updateDTO.category);
+			if (!category)
+				throw new AppError(
+					parameterErrorMessages.CategoryDidntFound.message,
+					parameterErrorMessages.CategoryDidntFound.statusCode
+				);
+		}
+		if (updateDTO.key) updateDTO.key = slugify(updateDTO.key, { replacement: '_', trim: true, lower: true });
+		if (updateDTO.key || updateDTO.category)
+			await this.checkExistOptionByKeyAndCategory(
+				updateDTO.category || parameter.category,
+				updateDTO.key || parameter.key
+			);
+		if (updateDTO?.enum) updateDTO.enum = await this.convertEnumToArray(updateDTO.enum);
+
+		const updatedParameter = await this.#ParameterRepository.update(
+			parameterId,
+			{ $set: updateDTO },
+			{ new: true }
+		);
+		return updatedParameter;
+	};
+
 	delete = async (parameterId) => {
 		const result = await this.#ParameterRepository.deleteOneById(parameterId);
 		if (!result)
@@ -142,6 +195,13 @@ class ParameterService {
 				parameterErrorMessages.OptionWithKeyAndCategoryAlreadyExist.statusCode
 			);
 		return true;
+	};
+
+	convertEnumToArray = async (enumData) => {
+		if (typeof enumData === 'string') {
+			enumData = enumData.split(',');
+		} else if (!Array.isArray(enumData)) enumData = [];
+		return enumData;
 	};
 }
 
