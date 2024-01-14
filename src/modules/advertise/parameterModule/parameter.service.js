@@ -17,7 +17,6 @@ class ParameterService {
 		const { error } = parameterValidator.createParameterValidator(parameterDTO);
 		if (error) {
 			const errorMessage = error.message;
-			// console.log('🚀 ~ ParameterService ~ create= ~ errorMessage:', errorMessage); // for develop
 			if (errorMessage.endsWith('is not allowed')) {
 				throw new AppError(
 					parameterErrorMessages.FieldIsNotAllowed.message,

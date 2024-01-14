@@ -98,6 +98,17 @@ describe('Advertise parameter module tests', () => {
 		expect(response.body.message).toBe(parameterErrorMessages['"key" is required'].message);
 	});
 
+	it('Create parameter: returns 409 for create parameter with duplicate category and key', async () => {
+		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		await ParameterModel.create(parameterDTO);
+		const parameterWithDuplicateCatAndKey = JSON.parse(JSON.stringify(parameterDTO));
+		parameterWithDuplicateCatAndKey.title = 'new title';
+		parameterWithDuplicateCatAndKey.enum = ['new enum1', 'new enum2'];
+		const response = await postRequestWithAuth(parameterWithDuplicateCatAndKey, userId, baseParameterUrl);
+		expect(response.status).toBe(parameterErrorMessages.OptionWithKeyAndCategoryAlreadyExist.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.OptionWithKeyAndCategoryAlreadyExist.message);
+	});
+
 	it('Find parameter: returns 200 for find parameter with id', async () => {
 		const { parameterDTO, userId } = await createParameterData(correctParameter);
 		const parameter = await ParameterModel.create(parameterDTO);
