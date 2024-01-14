@@ -43,7 +43,7 @@ class ParameterService {
 				parameterErrorMessages.CategoryDidntFound.statusCode
 			);
 		parameterDTO.key = slugify(parameterDTO.key, { replacement: '_', trim: true, lower: true });
-		await this.checkExistOptionByKeyAndCategory(category, parameterDTO.key);
+		await this.checkExistParameterByKeyAndCategory(category, parameterDTO.key);
 		if (parameterDTO?.enum) parameterDTO.enum = await this.convertEnumToArray(parameterDTO.enum);
 		const parameter = await this.#ParameterRepository.create(parameterDTO);
 		return parameter;
@@ -163,7 +163,7 @@ class ParameterService {
 		}
 		if (updateDTO.key) updateDTO.key = slugify(updateDTO.key, { replacement: '_', trim: true, lower: true });
 		if (updateDTO.key || updateDTO.category)
-			await this.checkExistOptionByKeyAndCategory(
+			await this.checkExistParameterByKeyAndCategory(
 				updateDTO.category || parameter.category,
 				updateDTO.key || parameter.key
 			);
@@ -187,12 +187,12 @@ class ParameterService {
 		return result;
 	};
 
-	checkExistOptionByKeyAndCategory = async (category, key) => {
+	checkExistParameterByKeyAndCategory = async (category, key) => {
 		const parameter = await this.#ParameterRepository.findOne({ category, key });
 		if (parameter)
 			throw new AppError(
-				parameterErrorMessages.OptionWithKeyAndCategoryAlreadyExist.message,
-				parameterErrorMessages.OptionWithKeyAndCategoryAlreadyExist.statusCode
+				parameterErrorMessages.ParameterWithKeyAndCategoryAlreadyExist.message,
+				parameterErrorMessages.ParameterWithKeyAndCategoryAlreadyExist.statusCode
 			);
 		return true;
 	};

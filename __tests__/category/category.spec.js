@@ -18,13 +18,13 @@ afterEach(async () => {
 	await UserModel.deleteMany({});
 });
 
-const correctCategory = {
+const correctCategoryDtoDto = {
 	title: 'category-1',
 	slug: 'category-1-slug',
 	description: 'category-1-description',
 };
 
-const correctParentCategory = {
+const correctParentCategoryDto = {
 	title: 'category-parent',
 	slug: 'category-parent-slug',
 	description: 'category-parent-description',
@@ -35,29 +35,29 @@ const baseCategoryURL = '/api/v1/category';
 describe('Create Category tests', () => {
 	it('Create category: returns 201 with correct values', async () => {
 		const user = await createUser();
-		const response = await postRequestWithAuth(correctCategory, user._id, baseCategoryURL);
+		const response = await postRequestWithAuth(correctCategoryDtoDto, user._id, baseCategoryURL);
 		expect(response.status).toBe(201);
-		expect(response.body.title).toBe(correctCategory.title);
-		expect(response.body.slug).toBe(correctCategory.slug);
+		expect(response.body.title).toBe(correctCategoryDtoDto.title);
+		expect(response.body.slug).toBe(correctCategoryDtoDto.slug);
 	});
 
 	it('Create sub category: returns 201 with correct values and correct parent id', async () => {
 		const user = await createUser();
-		const parentCategory = await CategoryModel.create(correctParentCategory);
+		const parentCategory = await CategoryModel.create(correctParentCategoryDto);
 		const parentId = parentCategory._id;
 		const subCategory = {
-			...correctCategory,
+			...correctCategoryDtoDto,
 			parentId,
 		};
 		const response = await postRequestWithAuth(subCategory, user._id, baseCategoryURL);
-		expect(response.body.title).toBe(correctCategory.title);
-		expect(response.body.slug).toBe(correctCategory.slug);
+		expect(response.body.title).toBe(correctCategoryDtoDto.title);
+		expect(response.body.slug).toBe(correctCategoryDtoDto.slug);
 		expect(response.body.parentId).toBe(parentId.toString());
 	});
 
 	it('Create category: returns 400 without required field title', async () => {
 		const user = await createUser();
-		const categoryWithoutTitle = JSON.parse(JSON.stringify(correctCategory));
+		const categoryWithoutTitle = JSON.parse(JSON.stringify(correctCategoryDtoDto));
 		delete categoryWithoutTitle.title;
 		const response = await postRequestWithAuth(categoryWithoutTitle, user._id, baseCategoryURL);
 		expect(response.status).toBe(categoryErrorMessages['"title" is required'].statusCode);
@@ -66,7 +66,7 @@ describe('Create Category tests', () => {
 
 	it('Create category: returns 400 without required field slug', async () => {
 		const user = await createUser();
-		const categoryWithoutSlug = JSON.parse(JSON.stringify(correctCategory));
+		const categoryWithoutSlug = JSON.parse(JSON.stringify(correctCategoryDtoDto));
 		delete categoryWithoutSlug.slug;
 		const response = await postRequestWithAuth(categoryWithoutSlug, user._id, baseCategoryURL);
 		expect(response.status).toBe(categoryErrorMessages['"slug" is required'].statusCode);
@@ -75,8 +75,8 @@ describe('Create Category tests', () => {
 
 	it('Create category: returns 409 with duplicate field title', async () => {
 		const user = await createUser();
-		await CategoryModel.create(correctCategory);
-		const categoryWithDuplicateTitle = JSON.parse(JSON.stringify(correctCategory));
+		await CategoryModel.create(correctCategoryDtoDto);
+		const categoryWithDuplicateTitle = JSON.parse(JSON.stringify(correctCategoryDtoDto));
 		categoryWithDuplicateTitle.slug = 'new slug';
 		const response = await postRequestWithAuth(categoryWithDuplicateTitle, user._id, baseCategoryURL);
 		expect(response.status).toBe(409);
@@ -84,19 +84,19 @@ describe('Create Category tests', () => {
 
 	it('Create category: returns 409 with duplicate field slug', async () => {
 		const user = await createUser();
-		await CategoryModel.create(correctCategory);
-		const categoryWithDuplicateSlug = JSON.parse(JSON.stringify(correctCategory));
+		await CategoryModel.create(correctCategoryDtoDto);
+		const categoryWithDuplicateSlug = JSON.parse(JSON.stringify(correctCategoryDtoDto));
 		categoryWithDuplicateSlug.title = 'new title';
 		const response = await postRequestWithAuth(categoryWithDuplicateSlug, user._id, baseCategoryURL);
 		expect(response.status).toBe(409);
 	});
 
 	it('Create category: returns 404 if parent category not found', async () => {
-		const parentCategory = await CategoryModel.create(correctParentCategory);
+		const parentCategory = await CategoryModel.create(correctParentCategoryDto);
 		const parentId = parentCategory._id;
 		await CategoryModel.deleteOne({ _id: parentId });
 		const subCategory = {
-			...correctCategory,
+			...correctCategoryDtoDto,
 			parentId,
 		};
 		const user = await createUser();

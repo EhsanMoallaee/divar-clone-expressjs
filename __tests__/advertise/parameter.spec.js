@@ -8,6 +8,7 @@ import {
 	createUser,
 	deleteRequestWithAuth,
 	getRequestWithAuth,
+	patchRequestWithAuth,
 	postRequestWithAuth,
 } from '../../src/common/testsFunctions/request.withAuth.js';
 
@@ -27,12 +28,28 @@ afterEach(async () => {
 	await UserModel.deleteMany({});
 });
 
-const correctParameter = {
+const correctParameterDto = {
 	title: 'رنگ',
 	key: 'color',
 	type: 'string',
 	enum: ['white', 'black', 'silver'],
 	guide: 'Select the color',
+};
+
+const secondCorrectParameterDto = {
+	title: 'title',
+	key: 'year',
+	type: 'number',
+	enum: [2020, 2021, 2022, 2023],
+	guide: 'Select the year',
+};
+
+const correctUpdateParameterDto = {
+	title: 'update title',
+	key: 'update-key',
+	type: 'string',
+	enum: ['white', 'black', 'silver'],
+	guide: 'Select from enum',
 };
 
 const correctCategory = {
@@ -41,11 +58,20 @@ const correctCategory = {
 	description: 'category-1-description',
 };
 
-const createParameterData = async (parameterDTO) => {
-	const user = await createUser();
-	const category = await CategoryModel.create(correctCategory);
-	parameterDTO.category = category._id;
-	return { parameterDTO, userId: user._id, category };
+const secondCorrectCategory = {
+	title: 'category-2',
+	slug: 'category-2-slug',
+	description: 'category-2-description',
+};
+
+const createCategory = async (categoryDto) => {
+	const category = await CategoryModel.create(categoryDto);
+	return category;
+};
+
+const createParameterData = async (parameterDTO, categoryId) => {
+	parameterDTO.category = categoryId;
+	return parameterDTO;
 };
 
 const baseParameterUrl = '/api/v1/advertise/parameter';
@@ -55,15 +81,23 @@ const findParameterByCategorySlugUrl = '/api/v1/advertise/parameter/by-category-
 
 describe('Advertise parameter module tests', () => {
 	it('Create parameter: returns 201 with correct values', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const response = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
 		expect(response.status).toBe(201);
-		expect(response.body.parameter.title).toBe(correctParameter.title);
-		expect(response.body.parameter.key).toBe(correctParameter.key);
+		expect(response.body.parameter.title).toBe(correctParameterDto.title);
+		expect(response.body.parameter.key).toBe(correctParameterDto.key);
 	});
 
 	it('Create parameter: returns 400 with empty title', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameterDtoWithEmptyTitle = JSON.parse(JSON.stringify(parameterDTO));
 		parameterDtoWithEmptyTitle.title = '';
 		const response = await postRequestWithAuth(parameterDtoWithEmptyTitle, userId, baseParameterUrl);
@@ -72,7 +106,11 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Create parameter: returns 400 without title', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameterDtoWithoutTitle = JSON.parse(JSON.stringify(parameterDTO));
 		delete parameterDtoWithoutTitle.title;
 		const response = await postRequestWithAuth(parameterDtoWithoutTitle, userId, baseParameterUrl);
@@ -81,7 +119,11 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Create parameter: returns 400 with empty key', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameterDtoWithEmptyKey = JSON.parse(JSON.stringify(parameterDTO));
 		parameterDtoWithEmptyKey.key = '';
 		const response = await postRequestWithAuth(parameterDtoWithEmptyKey, userId, baseParameterUrl);
@@ -90,7 +132,11 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Create parameter: returns 400 without key', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameterDtoWithoutKey = JSON.parse(JSON.stringify(parameterDTO));
 		delete parameterDtoWithoutKey.key;
 		const response = await postRequestWithAuth(parameterDtoWithoutKey, userId, baseParameterUrl);
@@ -99,18 +145,26 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Create parameter: returns 409 for create parameter with duplicate category and key', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		await ParameterModel.create(parameterDTO);
 		const parameterWithDuplicateCatAndKey = JSON.parse(JSON.stringify(parameterDTO));
 		parameterWithDuplicateCatAndKey.title = 'new title';
 		parameterWithDuplicateCatAndKey.enum = ['new enum1', 'new enum2'];
 		const response = await postRequestWithAuth(parameterWithDuplicateCatAndKey, userId, baseParameterUrl);
-		expect(response.status).toBe(parameterErrorMessages.OptionWithKeyAndCategoryAlreadyExist.statusCode);
-		expect(response.body.message).toBe(parameterErrorMessages.OptionWithKeyAndCategoryAlreadyExist.message);
+		expect(response.status).toBe(parameterErrorMessages.ParameterWithKeyAndCategoryAlreadyExist.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParameterWithKeyAndCategoryAlreadyExist.message);
 	});
 
 	it('Find parameter: returns 200 for find parameter with id', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameter = await ParameterModel.create(parameterDTO);
 		const url = `${findParameterByIdUrl}/${parameter._id}`;
 		const response = await getRequestWithAuth(userId, {}, url);
@@ -118,7 +172,11 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Find parameter: returns 404 for find parameter with wrong id', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameter = await ParameterModel.create(parameterDTO);
 		const url = `${findParameterByIdUrl}/${parameter._id}`;
 		await ParameterModel.deleteOne({ _id: parameter._id });
@@ -128,15 +186,23 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Find parameter: returns 200 for find parameter with category id', async () => {
-		const { parameterDTO, userId, category } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		await ParameterModel.create(parameterDTO);
-		const url = `${findParameterByCategoryIdUrl}/${category._id}`;
+		const url = `${findParameterByCategoryIdUrl}/${categoryId}`;
 		const response = await getRequestWithAuth(userId, {}, url);
 		expect(response.status).toBe(200);
 	});
 
 	it('Find parameter: returns 404 for find parameter with wrong category id', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameter = await ParameterModel.create(parameterDTO);
 		const url = `${findParameterByCategoryIdUrl}/${parameter._id}`;
 		const response = await getRequestWithAuth(userId, {}, url);
@@ -145,7 +211,11 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Find parameter: returns 200 for find parameter with category slug', async () => {
-		const { parameterDTO, userId, category } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		await ParameterModel.create(parameterDTO);
 		const url = `${findParameterByCategorySlugUrl}/${category.slug}`;
 		const response = await getRequestWithAuth(userId, {}, url);
@@ -153,7 +223,11 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Find parameter: returns 404 for find parameter with wrong category slug', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		await ParameterModel.create(parameterDTO);
 		const url = `${findParameterByCategorySlugUrl}/${'wrong-slug'}`;
 		const response = await getRequestWithAuth(userId, {}, url);
@@ -162,7 +236,11 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Find parameter: returns 200 for find all parameters', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameter = await ParameterModel.create(parameterDTO);
 		const response = await getRequestWithAuth(userId, {}, baseParameterUrl);
 		expect(response.status).toBe(200);
@@ -171,14 +249,19 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Find parameter: returns 404 for dont find any parameter in fetch all route', async () => {
-		const { userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
 		const response = await getRequestWithAuth(userId, {}, baseParameterUrl);
 		expect(response.status).toBe(parameterErrorMessages.ParametersDidntFound.statusCode);
 		expect(response.body.message).toBe(parameterErrorMessages.ParametersDidntFound.message);
 	});
 
 	it('Find parameter: returns 200 for delete a parameter', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameter = await ParameterModel.create(parameterDTO);
 		const url = `${baseParameterUrl}/${parameter._id}`;
 		const response = await deleteRequestWithAuth(userId, url);
@@ -187,11 +270,142 @@ describe('Advertise parameter module tests', () => {
 	});
 
 	it('Find parameter: returns 404 for delete a parameter with wrong id', async () => {
-		const { parameterDTO, userId } = await createParameterData(correctParameter);
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		await ParameterModel.create(parameterDTO);
 		const url = `${baseParameterUrl}/${userId}`;
 		const response = await deleteRequestWithAuth(userId, url);
 		expect(response.status).toBe(parameterErrorMessages.ParameterDidntFound.statusCode);
 		expect(response.body.message).toBe(parameterErrorMessages.ParameterDidntFound.message);
+	});
+
+	it('Update parameter: returns 200 for update a parameter with correct vlaues', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const firstCategory = await createCategory(correctCategory);
+		const firstCategoryId = firstCategory._id;
+		const parameterDTO = await createParameterData(correctParameterDto, firstCategoryId);
+		await ParameterModel.create(parameterDTO);
+
+		const secondCategory = await createCategory(secondCorrectCategory);
+		const secondCategoryId = secondCategory._id;
+		const secondParameterDto = await createParameterData(secondCorrectParameterDto, secondCategoryId);
+		const secondParameter = await ParameterModel.create(secondParameterDto);
+
+		const updateParameterDto = await createParameterData(correctUpdateParameterDto, secondCategoryId);
+
+		const url = `${baseParameterUrl}/${secondParameter._id}`;
+		const response = await patchRequestWithAuth(updateParameterDto, userId, url);
+		expect(response.status).toBe(200);
+		expect(response.body.updatedParameter.key).toBe(updateParameterDto.key);
+	});
+
+	it('Update parameter: returns 409 for update a parameter with duplicate key and category vlaues', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const firstCategory = await createCategory(correctCategory);
+		const firstCategoryId = firstCategory._id;
+		const firstParameterDTO = await createParameterData(correctParameterDto, firstCategoryId);
+		const firstParameter = await ParameterModel.create(firstParameterDTO);
+
+		const secondCategory = await createCategory(secondCorrectCategory);
+		const secondCategoryId = secondCategory._id;
+		const secondParameterDto = await createParameterData(secondCorrectParameterDto, secondCategoryId);
+		const secondParameter = await ParameterModel.create(secondParameterDto);
+
+		const updateParameterDto = await createParameterData(correctUpdateParameterDto, firstCategoryId);
+		updateParameterDto.key = firstParameter.key;
+		updateParameterDto.category = firstParameter.category;
+
+		const url = `${baseParameterUrl}/${secondParameter._id}`;
+		const response = await patchRequestWithAuth(updateParameterDto, userId, url);
+		expect(response.status).toBe(parameterErrorMessages.ParameterWithKeyAndCategoryAlreadyExist.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParameterWithKeyAndCategoryAlreadyExist.message);
+	});
+
+	it('Update parameter: returns 400 for update a parameter with wrong id format request', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const url = `${baseParameterUrl}/1234`;
+		const response = await patchRequestWithAuth({}, userId, url);
+		expect(response.status).toBe(parameterErrorMessages.WrongParameterId.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.WrongParameterId.message);
+	});
+
+	it('Update parameter: returns 404 for update a parameter with wrong parameter id/doesnt exist request', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const url = `${baseParameterUrl}/${userId}`;
+		const response = await patchRequestWithAuth({}, userId, url);
+		expect(response.status).toBe(parameterErrorMessages.ParameterDidntFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParameterDidntFound.message);
+	});
+
+	it('Update parameter: returns 404 for update a parameter with wrong category id/doesnt exist request', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const firstCategory = await createCategory(correctCategory);
+		const firstCategoryId = firstCategory._id;
+		const firstParameterDTO = await createParameterData(correctParameterDto, firstCategoryId);
+		const firstParameter = await ParameterModel.create(firstParameterDTO);
+		const url = `${baseParameterUrl}/${firstParameter._id}`;
+		const response = await patchRequestWithAuth({ category: userId }, userId, url);
+		expect(response.status).toBe(parameterErrorMessages.CategoryDidntFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.CategoryDidntFound.message);
+	});
+
+	it('Update parameter: returns 400 for update a parameter with number type title instead of string', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const firstCategory = await createCategory(correctCategory);
+		const firstCategoryId = firstCategory._id;
+		const firstParameterDTO = await createParameterData(correctParameterDto, firstCategoryId);
+		const firstParameter = await ParameterModel.create(firstParameterDTO);
+		const url = `${baseParameterUrl}/${firstParameter._id}`;
+		const response = await patchRequestWithAuth({ title: 2 }, userId, url);
+		expect(response.status).toBe(parameterErrorMessages['"title" must be a string'].statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages['"title" must be a string'].message);
+	});
+
+	it('Update parameter: returns 400 for update a parameter with empty string title', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const firstCategory = await createCategory(correctCategory);
+		const firstCategoryId = firstCategory._id;
+		const firstParameterDTO = await createParameterData(correctParameterDto, firstCategoryId);
+		const firstParameter = await ParameterModel.create(firstParameterDTO);
+		const url = `${baseParameterUrl}/${firstParameter._id}`;
+		const response = await patchRequestWithAuth({ title: '' }, userId, url);
+		expect(response.status).toBe(parameterErrorMessages['"title" contains an invalid value'].statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages['"title" contains an invalid value'].message);
+	});
+
+	it('Update parameter: returns 400 for update a parameter with number type key instead of string', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const firstCategory = await createCategory(correctCategory);
+		const firstCategoryId = firstCategory._id;
+		const firstParameterDTO = await createParameterData(correctParameterDto, firstCategoryId);
+		const firstParameter = await ParameterModel.create(firstParameterDTO);
+		const url = `${baseParameterUrl}/${firstParameter._id}`;
+		const response = await patchRequestWithAuth({ key: 2 }, userId, url);
+		expect(response.status).toBe(parameterErrorMessages['"key" must be a string'].statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages['"key" must be a string'].message);
+	});
+
+	it('Update parameter: returns 400 for update a parameter with empty string key', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const firstCategory = await createCategory(correctCategory);
+		const firstCategoryId = firstCategory._id;
+		const firstParameterDTO = await createParameterData(correctParameterDto, firstCategoryId);
+		const firstParameter = await ParameterModel.create(firstParameterDTO);
+		const url = `${baseParameterUrl}/${firstParameter._id}`;
+		const response = await patchRequestWithAuth({ key: '' }, userId, url);
+		expect(response.status).toBe(parameterErrorMessages['"key" contains an invalid value'].statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages['"key" contains an invalid value'].message);
 	});
 });

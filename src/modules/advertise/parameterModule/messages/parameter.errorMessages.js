@@ -7,6 +7,10 @@ const parameterErrorMessages = {
 		message: 'مقدار عنوان برای مشخصه نمیتواند خالی باشد',
 		statusCode: 400,
 	},
+	'"title" must be a string': {
+		message: 'مقدار عنوان برای مشخصه باید از نوع رشته ای باشد',
+		statusCode: 400,
+	},
 	'"title" contains an invalid value': {
 		message: 'مقدار عنوان برای مشخصه نمیتواند رشته خالی باشد',
 		statusCode: 400,
@@ -17,6 +21,10 @@ const parameterErrorMessages = {
 	},
 	'"key" is not allowed to be empty': {
 		message: 'مقدار کلید برای مشخصه نمیتواند خالی باشد',
+		statusCode: 400,
+	},
+	'"key" must be a string': {
+		message: 'مقدار کلید برای مشخصه باید از نوع رشته ای باشد',
 		statusCode: 400,
 	},
 	'"key" contains an invalid value': {
@@ -63,7 +71,7 @@ const parameterErrorMessages = {
 		message: 'مشخصاتی برای دسته بندی مورد نظر پیدا نشد',
 		statusCode: 404,
 	},
-	OptionWithKeyAndCategoryAlreadyExist: {
+	ParameterWithKeyAndCategoryAlreadyExist: {
 		message: 'این مشخصه با این دسته بندی و کلید قبلا ایجاد شده است',
 		statusCode: 409,
 	},

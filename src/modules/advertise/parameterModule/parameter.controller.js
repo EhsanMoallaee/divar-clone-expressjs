@@ -43,6 +43,7 @@ class ParameterController {
 		const updatedParameter = await this.#ParameterService.update(parameterId, updateDTO);
 		return res.status(200).json({ updatedParameter });
 	});
+
 	delete = catchAsyncErrors(async (req, res) => {
 		const { parameterId } = req.params;
 		await this.#ParameterService.delete(parameterId);

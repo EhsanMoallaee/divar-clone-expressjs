@@ -56,6 +56,15 @@ export const deleteRequestWithAuth = async (userId, url) => {
 	return response;
 };
 
+export const patchRequestWithAuth = async (data, userId, url) => {
+	const xAuthToken = await generateToken({ id: userId });
+	const response = await request(app)
+		.patch(url)
+		.send(data)
+		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+	return response;
+};
+
 // for develop
 // const addUsers = async (userCount) => {
 // 	const users = [];
