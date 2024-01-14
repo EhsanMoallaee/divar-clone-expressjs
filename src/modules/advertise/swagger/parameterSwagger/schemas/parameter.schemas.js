@@ -25,6 +25,9 @@
  *                  enum:
  *                      type: string
  *                      description: parameter enum
+ *                  isRequired:
+ *                      type: boolean
+ *                      description: set this parameter as required or not required
  *                  guide:
  *                      type: string
  *                      description: parameter guide

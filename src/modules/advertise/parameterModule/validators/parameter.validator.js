@@ -12,6 +12,7 @@ class ParameterValidator {
 			type: Joi.string().valid('number', 'string', 'boolean', 'array').required(),
 			enum: Joi.array().allow(null, ''),
 			guide: Joi.string().allow(null, ''),
+			isRequired: Joi.boolean(),
 			category: joiObjectId().required(),
 		});
 		return schema.validate(data);

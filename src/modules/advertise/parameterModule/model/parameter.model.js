@@ -7,6 +7,7 @@ const parameterSchema = new Schema(
 		type: { type: String, enum: ['number', 'string', 'boolean', 'array'], required: true },
 		enum: { type: Array, default: [] },
 		guide: { type: String, required: false },
+		isRequired: { type: Boolean, required: false, default: false },
 		category: { type: Types.ObjectId, ref: 'category', required: true },
 	},
 	{ versionKey: false }
