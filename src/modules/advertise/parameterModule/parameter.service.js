@@ -1,15 +1,15 @@
 import slugify from 'slugify';
 import AppError from '../../errorHandling/app.error.js';
-import CategoryRepository from '../../category/model/category.repository.js';
 import parameterErrorMessages from './messages/parameter.errorMessages.js';
 import ParameterRepository from './model/parameter.repository.js';
 import parameterValidator from './validators/parameter.validator.js';
+import categoryService from '../../category/category.service.js';
 
 class ParameterService {
-	#CategoryRepository;
+	#CategoryService;
 	#ParameterRepository;
 	constructor() {
-		this.#CategoryRepository = CategoryRepository;
+		this.#CategoryService = categoryService;
 		this.#ParameterRepository = ParameterRepository;
 	}
 
@@ -34,7 +34,12 @@ class ParameterService {
 				);
 			}
 		}
-		const category = await this.checkExistCategory(parameterDTO.category);
+		const category = await this.#CategoryService.checkExistCategory(parameterDTO.category);
+		if (!category)
+			throw new AppError(
+				parameterErrorMessages.CategoryDidntFound.message,
+				parameterErrorMessages.CategoryDidntFound.statusCode
+			);
 		parameterDTO.key = slugify(parameterDTO.key, { replacement: '_', trim: true, lower: true });
 		await this.checkExistOptionByKeyAndCategory(category, parameterDTO.key);
 		if (parameterDTO?.enum && typeof parameterDTO.enum === 'string') {
@@ -126,16 +131,6 @@ class ParameterService {
 				parameterErrorMessages.ParameterDidntFound.statusCode
 			);
 		return result;
-	};
-
-	checkExistCategory = async (categoryId) => {
-		const category = await this.#CategoryRepository.findOneById(categoryId);
-		if (!category)
-			throw new AppError(
-				parameterErrorMessages.CategoryDidntFound.message,
-				parameterErrorMessages.CategoryDidntFound.statusCode
-			);
-		return category;
 	};
 
 	checkExistOptionByKeyAndCategory = async (category, key) => {
