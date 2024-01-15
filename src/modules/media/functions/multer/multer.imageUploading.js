@@ -1,9 +1,7 @@
 import multer from 'multer';
 import gregorianToJalali from '../date/gregorianToJalali.dateConverter.js';
 
-const date = gregorianToJalali();
-const year = date['year'];
-const month = date['month'];
+const { year, month } = gregorianToJalali();
 const imageStorage = multer.diskStorage({
 	destination: function (req, file, cb) {
 		const dir = process.cwd() + `/static/${year}/${month}/${file.fieldname}/`;

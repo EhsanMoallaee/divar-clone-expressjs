@@ -80,7 +80,7 @@ const findParameterByCategoryIdUrl = '/api/v1/advertise/parameter/by-category-id
 const findParameterByCategorySlugUrl = '/api/v1/advertise/parameter/by-category-slug';
 
 describe('Advertise parameter module tests', () => {
-	it('Create parameter: returns 201 with correct values', async () => {
+	it('Create parameter: returns 201 for request with correct values', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -92,7 +92,7 @@ describe('Advertise parameter module tests', () => {
 		expect(response.body.parameter.key).toBe(correctParameterDto.key);
 	});
 
-	it('Create parameter: returns 400 with empty title', async () => {
+	it('Create parameter: returns 400 for request with empty title', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -105,7 +105,7 @@ describe('Advertise parameter module tests', () => {
 		expect(response.body.message).toBe(parameterErrorMessages['"title" is not allowed to be empty'].message);
 	});
 
-	it('Create parameter: returns 400 without title', async () => {
+	it('Create parameter: returns 400 for request without title', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -118,7 +118,7 @@ describe('Advertise parameter module tests', () => {
 		expect(response.body.message).toBe(parameterErrorMessages['"title" is required'].message);
 	});
 
-	it('Create parameter: returns 400 with empty key', async () => {
+	it('Create parameter: returns 400 for request with empty key', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -131,7 +131,7 @@ describe('Advertise parameter module tests', () => {
 		expect(response.body.message).toBe(parameterErrorMessages['"key" is not allowed to be empty'].message);
 	});
 
-	it('Create parameter: returns 400 without key', async () => {
+	it('Create parameter: returns 400 for request without key', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -171,7 +171,7 @@ describe('Advertise parameter module tests', () => {
 		expect(response.status).toBe(200);
 	});
 
-	it('Find parameter: returns 404 for find parameter with wrong id', async () => {
+	it('Find parameter: returns 404 for find parameter with wrong id/doesnt exist', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -197,7 +197,7 @@ describe('Advertise parameter module tests', () => {
 		expect(response.status).toBe(200);
 	});
 
-	it('Find parameter: returns 404 for find parameter with wrong category id', async () => {
+	it('Find parameter: returns 404 for find parameter with wrong category id/doesnt exist', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -222,7 +222,7 @@ describe('Advertise parameter module tests', () => {
 		expect(response.status).toBe(200);
 	});
 
-	it('Find parameter: returns 404 for find parameter with wrong category slug', async () => {
+	it('Find parameter: returns 404 for find parameter with wrong category slug/doesnt exist', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -256,7 +256,7 @@ describe('Advertise parameter module tests', () => {
 		expect(response.body.message).toBe(parameterErrorMessages.ParametersDidntFound.message);
 	});
 
-	it('Find parameter: returns 200 for delete a parameter', async () => {
+	it('Delete parameter: returns 200 for delete a parameter', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -269,7 +269,7 @@ describe('Advertise parameter module tests', () => {
 		expect(response.body.message).toBe(parameterSuccessMessages.ParameterDeletedSuccessfully.message);
 	});
 
-	it('Find parameter: returns 404 for delete a parameter with wrong id', async () => {
+	it('Delete parameter: returns 404 for delete a parameter with wrong id', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);

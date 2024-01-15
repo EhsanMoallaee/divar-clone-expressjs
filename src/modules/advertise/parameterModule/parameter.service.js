@@ -42,6 +42,11 @@ class ParameterService {
 				parameterErrorMessages.CategoryDidntFound.message,
 				parameterErrorMessages.CategoryDidntFound.statusCode
 			);
+		if (category.hasChild)
+			throw new AppError(
+				parameterErrorMessages.CategoryHasChild.message,
+				parameterErrorMessages.CategoryHasChild.statusCode
+			);
 		parameterDTO.key = slugify(parameterDTO.key, { replacement: '_', trim: true, lower: true });
 		await this.checkExistParameterByKeyAndCategory(category, parameterDTO.key);
 		if (parameterDTO?.enum) parameterDTO.enum = await this.convertEnumToArray(parameterDTO.enum);

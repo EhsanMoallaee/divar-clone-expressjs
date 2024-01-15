@@ -4,9 +4,7 @@ import gregorianToJalali from './date/gregorianToJalali.dateConverter.js';
 
 export default async function imageResizer(imageUrl, imageName) {
 	if (imageUrl) {
-		const date = gregorianToJalali();
-		const year = date['year'];
-		const month = date['month'];
+		const { year, month } = gregorianToJalali();
 		const appRoot = process.cwd();
 		const dir = appRoot + `/static/${year}/${month}/image/`;
 		const thumbnailSizeFilename = 'thumb-' + imageName;

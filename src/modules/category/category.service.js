@@ -33,18 +33,21 @@ class CategoryService {
 				);
 			}
 		}
+		let parentCategory;
 		if (categoryDTO.parentId && isValidObjectId(categoryDTO.parentId)) {
-			const foundCategory = await this.checkExistCategory(categoryDTO?.parentId);
-			if (!foundCategory)
+			parentCategory = await this.checkExistCategory(categoryDTO?.parentId);
+			if (!parentCategory)
 				throw new AppError(
 					categoryErrorMessages.ParentCategoryDidntFound.message,
 					categoryErrorMessages.ParentCategoryDidntFound.statusCode
 				);
-			categoryDTO.parentsIdArray = [...foundCategory.parentsIdArray, categoryDTO.parentId];
+			categoryDTO.parentsIdArray = [...parentCategory.parentsIdArray, categoryDTO.parentId];
 		}
 		if (categoryDTO.parentId == '') delete categoryDTO.parentId;
 		categoryDTO.slug = slugify(categoryDTO.slug, { remove: /[*+~.()'"!?_^#&:@]/g });
 		const category = await this.#CategoryRepository.create(categoryDTO);
+		if (parentCategory && !parentCategory.hasChild)
+			await this.#CategoryRepository.update(parentCategory._id, { $set: { hasChild: true } });
 		return category;
 	};
 

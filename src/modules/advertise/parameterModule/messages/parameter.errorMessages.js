@@ -55,6 +55,10 @@ const parameterErrorMessages = {
 		message: 'آی دی دسته بندی ارسال شده صحیح نمیباشد',
 		statusCode: 400,
 	},
+	CategoryHasChild: {
+		message: 'برای دسته بندی ای که دارای فرزند است نمیتوان مشخصهء آگهی ایجاد کرد',
+		statusCode: 400,
+	},
 	WrongParameterId: {
 		message: 'آی دی مشخصه ارسال شده صحیح نمیباشد',
 		statusCode: 400,
