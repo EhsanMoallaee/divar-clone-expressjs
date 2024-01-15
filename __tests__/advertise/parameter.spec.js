@@ -144,6 +144,18 @@ describe('Advertise parameter module tests', () => {
 		expect(response.body.message).toBe(parameterErrorMessages['"key" is required'].message);
 	});
 
+	it('Create parameter: returns 400 for create a parameter for a category which has child/children', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const parentCategory = await createCategory({ ...correctCategory, hasChild: true });
+		const parentCategoryId = parentCategory._id;
+
+		const parameterDTO = await createParameterData(correctParameterDto, parentCategoryId);
+		const response = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		expect(response.status).toBe(parameterErrorMessages.CategoryHasChild.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.CategoryHasChild.message);
+	});
+
 	it('Create parameter: returns 409 for create parameter with duplicate category and key', async () => {
 		const user = await createUser();
 		const userId = user._id;
