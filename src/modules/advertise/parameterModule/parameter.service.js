@@ -39,15 +39,22 @@ class ParameterService {
 		const category = await this.#CategoryService.checkExistCategory(parameterDTO.category);
 		if (!category)
 			throw new AppError(
-				parameterErrorMessages.CategoryDidntFound.message,
-				parameterErrorMessages.CategoryDidntFound.statusCode
+				parameterErrorMessages.CategoryNotFound.message,
+				parameterErrorMessages.CategoryNotFound.statusCode
 			);
 		if (category.hasChild)
 			throw new AppError(
 				parameterErrorMessages.CategoryHasChild.message,
 				parameterErrorMessages.CategoryHasChild.statusCode
 			);
-		parameterDTO.key = slugify(parameterDTO.key, { replacement: '_', trim: true, lower: true });
+		slugify.extend({ '-': '_' });
+		parameterDTO.key = slugify(parameterDTO.key, {
+			remove: /[*+~.()'"!?^#&:@]/g,
+			replacement: '_',
+			trim: true,
+			lower: true,
+		});
+		// parameterDTO.key = slugify(parameterDTO.key, { replacement: '_', trim: true, lower: true });
 		await this.checkExistParameterByKeyAndCategory(category, parameterDTO.key);
 		if (parameterDTO?.enum) parameterDTO.enum = await this.convertEnumToArray(parameterDTO.enum);
 		const parameter = await this.#ParameterRepository.create(parameterDTO);
@@ -59,8 +66,8 @@ class ParameterService {
 		const parameter = await this.#ParameterRepository.findOneById(parameterId, { __v: 0 }, populate);
 		if (!parameter)
 			throw new AppError(
-				parameterErrorMessages.ParameterDidntFound.message,
-				parameterErrorMessages.ParameterDidntFound.statusCode
+				parameterErrorMessages.ParameterNotFound.message,
+				parameterErrorMessages.ParameterNotFound.statusCode
 			);
 		return parameter;
 	};
@@ -70,8 +77,8 @@ class ParameterService {
 		const parameters = await this.#ParameterRepository.find({ category: categoryId }, { __v: 0 }, populate);
 		if (!parameters || parameters.length === 0)
 			throw new AppError(
-				parameterErrorMessages.ParametersDidntFound.message,
-				parameterErrorMessages.ParametersDidntFound.statusCode
+				parameterErrorMessages.ParametersNotFound.message,
+				parameterErrorMessages.ParametersNotFound.statusCode
 			);
 		return parameters;
 	};
@@ -111,8 +118,8 @@ class ParameterService {
 		const parameters = await this.#ParameterRepository.aggregate(aggregate);
 		if (!parameters || parameters.length === 0)
 			throw new AppError(
-				parameterErrorMessages.ParametersDidntFound.message,
-				parameterErrorMessages.ParametersDidntFound.statusCode
+				parameterErrorMessages.ParametersNotFound.message,
+				parameterErrorMessages.ParametersNotFound.statusCode
 			);
 		return parameters;
 	};
@@ -122,8 +129,8 @@ class ParameterService {
 		const parameters = await this.#ParameterRepository.find({}, { __v: 0 }, populate);
 		if (!parameters || parameters.length === 0)
 			throw new AppError(
-				parameterErrorMessages.ParametersDidntFound.message,
-				parameterErrorMessages.ParametersDidntFound.statusCode
+				parameterErrorMessages.ParametersNotFound.message,
+				parameterErrorMessages.ParametersNotFound.statusCode
 			);
 		return parameters;
 	};
@@ -162,8 +169,8 @@ class ParameterService {
 			const category = await this.#CategoryService.checkExistCategory(updateDTO.category);
 			if (!category)
 				throw new AppError(
-					parameterErrorMessages.CategoryDidntFound.message,
-					parameterErrorMessages.CategoryDidntFound.statusCode
+					parameterErrorMessages.CategoryNotFound.message,
+					parameterErrorMessages.CategoryNotFound.statusCode
 				);
 		}
 		if (updateDTO.key) updateDTO.key = slugify(updateDTO.key, { replacement: '_', trim: true, lower: true });
@@ -186,8 +193,8 @@ class ParameterService {
 		const result = await this.#ParameterRepository.deleteOneById(parameterId);
 		if (!result)
 			throw new AppError(
-				parameterErrorMessages.ParameterDidntFound.message,
-				parameterErrorMessages.ParameterDidntFound.statusCode
+				parameterErrorMessages.ParameterNotFound.message,
+				parameterErrorMessages.ParameterNotFound.statusCode
 			);
 		return result;
 	};

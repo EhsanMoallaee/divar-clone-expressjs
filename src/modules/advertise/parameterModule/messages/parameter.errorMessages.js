@@ -47,7 +47,7 @@ const parameterErrorMessages = {
 		message: 'باشد و نمیتواند رشته خالی باشد true یا false مقدار فیلد الزامی بودن مشخصه فقط میتواند',
 		statusCode: 400,
 	},
-	CategoryDidntFound: {
+	CategoryNotFound: {
 		message: 'دسته بندی مورد نظر پیدا نشد',
 		statusCode: 404,
 	},
@@ -67,11 +67,11 @@ const parameterErrorMessages = {
 		message: 'لطفا با پشتیبانی سایت تماس بگیرید',
 		statusCode: 403,
 	},
-	ParameterDidntFound: {
+	ParameterNotFound: {
 		message: 'مشخصه مورد نظر پیدا نشد',
 		statusCode: 404,
 	},
-	ParametersDidntFound: {
+	ParametersNotFound: {
 		message: 'مشخصاتی برای دسته بندی مورد نظر پیدا نشد',
 		statusCode: 404,
 	},

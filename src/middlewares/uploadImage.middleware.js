@@ -2,6 +2,7 @@ import multer from 'multer';
 import gracefulFs from 'graceful-fs';
 import gregorianToJalali from '../common/dateConverters/gregorianToJalali.dateConverter.js';
 import uploadImageErrorMessages from './messages/uploadImage.ErrorMessages.js';
+import UploadFieldNames from '../common/constants/uploadFile.enum.js';
 
 const { year, month } = gregorianToJalali();
 const storage = multer.diskStorage({
@@ -11,7 +12,7 @@ const storage = multer.diskStorage({
 	},
 	filename: (req, file, cb) => {
 		let originalname = file.originalname.replace(/[^A-Za-z0-9.]/g, '-');
-		const filename = 'img' + Date.now() + '-' + originalname;
+		const filename = UploadFieldNames.FILE_NAME_PREFIX + Date.now() + '-' + originalname;
 		cb(null, filename);
 	},
 });
@@ -19,14 +20,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const uploadMiddleware = (req, res, next) => {
-	upload.array('image', 5)(req, res, (err) => {
+	upload.array(UploadFieldNames.FIELD_NAME, UploadFieldNames.MAX_ALLOWED_FILES_COUNT)(req, res, (err) => {
 		if (err) {
 			if (err.message == 'Unexpected field') {
 				return res
 					.status(uploadImageErrorMessages.FieldIsNotAllowed.statusCode)
 					.json({ message: uploadImageErrorMessages.FieldIsNotAllowed.message });
 			}
-			return res.status(400).json({ error: err.message });
+			return res.status(400).json({ message: uploadImageErrorMessages.UnknownProblem.message });
 		}
 
 		const files = req.files;
@@ -37,11 +38,11 @@ const uploadMiddleware = (req, res, next) => {
 			const maxSize = 3 * 1024 * 1024; // 3MB
 
 			if (!allowedTypes.includes(file.mimetype)) {
-				errors.push(`Invalid file type: ${file.originalname}`);
+				errors.push(`${file.originalname} :${uploadImageErrorMessages.WrongImageFileFormat.message}`);
 			}
 
 			if (file.size > maxSize) {
-				errors.push(`File too large: ${file.originalname}`);
+				errors.push(`${file.originalname} :${uploadImageErrorMessages.MaxImageFileSizeError.message}`);
 			}
 		});
 

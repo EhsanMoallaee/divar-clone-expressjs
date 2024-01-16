@@ -1,5 +1,7 @@
 const UploadFieldNames = Object.freeze({
-	IMAGE: 'image',
+	FIELD_NAME: 'images',
+	FILE_NAME_PREFIX: 'img',
+	MAX_ALLOWED_FILES_COUNT: 5,
 });
 
 export default UploadFieldNames;

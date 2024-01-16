@@ -116,7 +116,7 @@ describe('Create Category tests', () => {
 		};
 		const user = await createUser();
 		const response = await postRequestWithAuth(subCategory, user._id, baseCategoryURL);
-		expect(response.status).toBe(categoryErrorMessages.ParentCategoryDidntFound.statusCode);
-		expect(response.body.message).toBe(categoryErrorMessages.ParentCategoryDidntFound.message);
+		expect(response.status).toBe(categoryErrorMessages.ParentCategoryNotFound.statusCode);
+		expect(response.body.message).toBe(categoryErrorMessages.ParentCategoryNotFound.message);
 	});
 });

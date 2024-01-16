@@ -11,11 +11,11 @@ const categoryErrorMessages = {
 		message: 'وارد کردن توضیحات برای دسته بندی الزامیست',
 		statusCode: 400,
 	},
-	CategoryDidntFound: {
+	CategoryNotFound: {
 		message: 'دسته بندی مورد نظر پیدا نشد',
 		statusCode: 404,
 	},
-	CategoriesDidntFound: {
+	CategoriesNotFound: {
 		message: 'دسته بندی ای پیدا نشد',
 		statusCode: 404,
 	},
@@ -31,7 +31,7 @@ const categoryErrorMessages = {
 		message: 'لطفا با پشتیبانی سایت تماس بگیرید',
 		statusCode: 403,
 	},
-	ParentCategoryDidntFound: {
+	ParentCategoryNotFound: {
 		message: 'دسته بندی والد پیدا نشد',
 		statusCode: 404,
 	},

@@ -38,8 +38,8 @@ class CategoryService {
 			parentCategory = await this.checkExistCategory(categoryDTO?.parentId);
 			if (!parentCategory)
 				throw new AppError(
-					categoryErrorMessages.ParentCategoryDidntFound.message,
-					categoryErrorMessages.ParentCategoryDidntFound.statusCode
+					categoryErrorMessages.ParentCategoryNotFound.message,
+					categoryErrorMessages.ParentCategoryNotFound.statusCode
 				);
 			categoryDTO.parentsIdArray = [...parentCategory.parentsIdArray, categoryDTO.parentId];
 		}
@@ -55,8 +55,8 @@ class CategoryService {
 		const category = await this.checkExistCategory(categoryId);
 		if (!category)
 			throw new AppError(
-				categoryErrorMessages.CategoryDidntFound.message,
-				categoryErrorMessages.CategoryDidntFound.statusCode
+				categoryErrorMessages.CategoryNotFound.message,
+				categoryErrorMessages.CategoryNotFound.statusCode
 			);
 		return category;
 	};
@@ -65,8 +65,8 @@ class CategoryService {
 		const category = await this.#CategoryRepository.findOne({ slug }, { __v: 0, createdAt: 0, updatedAt: 0 });
 		if (!category)
 			throw new AppError(
-				categoryErrorMessages.CategoryDidntFound.message,
-				categoryErrorMessages.CategoryDidntFound.statusCode
+				categoryErrorMessages.CategoryNotFound.message,
+				categoryErrorMessages.CategoryNotFound.statusCode
 			);
 		return category;
 	};
@@ -78,8 +78,8 @@ class CategoryService {
 		);
 		if (!categories || categories.length == 0) {
 			throw new AppError(
-				categoryErrorMessages.CategoriesDidntFound.message,
-				categoryErrorMessages.CategoriesDidntFound.statusCode
+				categoryErrorMessages.CategoriesNotFound.message,
+				categoryErrorMessages.CategoriesNotFound.statusCode
 			);
 		}
 		return categories;
@@ -89,8 +89,8 @@ class CategoryService {
 		const category = await this.#CategoryRepository.deleteOneById(catId);
 		if (!category) {
 			throw new AppError(
-				categoryErrorMessages.CategoriesDidntFound.message,
-				categoryErrorMessages.CategoriesDidntFound.statusCode
+				categoryErrorMessages.CategoriesNotFound.message,
+				categoryErrorMessages.CategoriesNotFound.statusCode
 			);
 		}
 	};

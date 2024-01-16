@@ -46,7 +46,7 @@ const secondCorrectParameterDto = {
 
 const correctUpdateParameterDto = {
 	title: 'update title',
-	key: 'update-key',
+	key: 'update_key',
 	type: 'string',
 	enum: ['white', 'black', 'silver'],
 	guide: 'Select from enum',
@@ -193,8 +193,8 @@ describe('Advertise parameter module tests', () => {
 		const url = `${findParameterByIdUrl}/${parameter._id}`;
 		await ParameterModel.deleteOne({ _id: parameter._id });
 		const response = await getRequestWithAuth(userId, {}, url);
-		expect(response.status).toBe(parameterErrorMessages.ParameterDidntFound.statusCode);
-		expect(response.body.message).toBe(parameterErrorMessages.ParameterDidntFound.message);
+		expect(response.status).toBe(parameterErrorMessages.ParameterNotFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParameterNotFound.message);
 	});
 
 	it('Find parameter: returns 200 for find parameter with category id', async () => {
@@ -218,8 +218,8 @@ describe('Advertise parameter module tests', () => {
 		const parameter = await ParameterModel.create(parameterDTO);
 		const url = `${findParameterByCategoryIdUrl}/${parameter._id}`;
 		const response = await getRequestWithAuth(userId, {}, url);
-		expect(response.status).toBe(parameterErrorMessages.ParametersDidntFound.statusCode);
-		expect(response.body.message).toBe(parameterErrorMessages.ParametersDidntFound.message);
+		expect(response.status).toBe(parameterErrorMessages.ParametersNotFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParametersNotFound.message);
 	});
 
 	it('Find parameter: returns 200 for find parameter with category slug', async () => {
@@ -243,8 +243,8 @@ describe('Advertise parameter module tests', () => {
 		await ParameterModel.create(parameterDTO);
 		const url = `${findParameterByCategorySlugUrl}/${'wrong-slug'}`;
 		const response = await getRequestWithAuth(userId, {}, url);
-		expect(response.status).toBe(parameterErrorMessages.ParametersDidntFound.statusCode);
-		expect(response.body.message).toBe(parameterErrorMessages.ParametersDidntFound.message);
+		expect(response.status).toBe(parameterErrorMessages.ParametersNotFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParametersNotFound.message);
 	});
 
 	it('Find parameter: returns 200 for find all parameters', async () => {
@@ -264,8 +264,8 @@ describe('Advertise parameter module tests', () => {
 		const user = await createUser();
 		const userId = user._id;
 		const response = await getRequestWithAuth(userId, {}, baseParameterUrl);
-		expect(response.status).toBe(parameterErrorMessages.ParametersDidntFound.statusCode);
-		expect(response.body.message).toBe(parameterErrorMessages.ParametersDidntFound.message);
+		expect(response.status).toBe(parameterErrorMessages.ParametersNotFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParametersNotFound.message);
 	});
 
 	it('Delete parameter: returns 200 for delete a parameter', async () => {
@@ -290,8 +290,8 @@ describe('Advertise parameter module tests', () => {
 		await ParameterModel.create(parameterDTO);
 		const url = `${baseParameterUrl}/${userId}`;
 		const response = await deleteRequestWithAuth(userId, url);
-		expect(response.status).toBe(parameterErrorMessages.ParameterDidntFound.statusCode);
-		expect(response.body.message).toBe(parameterErrorMessages.ParameterDidntFound.message);
+		expect(response.status).toBe(parameterErrorMessages.ParameterNotFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParameterNotFound.message);
 	});
 
 	it('Update parameter: returns 200 for update a parameter with correct vlaues', async () => {
@@ -352,8 +352,8 @@ describe('Advertise parameter module tests', () => {
 		const userId = user._id;
 		const url = `${baseParameterUrl}/${userId}`;
 		const response = await patchRequestWithAuth({}, userId, url);
-		expect(response.status).toBe(parameterErrorMessages.ParameterDidntFound.statusCode);
-		expect(response.body.message).toBe(parameterErrorMessages.ParameterDidntFound.message);
+		expect(response.status).toBe(parameterErrorMessages.ParameterNotFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParameterNotFound.message);
 	});
 
 	it('Update parameter: returns 404 for update a parameter with wrong category id/doesnt exist request', async () => {
@@ -365,8 +365,8 @@ describe('Advertise parameter module tests', () => {
 		const firstParameter = await ParameterModel.create(firstParameterDTO);
 		const url = `${baseParameterUrl}/${firstParameter._id}`;
 		const response = await patchRequestWithAuth({ category: userId }, userId, url);
-		expect(response.status).toBe(parameterErrorMessages.CategoryDidntFound.statusCode);
-		expect(response.body.message).toBe(parameterErrorMessages.CategoryDidntFound.message);
+		expect(response.status).toBe(parameterErrorMessages.CategoryNotFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.CategoryNotFound.message);
 	});
 
 	it('Update parameter: returns 400 for update a parameter with number type title instead of string', async () => {
