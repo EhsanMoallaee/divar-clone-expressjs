@@ -1,5 +1,5 @@
 import gracefulFs from 'graceful-fs';
-import gregorianToJalali from '../modules/media/functions/date/gregorianToJalali.dateConverter.js';
+import gregorianToJalali from '../common/dateConverters/gregorianToJalali.dateConverter.js';
 
 //Check media storage folder exist if doesn't so make that
 export default function (type) {
