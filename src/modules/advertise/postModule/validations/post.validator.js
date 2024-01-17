@@ -9,12 +9,13 @@ class PostValidator {
 		const schema = Joi.object({
 			title: Joi.string()
 				.required()
-				.pattern(/(?!^\d+$)^.+$/),
-			description: Joi.string().required(),
+				.pattern(/(?!^\d+$)^.+$/)
+				.trim(),
+			description: Joi.string().required().trim(),
 			categoryId: joiObjectId().required(),
-			province: Joi.string().required(),
-			city: Joi.string().required(),
-			district: Joi.string().required(),
+			province: Joi.string().required().trim(),
+			city: Joi.string().required().trim(),
+			district: Joi.string().required().trim(),
 			coordinate: Joi.array().ordered(
 				Joi.number().min(-90).max(90).required(),
 				Joi.number().min(-180).max(180).required()

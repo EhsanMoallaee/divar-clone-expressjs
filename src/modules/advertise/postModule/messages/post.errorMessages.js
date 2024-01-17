@@ -71,17 +71,9 @@ const postErrorMessages = {
 		message: 'مقدار نام منطقه یا خیابان محل آگهی نمیتواند رشته خالی باشد',
 		statusCode: 400,
 	},
-	TitleCouldNotBeJustNumbers: {
-		message: 'عنوان آگهی نمیتواند فقط عدد باشد',
-		statusCode: 400,
-	},
-	FieldIsNotAllowed: {
-		message: 'لطفا با پشتیبانی سایت تماس بگیرید',
-		statusCode: 403,
-	},
-	WrongCategoryId: {
-		message: 'آی دی دسته بندی ارسال شده صحیح نمیباشد',
-		statusCode: 400,
+	AdvertisePostsNotFound: {
+		message: 'آگهی ای پیدا نشد',
+		statusCode: 404,
 	},
 	CategoryNotFound: {
 		message: 'دسته بندی مورد نظر پیدا نشد',
@@ -90,6 +82,14 @@ const postErrorMessages = {
 	CategoryHasChild: {
 		message: 'برای دسته بندی ای که دارای فرزند است نمیتوان مشخصهء آگهی ایجاد کرد',
 		statusCode: 400,
+	},
+	ExceptionError: {
+		message: 'درخواست معتبر نمیباشد',
+		statusCode: 400,
+	},
+	FieldIsNotAllowed: {
+		message: 'لطفا با پشتیبانی سایت تماس بگیرید',
+		statusCode: 403,
 	},
 	ParametersNotFound: {
 		message: 'مشخصاتی برای دسته بندی مورد نظر پیدا نشد',
@@ -103,8 +103,12 @@ const postErrorMessages = {
 		message: 'تمامی مشخصات الزامی باید ارسال شده و دارای مقدار باشند',
 		statusCode: 400,
 	},
-	ExceptionError: {
-		message: 'درخواست معتبر نمیباشد',
+	TitleCouldNotBeJustNumbers: {
+		message: 'عنوان آگهی نمیتواند فقط عدد باشد',
+		statusCode: 400,
+	},
+	WrongCategoryId: {
+		message: 'آی دی دسته بندی ارسال شده صحیح نمیباشد',
 		statusCode: 400,
 	},
 };

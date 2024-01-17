@@ -5,9 +5,9 @@ class CategoryValidator {
 
 	createCategoryValidator = (data) => {
 		const schema = Joi.object({
-			title: Joi.string().required(),
-			slug: Joi.string().required(),
-			description: Joi.string().required(),
+			title: Joi.string().required().trim(),
+			slug: Joi.string().required().trim(),
+			description: Joi.string().required().trim(),
 			icon: Joi.string().allow(null, ''),
 			parentId: Joi.string().allow(null, ''),
 		});

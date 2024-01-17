@@ -21,7 +21,6 @@ class PostService {
 		const { error } = PostValidator.createPostValidator(data);
 		if (error) {
 			const errorMessage = error.message;
-			console.log('🚀 ~ PostService ~ create= ~ errorMessage:', errorMessage);
 			if (errorMessage.endsWith('is not allowed')) {
 				throw new AppError(
 					postErrorMessages.FieldIsNotAllowed.message,
@@ -71,6 +70,17 @@ class PostService {
 		delete postDTO.categoryId;
 		const advertisePost = await this.#PostRepository.create(postDTO);
 		return advertisePost;
+	};
+
+	findByCategorySlug = async (categorySlug) => {
+		const filterQuery = { 'directCategory.slug': categorySlug };
+		const advertisePosts = await this.#PostRepository.find(filterQuery, { updatedAt: 0 });
+		if (!advertisePosts || advertisePosts.length === 0)
+			throw new AppError(
+				postErrorMessages.AdvertisePostsNotFound.message,
+				postErrorMessages.AdvertisePostsNotFound.statusCode
+			);
+		return advertisePosts;
 	};
 }
 

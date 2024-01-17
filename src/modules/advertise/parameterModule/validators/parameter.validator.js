@@ -7,11 +7,11 @@ class ParameterValidator {
 
 	createParameterValidator = (data) => {
 		const schema = Joi.object({
-			title: Joi.string().required(),
-			key: Joi.string().required(),
+			title: Joi.string().required().trim(),
+			key: Joi.string().required().trim(),
 			type: Joi.string().valid('number', 'string', 'boolean', 'array').required(),
 			enum: Joi.alternatives().try(Joi.array(), Joi.string()),
-			guide: Joi.string().allow(null, ''),
+			guide: Joi.string().allow(null, '').trim(),
 			isRequired: Joi.boolean(),
 			category: joiObjectId().required(),
 		});
@@ -20,11 +20,11 @@ class ParameterValidator {
 
 	updateParameterValidator = (data) => {
 		const schema = Joi.object({
-			title: Joi.string().optional().invalid(''),
-			key: Joi.string().optional().invalid('', null),
+			title: Joi.string().optional().invalid('').trim(),
+			key: Joi.string().optional().invalid('', null).trim(),
 			type: Joi.string().optional().valid('number', 'string', 'boolean', 'array'),
 			enum: Joi.alternatives().optional().try(Joi.array(), Joi.string()),
-			guide: Joi.string().optional().allow(null, ''),
+			guide: Joi.string().optional().allow(null, '').trim(),
 			isRequired: Joi.boolean().optional(),
 			category: joiObjectId().optional(),
 		});

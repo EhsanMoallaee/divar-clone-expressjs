@@ -11,7 +11,13 @@ class PostController {
 		const files = req.files;
 		const postData = req.body;
 		const result = await this.#PostService.create(postData, files);
-		return res.json({ result });
+		return res.status(201).json({ result });
+	});
+
+	findByCategorySlug = catchAsyncErrors(async (req, res) => {
+		const { categorySlug } = req.params;
+		const posts = await this.#PostService.findByCategorySlug(categorySlug);
+		return res.status(200).json({ posts });
 	});
 }
 
