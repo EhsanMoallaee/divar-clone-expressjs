@@ -1,9 +1,9 @@
 import AppError from '../../errorHandling/app.error.js';
 import postErrorMessages from '../postModule/messages/post.errorMessages.js';
 
-export default async function checkKeysAreAllowed(parametersInData, allowedKeys) {
+export default async function checkKeysAreAllowed(parametersInData, allowedParametersKeys) {
 	const containAllowedKeys = parametersInData.every((key) => {
-		return allowedKeys.indexOf(key) !== -1;
+		return allowedParametersKeys.indexOf(key) !== -1;
 	});
 
 	if (!containAllowedKeys)

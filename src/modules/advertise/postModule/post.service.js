@@ -58,9 +58,9 @@ class PostService {
 		};
 
 		const parameters = await this.#ParameterService.findByCategoryId(category._id);
-		const allowedKeys = parameters.map((param) => param.key);
+		const allowedParametersKeys = parameters.map((param) => param.key);
 		const parametersInData = [...Object.keys(data.parameters)];
-		await checkKeysAreAllowed(parametersInData, allowedKeys);
+		await checkKeysAreAllowed(parametersInData, allowedParametersKeys);
 		await checkIncludesRequiredKeys(parameters, data);
 
 		const postDTO = {
@@ -92,18 +92,8 @@ class PostService {
 				postErrorMessages.CategorySlugIsMissing.statusCode
 			);
 		const category = await this.#CategoryService.findBySlug(categorySlug);
-		let categoryIds = [];
-		if (!category.hasChild) {
-			categoryIds.push(category._id);
-		} else {
-			categoryIds = await this.#CategoryService.findCategoryChildWithNoChild(category._id);
-		}
-		const advertisePosts = [];
-		for (const id of categoryIds) {
-			const filterQuery = { 'directCategory.id': id };
-			const posts = await this.#PostRepository.find(filterQuery, { updatedAt: 0 });
-			if (posts && posts.length > 0) advertisePosts.push(...posts);
-		}
+		const categoryIds = await this.findRelatedNoChildCategoryIds(category);
+		const advertisePosts = await this.findAdvertisePosts(categoryIds);
 		if (!advertisePosts || advertisePosts.length === 0)
 			throw new AppError(
 				postErrorMessages.AdvertisePostsNotFound.message,
@@ -143,18 +133,42 @@ class PostService {
 				postErrorMessages.ProvinceIsMissing.message,
 				postErrorMessages.ProvinceIsMissing.statusCode
 			);
-		const filterQuery = {
-			'directCategory.slug': categorySlug,
-			province,
-		};
-		if (city) filterQuery.city = city;
-		if (district) filterQuery.district = district;
-		const advertisePosts = await this.#PostRepository.find(filterQuery, { updatedAt: 0 });
+		const category = await this.#CategoryService.findBySlug(categorySlug);
+		const categoryIds = await this.findRelatedNoChildCategoryIds(category);
+		const conditions = { province, city, district };
+		const advertisePosts = await this.findAdvertisePosts(categoryIds, conditions);
 		if (!advertisePosts || advertisePosts.length === 0)
 			throw new AppError(
 				postErrorMessages.AdvertisePostsNotFound.message,
 				postErrorMessages.AdvertisePostsNotFound.statusCode
 			);
+		return advertisePosts;
+	};
+
+	findRelatedNoChildCategoryIds = async (category) => {
+		let categoryIds = [];
+		if (!category.hasChild) {
+			categoryIds.push(category._id);
+		} else {
+			categoryIds = await this.#CategoryService.findCategoryChildWithNoChild(category._id);
+		}
+		return categoryIds;
+	};
+
+	findAdvertisePosts = async (categoryIds, conditions) => {
+		const advertisePosts = [];
+		let filterQuery = {};
+		if (conditions) {
+			Object.keys(conditions).forEach((key) => conditions[key] == null && delete conditions[key]);
+			filterQuery = {
+				...conditions,
+			};
+		}
+		for (const id of categoryIds) {
+			filterQuery['directCategory.id'] = id;
+			const posts = await this.#PostRepository.find(filterQuery, { updatedAt: 0 });
+			if (posts && posts.length > 0) advertisePosts.push(...posts);
+		}
 		return advertisePosts;
 	};
 }
