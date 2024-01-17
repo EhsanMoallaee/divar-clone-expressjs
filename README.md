@@ -17,7 +17,7 @@ This is a clone of Persian Divar marketplace.It's not a replica, and it doesn't 
 
 ## Basic config for Persian users
 
-For slugify Persian words with slugify package in 'node_modules/slugify/slugify.js' replace whole " var locales = JSON.parse(...)" line with which I wrote in "persianCharMap/slugify.fa.charmap.js" or if you want use another language too, just add ' "fa":{...} ' charmap part to locales variable in slugify.js file of package.
+For slugify Persian words with slugify package in 'node_modules/slugify/slugify.js' replace whole " var locales = JSON.parse(...)" line with which I wrote in "persianCharMap/slugify.fa.charmap.js" or if you want use another languages too, just add ' "fa":{...} ' charmap part to locales variable in slugify.js file of package.
 
 ## Environment Variables
 
