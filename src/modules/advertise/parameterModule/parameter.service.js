@@ -42,7 +42,7 @@ class ParameterService {
 				parameterErrorMessages.CategoryNotFound.message,
 				parameterErrorMessages.CategoryNotFound.statusCode
 			);
-		if (category.hasChild)
+		if (category.hasChildren)
 			throw new AppError(
 				parameterErrorMessages.CategoryHasChild.message,
 				parameterErrorMessages.CategoryHasChild.statusCode

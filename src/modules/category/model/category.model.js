@@ -12,7 +12,7 @@ const categorySchema = new Schema(
 			ref: 'category',
 		},
 		parentsIdArray: { type: [Types.ObjectId], default: [] },
-		hasChild: { type: Boolean, default: false },
+		hasChildren: { type: Boolean, default: false },
 	},
 	{ versionKey: false, id: false, timestamps: true, toJSON: { virtuals: true } }
 );

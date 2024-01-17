@@ -25,7 +25,7 @@ To run this project,first you will need to create three .env files as:
 .env.test
 .env.development
 .env.production
-in the root of the project folder and then add the following environment variables to your .env files with your own data:
+in the root of the project folder and then add the following environment variables to your .env files with your own values:
 
 `PORT`
 

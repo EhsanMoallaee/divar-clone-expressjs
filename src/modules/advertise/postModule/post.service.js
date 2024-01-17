@@ -145,12 +145,22 @@ class PostService {
 		return advertisePosts;
 	};
 
+	delete = async (postId) => {
+		const result = await this.#PostRepository.deleteOneById(postId);
+		if (!result)
+			throw new AppError(
+				postErrorMessages.AdvertisePostNotFound.message,
+				postErrorMessages.AdvertisePostNotFound.statusCode
+			);
+		return result;
+	};
+
 	findRelatedNoChildCategoryIds = async (category) => {
 		let categoryIds = [];
-		if (!category.hasChild) {
+		if (!category.hasChildren) {
 			categoryIds.push(category._id);
 		} else {
-			categoryIds = await this.#CategoryService.findCategoryChildWithNoChild(category._id);
+			categoryIds = await this.#CategoryService.findCategoryChildWithNoChildren(category._id);
 		}
 		return categoryIds;
 	};

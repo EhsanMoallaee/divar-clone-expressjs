@@ -1,4 +1,5 @@
 import catchAsyncErrors from '../../errorHandling/catch.asyncErrors.js';
+import postSuccessMessages from './messages/post.successMessages.js';
 import postService from './post.service.js';
 
 class PostController {
@@ -41,6 +42,14 @@ class PostController {
 			district
 		);
 		return res.status(200).json({ advertisePosts });
+	});
+
+	delete = catchAsyncErrors(async (req, res) => {
+		const { postId } = req.params;
+		await this.#PostService.delete(postId);
+		return res
+			.status(postSuccessMessages.PostDeletedSuccessfully.statusCode)
+			.json({ message: postSuccessMessages.PostDeletedSuccessfully.message });
 	});
 }
 

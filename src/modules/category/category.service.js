@@ -46,8 +46,8 @@ class CategoryService {
 		if (categoryDTO.parentId == '') delete categoryDTO.parentId;
 		categoryDTO.slug = slugify(categoryDTO.slug, { remove: /[*+~.()'"!?_^#&:@]/g, locale: 'fa' });
 		const category = await this.#CategoryRepository.create(categoryDTO);
-		if (parentCategory && !parentCategory.hasChild)
-			await this.#CategoryRepository.update(parentCategory._id, { $set: { hasChild: true } });
+		if (parentCategory && !parentCategory.hasChildren)
+			await this.#CategoryRepository.update(parentCategory._id, { $set: { hasChildren: true } });
 		return category;
 	};
 
@@ -100,10 +100,10 @@ class CategoryService {
 		return category;
 	};
 
-	findCategoryChildWithNoChild = async (categoryId) => {
+	findCategoryChildWithNoChildren = async (categoryId) => {
 		const filterQuery = {
 			parentsIdArray: { $in: categoryId },
-			hasChild: false,
+			hasChildren: false,
 		};
 		const categoryWithNoChild = await this.#CategoryRepository.find(filterQuery, {
 			__v: 0,

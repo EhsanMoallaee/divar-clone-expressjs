@@ -12,5 +12,6 @@ postRouter_v1.get('/by-id/:postId', postController.findByPostId);
 postRouter_v1.get('/by-category-slug/:categorySlug', postController.findByCategorySlug);
 postRouter_v1.get('/by-address', postController.findByAddress);
 postRouter_v1.get('/by-categorySlug-address', postController.findByCategorySlugAndAddress);
+postRouter_v1.delete('/:postId', postController.delete);
 
 export default postRouter_v1;

@@ -55,7 +55,7 @@ describe('Create Category tests', () => {
 		expect(response.body.parentId).toBe(parentId.toString());
 	});
 
-	it('Create sub category: check hasChild field change to true when create a child for it', async () => {
+	it('Create sub category: check hasChildren field change to true when create a child for it', async () => {
 		const user = await createUser();
 		let parentCategory = await CategoryModel.create(correctParentCategoryDto);
 		const parentId = parentCategory._id;
@@ -67,7 +67,7 @@ describe('Create Category tests', () => {
 		parentCategory = await CategoryModel.findById(parentCategory._id);
 		expect(response.body.title).toBe(correctCategoryDtoDto.title);
 		expect(response.body.parentId).toBe(parentId.toString());
-		expect(parentCategory.hasChild).toBe(true);
+		expect(parentCategory.hasChildren).toBe(true);
 	});
 
 	it('Create category: returns 400 without required field title', async () => {
