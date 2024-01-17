@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import parameterController from '../parameter.controller.js';
+
 import authenticationGuard from '../../../../guards/authentication.guard.js';
 import authorizationGuard from '../../../../guards/authorization.guard.js';
+import parameterController from '../parameter.controller.js';
 import { Roles } from '../../../user/model/user.model.js';
 
 const parameterRouter_v1 = Router();
