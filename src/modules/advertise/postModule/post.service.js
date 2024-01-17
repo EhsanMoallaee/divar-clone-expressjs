@@ -52,7 +52,7 @@ class PostService {
 				postErrorMessages.CategoryNotFound.statusCode
 			);
 		const directCategory = {
-			category: category._id,
+			id: category._id,
 			title: category.title,
 			slug: category.slug,
 		};
@@ -92,15 +92,15 @@ class PostService {
 				postErrorMessages.CategorySlugIsMissing.statusCode
 			);
 		const category = await this.#CategoryService.findBySlug(categorySlug);
-		let categorySlugs = [];
+		let categoryIds = [];
 		if (!category.hasChild) {
-			categorySlugs.push(category.slug);
+			categoryIds.push(category._id);
 		} else {
-			categorySlugs = await this.#CategoryService.findCategoryChildWithNoChild(category._id);
+			categoryIds = await this.#CategoryService.findCategoryChildWithNoChild(category._id);
 		}
 		const advertisePosts = [];
-		for (const slug of categorySlugs) {
-			const filterQuery = { 'directCategory.slug': slug };
+		for (const id of categoryIds) {
+			const filterQuery = { 'directCategory.id': id };
 			const posts = await this.#PostRepository.find(filterQuery, { updatedAt: 0 });
 			if (posts && posts.length > 0) advertisePosts.push(...posts);
 		}

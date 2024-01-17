@@ -5,7 +5,7 @@ const postSchema = new Schema(
 		title: { type: String, required: true },
 		description: { type: String, required: true },
 		directCategory: {
-			category: { type: Types.ObjectId, ref: 'category', index: true },
+			id: { type: Types.ObjectId, ref: 'category', index: true },
 			title: { type: String },
 			slug: { type: String },
 		},

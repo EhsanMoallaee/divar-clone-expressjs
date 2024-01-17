@@ -116,11 +116,11 @@ class CategoryService {
 				categoryErrorMessages.CategoriesNotFound.statusCode
 			);
 		}
-		const categorySlugs = [];
+		const categoryIds = [];
 		for (const child of categoryWithNoChild) {
-			categorySlugs.push(child.slug);
+			categoryIds.push(child._id);
 		}
-		return categorySlugs;
+		return categoryIds;
 	};
 }
 
