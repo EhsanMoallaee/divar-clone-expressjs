@@ -56,12 +56,13 @@ class PostService {
 			title: category.title,
 			slug: category.slug,
 		};
+
 		const parameters = await this.#ParameterService.findByCategoryId(category._id);
 		const allowedKeys = parameters.map((param) => param.key);
 		const parametersInData = [...Object.keys(data.parameters)];
-
 		await checkKeysAreAllowed(parametersInData, allowedKeys);
 		await checkIncludesRequiredKeys(parameters, data);
+
 		const postDTO = {
 			...data,
 			directCategory,

@@ -43,6 +43,8 @@ in the root of the project folder and then add the following environment variabl
 
 (Kavenegar is an Iranian sms service provider)
 
+For slugify Persian words with slugify package in 'node_modules/slugify/slugify.js' replace " var locales = JSON.parse(...)" line with which I wrote in "persianCharMap/slugify.fa.charmap.js" or add ' "fa":{...} ' charmap part of this file to locales of slugify.js file of package.
+
 ## Run Locally
 
 Clone the project

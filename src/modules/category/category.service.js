@@ -44,7 +44,7 @@ class CategoryService {
 			categoryDTO.parentsIdArray = [...parentCategory.parentsIdArray, categoryDTO.parentId];
 		}
 		if (categoryDTO.parentId == '') delete categoryDTO.parentId;
-		categoryDTO.slug = slugify(categoryDTO.slug, { remove: /[*+~.()'"!?_^#&:@]/g });
+		categoryDTO.slug = slugify(categoryDTO.slug, { remove: /[*+~.()'"!?_^#&:@]/g, locale: 'fa' });
 		const category = await this.#CategoryRepository.create(categoryDTO);
 		if (parentCategory && !parentCategory.hasChild)
 			await this.#CategoryRepository.update(parentCategory._id, { $set: { hasChild: true } });
