@@ -17,7 +17,7 @@ categoryRouter_v1.delete(
 	[authenticationGuard, authorizationGuard([Roles.SUPERADMIN, Roles.ADMIN])],
 	categoryController.deleteById
 );
-categoryRouter_v1.get('/', categoryController.fetchAll);
+categoryRouter_v1.get('/', categoryController.fetchAllRootCategories);
 categoryRouter_v1.get('/by-slug/:slug', categoryController.findBySlug);
 categoryRouter_v1.get('/by-id/:catId', categoryController.findById);
 

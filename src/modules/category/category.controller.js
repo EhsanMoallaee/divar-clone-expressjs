@@ -33,8 +33,8 @@ class CategoryController {
 		return res.status(200).json({ category });
 	});
 
-	fetchAll = catchAsyncErrors(async (req, res) => {
-		const categories = await this.#CategoryService.fetchAll();
+	fetchAllRootCategories = catchAsyncErrors(async (req, res) => {
+		const categories = await this.#CategoryService.fetchAllRootCategories();
 		return res.status(200).json({
 			categories,
 		});

@@ -8,6 +8,9 @@ const postRouter_v1 = Router();
 
 // <domain>/api/v1/advertise/post
 postRouter_v1.post('/', [mediaStoragePathCheck(UploadFieldNames.FIELD_NAME), uploadMiddleware], postController.create);
+postRouter_v1.get('/by-id/:postId', postController.findByPostId);
 postRouter_v1.get('/by-category-slug/:categorySlug', postController.findByCategorySlug);
+postRouter_v1.get('/by-address', postController.findByAddress);
+postRouter_v1.get('/by-categorySlug-address', postController.findByCategorySlugAndAddress);
 
 export default postRouter_v1;

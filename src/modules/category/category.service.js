@@ -71,7 +71,7 @@ class CategoryService {
 		return category;
 	};
 
-	fetchAll = async () => {
+	fetchAllRootCategories = async () => {
 		const categories = await this.#CategoryRepository.find(
 			{ parentId: { $exists: false } },
 			{ __v: 0, createdAt: 0, updatedAt: 0 }
@@ -98,6 +98,29 @@ class CategoryService {
 	checkExistCategory = async (categoryId) => {
 		const category = await this.#CategoryRepository.findOneById(categoryId, { __v: 0, createdAt: 0, updatedAt: 0 });
 		return category;
+	};
+
+	findCategoryChildWithNoChild = async (categoryId) => {
+		const filterQuery = {
+			parentsIdArray: { $in: categoryId },
+			hasChild: false,
+		};
+		const categoryWithNoChild = await this.#CategoryRepository.find(filterQuery, {
+			__v: 0,
+			createdAt: 0,
+			updatedAt: 0,
+		});
+		if (!categoryWithNoChild || categoryWithNoChild.length == 0) {
+			throw new AppError(
+				categoryErrorMessages.CategoriesNotFound.message,
+				categoryErrorMessages.CategoriesNotFound.statusCode
+			);
+		}
+		const categorySlugs = [];
+		for (const child of categoryWithNoChild) {
+			categorySlugs.push(child.slug);
+		}
+		return categorySlugs;
 	};
 }
 
