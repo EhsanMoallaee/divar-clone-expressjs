@@ -3,12 +3,24 @@ const categoryErrorMessages = {
 		message: 'وارد کردن عنوان برای دسته بندی الزامیست',
 		statusCode: 400,
 	},
+	'"title" is not allowed to be empty': {
+		message: 'مقدار عنوان دسته بندی نمیتواند رشته خالی باشد',
+		statusCode: 400,
+	},
 	'"slug" is required': {
 		message: 'وارد کردن اسلاگ برای دسته بندی الزامیست',
 		statusCode: 400,
 	},
+	'"slug" is not allowed to be empty': {
+		message: 'مقدار اسلاگ دسته بندی نمیتواند رشته خالی باشد',
+		statusCode: 400,
+	},
 	'"description" is required': {
 		message: 'وارد کردن توضیحات برای دسته بندی الزامیست',
+		statusCode: 400,
+	},
+	'"description" is not allowed to be empty': {
+		message: 'مقدار توضیحات دسته بندی نمیتواند رشته خالی باشد',
 		statusCode: 400,
 	},
 	CategoryNotFound: {

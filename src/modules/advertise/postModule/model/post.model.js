@@ -13,8 +13,8 @@ const postSchema = new Schema(
 		city: { type: String, required: true },
 		district: { type: String, required: true },
 		coordinate: {
-			lat: { type: Number, required: true },
-			long: { type: Number, required: true },
+			type: [Number, Number],
+			index: '2d',
 		},
 		isConfirmed: { type: Boolean, default: false },
 		imagesGallery: [

@@ -5,6 +5,7 @@ import checkKeysAreAllowed from '../functions/checkKeys.areAllowed.js';
 import ParameterService from '../parameterModule/parameter.service.js';
 import postErrorMessages from './messages/post.errorMessages.js';
 import PostRepository from './model/post.repository.js';
+import PostValidator from './validations/post.validator.js';
 
 class PostService {
 	#CategoryService;
@@ -17,6 +18,29 @@ class PostService {
 	}
 
 	create = async (data, files) => {
+		const { error } = PostValidator.createPostValidator(data);
+		if (error) {
+			const errorMessage = error.message;
+			console.log('🚀 ~ PostService ~ create= ~ errorMessage:', errorMessage);
+			if (errorMessage.endsWith('is not allowed')) {
+				throw new AppError(
+					postErrorMessages.FieldIsNotAllowed.message,
+					postErrorMessages.FieldIsNotAllowed.statusCode
+				);
+			} else if (errorMessage.startsWith('"title" with value')) {
+				throw new AppError(
+					postErrorMessages.TitleCouldNotBeJustNumbers.message,
+					postErrorMessages.TitleCouldNotBeJustNumbers.statusCode
+				);
+			} else if (postErrorMessages[errorMessage]) {
+				throw new AppError(postErrorMessages[errorMessage].message, postErrorMessages[errorMessage].statusCode);
+			} else {
+				throw new AppError(
+					postErrorMessages.ExceptionError.message,
+					postErrorMessages.ExceptionError.statusCode
+				);
+			}
+		}
 		const imagesUrl = files.map((file) => {
 			return { url: file.path };
 		});
