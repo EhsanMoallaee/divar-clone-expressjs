@@ -53,8 +53,8 @@ class ParameterService {
 			replacement: '_',
 			trim: true,
 			lower: true,
+			locale: 'fa',
 		});
-		// parameterDTO.key = slugify(parameterDTO.key, { replacement: '_', trim: true, lower: true });
 		await this.checkExistParameterByKeyAndCategory(category, parameterDTO.key);
 		if (parameterDTO?.enum) parameterDTO.enum = await this.convertEnumToArray(parameterDTO.enum);
 		const parameter = await this.#ParameterRepository.create(parameterDTO);
@@ -173,7 +173,8 @@ class ParameterService {
 					parameterErrorMessages.CategoryNotFound.statusCode
 				);
 		}
-		if (updateDTO.key) updateDTO.key = slugify(updateDTO.key, { replacement: '_', trim: true, lower: true });
+		if (updateDTO.key)
+			updateDTO.key = slugify(updateDTO.key, { replacement: '_', trim: true, lower: true, locale: 'fa' });
 		if (updateDTO.key || updateDTO.category)
 			await this.checkExistParameterByKeyAndCategory(
 				updateDTO.category || parameter.category,

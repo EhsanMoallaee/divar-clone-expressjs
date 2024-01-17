@@ -15,6 +15,10 @@ This is a clone of Persian Divar marketplace.It's not a replica, and it doesn't 
 ![DOCKER](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
 ![GITHUB ACTIONS](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
 
+## Basic config for Persian users
+
+For slugify Persian words with slugify package in 'node_modules/slugify/slugify.js' replace " var locales = JSON.parse(...)" line with which I wrote in "persianCharMap/slugify.fa.charmap.js" or add ' "fa":{...} ' charmap part of this file to locales of slugify.js file of package.
+
 ## Environment Variables
 
 To run this project,first you will need to create three .env files as:
@@ -42,8 +46,6 @@ in the root of the project folder and then add the following environment variabl
 `KAVENEGAR_API_KEY`
 
 (Kavenegar is an Iranian sms service provider)
-
-For slugify Persian words with slugify package in 'node_modules/slugify/slugify.js' replace " var locales = JSON.parse(...)" line with which I wrote in "persianCharMap/slugify.fa.charmap.js" or add ' "fa":{...} ' charmap part of this file to locales of slugify.js file of package.
 
 ## Run Locally
 
