@@ -1,12 +1,11 @@
-/* eslint-disable no-useless-escape */
 import dotenv from 'dotenv';
 import request from 'supertest';
 import { sign } from 'cookie-signature';
 
 import app from '../../app.js';
 import CookieNames from '../constants/cookies.enum.js';
-import tokenGenerator from '../../modules/user/functions/jwtToken/jwtToken.generator.js';
 import { Roles } from '../../modules/user/model/user.model.js';
+import tokenGenerator from '../../modules/user/functions/jwtToken/jwtToken.generator.js';
 import UserRepository from '../../modules/user/model/user.repository.js';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
@@ -70,16 +69,14 @@ export const postRequestWithAuth = async (data, userId, url, image) => {
 export const postRequestWithAuthAndFile = async (data, userId, url, image) => {
 	const xAuthToken = await generateToken({ id: userId });
 	const requestInString = await makeRequestInString(data, xAuthToken, image);
+	const myRequest = Function('return await' + requestInString)();
 
-	const AsyncFunction = async function () {}.constructor;
-	const fn = new AsyncFunction('request', 'app', 'url', `return await ${requestInString}`);
-
-	const response = (await fn())(request, app, url, image);
+	const response = await myRequest(request, app, url);
 	return response;
 };
 
 async function makeRequestInString(data, xAuthToken, image) {
-	let str = 'async function sendData(request, app, url) { return await request(app).post(url)';
+	let str = 'sendData = async(request, app, url) => { return await request(app).post(url)';
 
 	for (const key in data) {
 		if (typeof data[key] == 'object' && key == 'parameters') {
@@ -93,7 +90,6 @@ async function makeRequestInString(data, xAuthToken, image) {
 			str += `.field('${[key]}', '${data[key]}')`;
 		}
 	}
-
 	str += `.attach('images', '${image}').set('Cookie', '${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}')}`;
 	return str;
 }
