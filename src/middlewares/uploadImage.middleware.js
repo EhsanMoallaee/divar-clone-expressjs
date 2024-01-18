@@ -33,18 +33,20 @@ const uploadMiddleware = (req, res, next) => {
 		const files = req.files;
 		const errors = [];
 
-		files.forEach((file) => {
-			const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg'];
-			const maxSize = 3 * 1024 * 1024; // 3MB
+		if (files && files.length > 0) {
+			files.forEach((file) => {
+				const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg'];
+				const maxSize = 3 * 1024 * 1024; // 3MB
 
-			if (!allowedTypes.includes(file.mimetype)) {
-				errors.push(`${file.originalname} :${uploadImageErrorMessages.WrongImageFileFormat.message}`);
-			}
+				if (!allowedTypes.includes(file.mimetype)) {
+					errors.push(`${file.originalname} :${uploadImageErrorMessages.WrongImageFileFormat.message}`);
+				}
 
-			if (file.size > maxSize) {
-				errors.push(`${file.originalname} :${uploadImageErrorMessages.MaxImageFileSizeError.message}`);
-			}
-		});
+				if (file.size > maxSize) {
+					errors.push(`${file.originalname} :${uploadImageErrorMessages.MaxImageFileSizeError.message}`);
+				}
+			});
+		}
 
 		if (errors.length > 0) {
 			files.forEach((file) => {

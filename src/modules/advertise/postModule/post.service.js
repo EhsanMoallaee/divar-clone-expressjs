@@ -22,6 +22,7 @@ class PostService {
 		const { error } = PostValidator.createPostValidator(data);
 		if (error) {
 			const errorMessage = error.message;
+			console.log('🚀 ~ PostService ~ create= ~ errorMessage:', errorMessage);
 			if (errorMessage.endsWith('is not allowed')) {
 				throw new AppError(
 					postErrorMessages.FieldIsNotAllowed.message,
@@ -41,9 +42,12 @@ class PostService {
 				);
 			}
 		}
-		const imagesUrl = files.map((file) => {
-			return { url: file.path };
-		});
+		let imagesUrl = [];
+		if (files && files.length > 0) {
+			imagesUrl = files.map((file) => {
+				return { url: file.path };
+			});
+		}
 
 		const category = await this.#CategoryService.findById(data.categoryId);
 		if (!category)

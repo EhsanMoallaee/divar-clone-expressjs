@@ -1,9 +1,9 @@
 import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import CategoryModel from '../../src/modules/category/model/category.model';
-import ParameterModel from '../../src/modules/advertise/parameterModule/model/parameter.model.js';
-import UserModel from '../../src/modules/user/model/user.model.js';
 import parameterErrorMessages from '../../src/modules/advertise/parameterModule/messages/parameter.errorMessages.js';
 import parameterSuccessMessages from '../../src/modules/advertise/parameterModule/messages/parameter.successMessages.js';
+import ParameterModel from '../../src/modules/advertise/parameterModule/model/parameter.model.js';
+import UserModel from '../../src/modules/user/model/user.model.js';
 import {
 	createUser,
 	deleteRequestWithAuth,

@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import dotenv from 'dotenv';
 import request from 'supertest';
 import { sign } from 'cookie-signature';
@@ -39,15 +40,6 @@ export const getRequestWithAuth = async (userId, filterQuery = {}, url) => {
 	return response;
 };
 
-export const postRequestWithAuth = async (data, userId, url) => {
-	const xAuthToken = await generateToken({ id: userId });
-	const response = await request(app)
-		.post(url)
-		.send(data)
-		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
-	return response;
-};
-
 export const deleteRequestWithAuth = async (userId, url) => {
 	const xAuthToken = await generateToken({ id: userId });
 	const response = await request(app)
@@ -65,16 +57,43 @@ export const patchRequestWithAuth = async (data, userId, url) => {
 	return response;
 };
 
-// for develop
-// const addUsers = async (userCount) => {
-// 	const users = [];
-// 	for (let i = 0; i < userCount; i++) {
-// 		const user = await UserRepository.create({
-// 			firstname: `user${i}`,
-// 			lastname: `user${i}`,
-// 			mobile: `0931111111${i}`,
-// 		});
-// 		users.push(user);
-// 	}
-// 	return users;
-// };
+export const postRequestWithAuth = async (data, userId, url, image) => {
+	const xAuthToken = await generateToken({ id: userId });
+	const response = await request(app)
+		.post(url)
+		.send(data)
+		.attach('images', image)
+		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+	return response;
+};
+
+export const postRequestWithAuthAndFile = async (data, userId, url, image) => {
+	const xAuthToken = await generateToken({ id: userId });
+	const requestInString = await makeRequestInString(data, xAuthToken, image);
+
+	const AsyncFunction = async function () {}.constructor;
+	const fn = new AsyncFunction('request', 'app', 'url', `return await ${requestInString}`);
+
+	const response = (await fn())(request, app, url, image);
+	return response;
+};
+
+async function makeRequestInString(data, xAuthToken, image) {
+	let str = 'async function sendData(request, app, url) { return await request(app).post(url)';
+
+	for (const key in data) {
+		if (typeof data[key] == 'object' && key == 'parameters') {
+			for (const itemKey in data[key]) {
+				const value = data.parameters[itemKey];
+				str += `.field('parameters[${itemKey}]', '${value}', {contentType: 'application/json'})`;
+			}
+		} else if (Array.isArray(data[key])) {
+			str += `.field('coordinate', [${data.coordinate}])`;
+		} else {
+			str += `.field('${[key]}', '${data[key]}')`;
+		}
+	}
+
+	str += `.attach('images', '${image}').set('Cookie', '${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}')}`;
+	return str;
+}
