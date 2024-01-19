@@ -11,7 +11,14 @@ import UserRepository from '../../modules/user/model/user.repository.js';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 const cookieSecretKey = process.env.COOKIE_SECRET_KEY;
 
-const userAdminData = {
+export const userData = {
+	firstname: 'user',
+	lastname: 'user',
+	mobile: '09375338874',
+	role: Roles.USER,
+};
+
+export const userAdminData = {
 	firstname: 'firstname',
 	lastname: 'lastname',
 	mobile: '09375338875',

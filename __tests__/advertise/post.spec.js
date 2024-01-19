@@ -6,9 +6,12 @@ import {
 	createUser,
 	postRequestWithAuth,
 	postRequestWithAuthAndFile,
+	userData,
 } from '../../src/common/testsFunctions/request.withAuth';
 import PostModel from '../../src/modules/advertise/postModule/model/post.model.js';
 import postErrorMessages from '../../src/modules/advertise/postModule/messages/post.errorMessages.js';
+import authorizationErrorMessages from '../../src/guards/messages/authorization.errorMessages.js';
+import authenticationErrorMessages from '../../src/guards/messages/authentication.errorMessages.js';
 
 beforeAll(async () => {
 	new ConnectMongodb();
@@ -142,6 +145,26 @@ describe('Advertise post module tests', () => {
 		expect(response.body.advertisePost.description).toBe(postDto.description);
 		expect(response.body.advertisePost).toHaveProperty('imagesGallery');
 		expect(response.body.advertisePost.imagesGallery.length).toBe(1);
+	});
+
+	it('Create Post: returns 401 for request by unauthenticated user', async () => {
+		const adminUser = await createUser();
+		const adminUserId = adminUser._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, adminUserId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+
+		const userId = categoryId;
+		const response = await postRequestWithAuth(postDto, userId, basePostUrl);
+		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
 	});
 
 	it('Create Post: returns 400 for sending request without title', async () => {
