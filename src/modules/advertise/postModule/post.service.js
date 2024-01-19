@@ -149,6 +149,8 @@ class PostService {
 	};
 
 	delete = async (postId) => {
+		if (!isValidObjectId(postId))
+			throw new AppError(postErrorMessages.WrongPostId.message, postErrorMessages.WrongPostId.statusCode);
 		const result = await this.#PostRepository.deleteOneById(postId);
 		if (!result)
 			throw new AppError(

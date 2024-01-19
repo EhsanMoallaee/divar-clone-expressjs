@@ -46,11 +46,21 @@ export const getRequestWithAuth = async (userId, filterQuery = {}, url) => {
 	return response;
 };
 
+export const getRequestWithoutAuth = async (filterQuery = {}, url) => {
+	const response = await request(app).get(url).query(filterQuery);
+	return response;
+};
+
 export const deleteRequestWithAuth = async (userId, url) => {
 	const xAuthToken = await generateToken({ id: userId });
 	const response = await request(app)
 		.delete(url)
 		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+	return response;
+};
+
+export const deleteRequestWithoutAuth = async (url) => {
+	const response = await request(app).delete(url);
 	return response;
 };
 
@@ -70,6 +80,11 @@ export const postRequestWithAuth = async (data, userId, url, image) => {
 		.send(data)
 		.attach('images', image)
 		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+	return response;
+};
+
+export const postRequestWithoutAuth = async (data, url, image) => {
+	const response = await request(app).post(url).send(data).attach('images', image);
 	return response;
 };
 

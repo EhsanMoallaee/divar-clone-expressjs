@@ -4,14 +4,19 @@ import ParameterModel from '../../src/modules/advertise/parameterModule/model/pa
 import UserModel from '../../src/modules/user/model/user.model.js';
 import {
 	createUser,
+	deleteRequestWithAuth,
+	deleteRequestWithoutAuth,
+	getRequestWithAuth,
 	postRequestWithAuth,
 	postRequestWithAuthAndFile,
+	postRequestWithoutAuth,
 	userData,
 } from '../../src/common/testsFunctions/request.withAuth';
 import PostModel from '../../src/modules/advertise/postModule/model/post.model.js';
 import postErrorMessages from '../../src/modules/advertise/postModule/messages/post.errorMessages.js';
 import authorizationErrorMessages from '../../src/guards/messages/authorization.errorMessages.js';
 import authenticationErrorMessages from '../../src/guards/messages/authentication.errorMessages.js';
+import postSuccessMessages from '../../src/modules/advertise/postModule/messages/post.successMessages.js';
 
 beforeAll(async () => {
 	new ConnectMongodb();
@@ -93,9 +98,13 @@ const createPostData = async (postDTO, categoryId, parameters) => {
 };
 
 const basePostUrl = '/api/v1/advertise/post';
+const findPostByIdUrl = '/api/v1/advertise/post/by-id';
+const findPostByCategorySlugUrl = '/api/v1/advertise/post/by-category-slug';
+const findPostByAddresUrl = '/api/v1/advertise/post/by-address';
+const findPostByCategorySlugAndAddresUrl = '/api/v1/advertise/post/by-categorySlug-address';
 const baseParameterUrl = '/api/v1/advertise/parameter';
 
-describe('Advertise post module tests', () => {
+describe('Create advertise post tests', () => {
 	it('Create Post: returns 201 with correct values and without images', async () => {
 		const user = await createUser();
 		const userId = user._id;
@@ -161,8 +170,7 @@ describe('Advertise post module tests', () => {
 		};
 		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
 
-		const userId = categoryId;
-		const response = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const response = await postRequestWithoutAuth(postDto, basePostUrl);
 		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
 		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
 	});
@@ -736,5 +744,365 @@ describe('Advertise post module tests', () => {
 		const response = await postRequestWithAuth(postDto, userId, basePostUrl);
 		expect(response.status).toBe(postErrorMessages.FieldIsNotAllowed.statusCode);
 		expect(response.body.message).toBe(postErrorMessages.FieldIsNotAllowed.message);
+	});
+});
+
+describe('Find advertise post tests', () => {
+	it('Find Post: returns 200 for finding post by id', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+
+		const createPostResponse = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = createPostResponse.body.advertisePost._id;
+
+		const url = `${findPostByIdUrl}/${postId}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(200);
+		expect(findPostResponse.body.advertisePost.title).toBe(postDto.title);
+		expect(findPostResponse.body.advertisePost.province).toBe(postDto.province);
+		expect(findPostResponse.body.advertisePost.city).toBe(postDto.city);
+	});
+
+	it('Find Post: returns 404 for finding post by wrong id/doesnt exist', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByIdUrl}/${parameter._id}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.AdvertisePostNotFound.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostNotFound.message);
+	});
+
+	it('Find Post: returns 404 for finding post by wrong id format', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByIdUrl}/1234`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.WrongPostId.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.WrongPostId.message);
+	});
+
+	it('Find Post: returns 200 for finding post by category slug', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByCategorySlugUrl}/${category.slug}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(200);
+		expect(findPostResponse.body.advertisePosts[0].title).toBe(postDto.title);
+		expect(findPostResponse.body.advertisePosts[0].province).toBe(postDto.province);
+		expect(findPostResponse.body.advertisePosts[0].city).toBe(postDto.city);
+	});
+
+	it('Find Post: returns 404 for finding post by category slug which doesnt exist', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByCategorySlugUrl}/wrong-slug`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.CategoryNotFound.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.CategoryNotFound.message);
+	});
+
+	it('Find Post: returns 404 for finding post by category slug which has not any advertise post', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+
+		const url = `${findPostByCategorySlugUrl}/${category.slug}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.AdvertisePostsNotFound.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostsNotFound.message);
+	});
+
+	it('Find Post: returns 200 for finding post by address in query(province is required, city and district is optional)', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByAddresUrl}?province=${postDto.province}&city=${postDto.city}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(200);
+		expect(findPostResponse.body.advertisePosts[0].title).toBe(postDto.title);
+		expect(findPostResponse.body.advertisePosts[0].province).toBe(postDto.province);
+		expect(findPostResponse.body.advertisePosts[0].city).toBe(postDto.city);
+	});
+
+	it('Find Post: returns 400 for finding post by address in query without province', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByAddresUrl}?city=${postDto.city}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.ProvinceIsMissing.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.ProvinceIsMissing.message);
+	});
+
+	it('Find Post: returns 404 for finding post by address in query with province which hasnt any advertise post', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByAddresUrl}?province=wrong-province`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.AdvertisePostsNotFound.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostsNotFound.message);
+	});
+
+	it('Find Post: returns 200 for finding post by category slug and address in query(province is required, city and district is optional)', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByCategorySlugAndAddresUrl}?categorySlug=${category.slug}&province=${postDto.province}&city=${postDto.city}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(200);
+		expect(findPostResponse.body.advertisePosts[0].title).toBe(postDto.title);
+		expect(findPostResponse.body.advertisePosts[0].province).toBe(postDto.province);
+		expect(findPostResponse.body.advertisePosts[0].city).toBe(postDto.city);
+	});
+
+	it('Find Post: returns 400 for finding post by category slug and address in query without sending category slug', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByCategorySlugAndAddresUrl}?province=${postDto.province}&city=${postDto.city}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.CategorySlugIsMissing.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.CategorySlugIsMissing.message);
+	});
+
+	it('Find Post: returns 400 for finding post by category slug and address in query without sending province slug', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByCategorySlugAndAddresUrl}?categorySlug=${category.slug}&city=${postDto.city}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.ProvinceIsMissing.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.ProvinceIsMissing.message);
+	});
+
+	it('Find Post: returns 404 for finding post by category slug and address in query which doesnt exist any post for them', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+
+		const url = `${findPostByCategorySlugAndAddresUrl}?categorySlug=${category.slug}&province=${correctPostBaseDto.province}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.AdvertisePostsNotFound.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostsNotFound.message);
+	});
+});
+
+describe('Delete advertise post tests', () => {
+	it('Delete Post: returns 200 for deleting post by id', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+
+		const createPostResponse = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = createPostResponse.body.advertisePost._id;
+
+		const url = `${basePostUrl}/${postId}`;
+		const response = await deleteRequestWithAuth(userId, url);
+		expect(response.status).toBe(postSuccessMessages.PostDeletedSuccessfully.statusCode);
+		expect(response.body.message).toBe(postSuccessMessages.PostDeletedSuccessfully.message);
+	});
+
+	it('Delete Post: returns 401 for request by unauthenticated user', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+
+		const createPostResponse = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = createPostResponse.body.advertisePost._id;
+
+		const url = `${basePostUrl}/${postId}`;
+		const response = await deleteRequestWithoutAuth(url);
+		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+	});
+
+	it('Delete Post: returns 403 for request by unauthorized user', async () => {
+		const adminUser = await createUser();
+		const adminUserId = adminUser._id;
+		const user = await createUser(userData);
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, adminUserId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+
+		const createPostResponse = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = createPostResponse.body.advertisePost._id;
+
+		const url = `${basePostUrl}/${postId}`;
+		const response = await deleteRequestWithAuth(userId, url);
+		expect(response.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
+		expect(response.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
+	});
+
+	it('Delete Post: returns 404 for deleting post by wrong id/doesnt exist', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const url = `${basePostUrl}/${categoryId}`;
+		const findPostResponse = await deleteRequestWithAuth(userId, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.AdvertisePostNotFound.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostNotFound.message);
+	});
+
+	it('Delete Post: returns 400 for deleting post by wrong id format', async () => {
+		const user = await createUser();
+		const userId = user._id;
+
+		const url = `${basePostUrl}/1234}`;
+		const findPostResponse = await deleteRequestWithAuth(userId, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.WrongPostId.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.WrongPostId.message);
 	});
 });

@@ -84,7 +84,7 @@ const findParameterByIdUrl = '/api/v1/advertise/parameter/by-id';
 const findParameterByCategoryIdUrl = '/api/v1/advertise/parameter/by-category-id';
 const findParameterByCategorySlugUrl = '/api/v1/advertise/parameter/by-category-slug';
 
-describe('Advertise parameter module tests', () => {
+describe('Create advertise parameter module tests', () => {
 	it('Create parameter: returns 201 for request with correct values', async () => {
 		const user = await createUser();
 		const userId = user._id;
@@ -175,8 +175,10 @@ describe('Advertise parameter module tests', () => {
 		expect(response.status).toBe(parameterErrorMessages.ParameterWithKeyAndCategoryAlreadyExist.statusCode);
 		expect(response.body.message).toBe(parameterErrorMessages.ParameterWithKeyAndCategoryAlreadyExist.message);
 	});
+});
 
-	it('Find parameter: returns 200 for find parameter with id', async () => {
+describe('Find advertise parameter module tests', () => {
+	it('Find parameter: returns 200 for find parameter by id', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -272,33 +274,9 @@ describe('Advertise parameter module tests', () => {
 		expect(response.status).toBe(parameterErrorMessages.ParametersNotFound.statusCode);
 		expect(response.body.message).toBe(parameterErrorMessages.ParametersNotFound.message);
 	});
+});
 
-	it('Delete parameter: returns 200 for delete a parameter', async () => {
-		const user = await createUser();
-		const userId = user._id;
-		const category = await createCategory(correctCategory);
-		const categoryId = category._id;
-		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
-		const parameter = await ParameterModel.create(parameterDTO);
-		const url = `${baseParameterUrl}/${parameter._id}`;
-		const response = await deleteRequestWithAuth(userId, url);
-		expect(response.status).toBe(parameterSuccessMessages.ParameterDeletedSuccessfully.statusCode);
-		expect(response.body.message).toBe(parameterSuccessMessages.ParameterDeletedSuccessfully.message);
-	});
-
-	it('Delete parameter: returns 404 for delete a parameter with wrong id', async () => {
-		const user = await createUser();
-		const userId = user._id;
-		const category = await createCategory(correctCategory);
-		const categoryId = category._id;
-		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
-		await ParameterModel.create(parameterDTO);
-		const url = `${baseParameterUrl}/${userId}`;
-		const response = await deleteRequestWithAuth(userId, url);
-		expect(response.status).toBe(parameterErrorMessages.ParameterNotFound.statusCode);
-		expect(response.body.message).toBe(parameterErrorMessages.ParameterNotFound.message);
-	});
-
+describe('Update advertise parameter module tests', () => {
 	it('Update parameter: returns 200 for update a parameter with correct vlaues', async () => {
 		const user = await createUser();
 		const userId = user._id;
@@ -424,5 +402,33 @@ describe('Advertise parameter module tests', () => {
 		const response = await patchRequestWithAuth({ key: '' }, userId, url);
 		expect(response.status).toBe(parameterErrorMessages['"key" contains an invalid value'].statusCode);
 		expect(response.body.message).toBe(parameterErrorMessages['"key" contains an invalid value'].message);
+	});
+});
+
+describe('Delete advertise parameter module tests', () => {
+	it('Delete parameter: returns 200 for delete a parameter', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		const parameter = await ParameterModel.create(parameterDTO);
+		const url = `${baseParameterUrl}/${parameter._id}`;
+		const response = await deleteRequestWithAuth(userId, url);
+		expect(response.status).toBe(parameterSuccessMessages.ParameterDeletedSuccessfully.statusCode);
+		expect(response.body.message).toBe(parameterSuccessMessages.ParameterDeletedSuccessfully.message);
+	});
+
+	it('Delete parameter: returns 404 for delete a parameter with wrong id', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		await ParameterModel.create(parameterDTO);
+		const url = `${baseParameterUrl}/${userId}`;
+		const response = await deleteRequestWithAuth(userId, url);
+		expect(response.status).toBe(parameterErrorMessages.ParameterNotFound.statusCode);
+		expect(response.body.message).toBe(parameterErrorMessages.ParameterNotFound.message);
 	});
 });

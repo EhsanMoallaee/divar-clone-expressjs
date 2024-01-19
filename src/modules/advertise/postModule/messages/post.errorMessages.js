@@ -135,12 +135,12 @@ const postErrorMessages = {
 		message: 'مشخصهء ارسال شده برای این آگهی مجاز نمیباشد',
 		statusCode: 400,
 	},
-	RequiredParameterIsMissing: {
-		message: 'تمامی مشخصات الزامی باید ارسال شده و دارای مقدار باشند',
-		statusCode: 400,
-	},
 	ProvinceIsMissing: {
 		message: 'لطفا استان مورد نظر را ارسال بفرمایید',
+		statusCode: 400,
+	},
+	RequiredParameterIsMissing: {
+		message: 'تمامی مشخصات الزامی باید ارسال شده و دارای مقدار باشند',
 		statusCode: 400,
 	},
 	TitleCouldNotBeJustNumbers: {
