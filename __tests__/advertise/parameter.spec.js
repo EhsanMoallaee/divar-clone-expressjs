@@ -1,4 +1,4 @@
-import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
+import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import CategoryModel from '../../src/modules/category/model/category.model';
 import parameterErrorMessages from '../../src/modules/advertise/parameterModule/messages/parameter.errorMessages.js';
 import parameterSuccessMessages from '../../src/modules/advertise/parameterModule/messages/parameter.successMessages.js';
@@ -26,6 +26,10 @@ afterEach(async () => {
 	await CategoryModel.deleteMany({});
 	await ParameterModel.deleteMany({});
 	await UserModel.deleteMany({});
+});
+
+afterAll(async () => {
+	await disconnectMongodb();
 });
 
 const correctParameterDto = {
@@ -70,8 +74,9 @@ const createCategory = async (categoryDto) => {
 };
 
 const createParameterData = async (parameterDTO, categoryId) => {
-	parameterDTO.category = categoryId;
-	return parameterDTO;
+	const dto = { ...parameterDTO };
+	dto.category = categoryId;
+	return dto;
 };
 
 const baseParameterUrl = '/api/v1/advertise/parameter';

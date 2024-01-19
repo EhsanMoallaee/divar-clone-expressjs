@@ -15,6 +15,18 @@ const postErrorMessages = {
 		message: 'مقدار شهر محل آگهی نمیتواند رشته خالی باشد',
 		statusCode: 400,
 	},
+	'"coordinate" must be an array': {
+		message: 'مقدار طول و عرض جغرافیایی باید بصورت آرایه ارسال شود',
+		statusCode: 400,
+	},
+	'"coordinate[0]" must not be a sparse array item': {
+		message: 'مقدار عرض جغرافیایی باید به عنوان اندیس اول آرایه ارسال شود',
+		statusCode: 400,
+	},
+	'"coordinate" does not contain 1 required value(s)': {
+		message: 'مقدار طول و عرض جغرافیایی باید بصورت آرایه شامل هر دو مقدار برای عرض و طول جغرافیایی باشد',
+		statusCode: 400,
+	},
 	'"coordinate[0]" must be a number': {
 		message: 'مقدار عرض جغرافیایی باید بصورت عددی ارسال شود',
 		statusCode: 400,
@@ -55,6 +67,18 @@ const postErrorMessages = {
 		message: 'مقدار نام منطقه یا خیابان محل آگهی نمیتواند رشته خالی باشد',
 		statusCode: 400,
 	},
+	'"parameters" is required': {
+		message: 'ارسال حداقل یک مشخصه برای آگهی الزامیست',
+		statusCode: 400,
+	},
+	'"parameters" must be of type object': {
+		message: 'مشخصات آگهی باید به صورت یک آبجکت ارسال شود',
+		statusCode: 400,
+	},
+	'"parameters" must have at least 1 key': {
+		message: 'مشخصات آگهی باید به صورت یک آبجکت و دارای حداقل یک عضو باشد',
+		statusCode: 400,
+	},
 	'"province" is required': {
 		message: 'وارد کردن استان برای آگهی الزامیست',
 		statusCode: 400,
@@ -65,6 +89,10 @@ const postErrorMessages = {
 	},
 	'"title" is required': {
 		message: 'وارد کردن عنوان برای آگهی الزامیست',
+		statusCode: 400,
+	},
+	'"title" must be a string': {
+		message: 'عنوان آگهی باید از نوع رشته ای باشد',
 		statusCode: 400,
 	},
 	'"title" is not allowed to be empty': {

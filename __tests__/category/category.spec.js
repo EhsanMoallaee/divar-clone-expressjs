@@ -1,6 +1,6 @@
 import categoryErrorMessages from '../../src/modules/category/messages/category.errorMessages.js';
 import CategoryModel from '../../src/modules/category/model/category.model.js';
-import { ConnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
+import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
 import { createUser, postRequestWithAuth } from '../../src/common/testsFunctions/request.withAuth.js';
 
@@ -16,6 +16,10 @@ beforeEach(async () => {
 afterEach(async () => {
 	await CategoryModel.deleteMany({});
 	await UserModel.deleteMany({});
+});
+
+afterAll(async () => {
+	await disconnectMongodb();
 });
 
 const correctCategoryDtoDto = {

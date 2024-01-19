@@ -85,7 +85,7 @@ async function makeRequestInString(data, xAuthToken, image) {
 				str += `.field('parameters[${itemKey}]', '${value}', {contentType: 'application/json'})`;
 			}
 		} else if (Array.isArray(data[key])) {
-			str += `.field('coordinate', [${data.coordinate}])`;
+			str += `.field('coordinate', [${data.coordinate[0]}, ${data.coordinate[1]}])`;
 		} else {
 			str += `.field('${[key]}', '${data[key]}')`;
 		}

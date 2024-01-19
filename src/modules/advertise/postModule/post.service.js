@@ -22,7 +22,6 @@ class PostService {
 		const { error } = PostValidator.createPostValidator(data);
 		if (error) {
 			const errorMessage = error.message;
-			console.log('🚀 ~ PostService ~ create= ~ errorMessage:', errorMessage);
 			if (errorMessage.endsWith('is not allowed')) {
 				throw new AppError(
 					postErrorMessages.FieldIsNotAllowed.message,

@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 
 const sendErrorDevelopmentMode = (err, res) => {
-	console.log('🚀 ~ sendErrorDevelopmentMode ~ err:', err);
+	// console.log('🚀 ~ sendErrorDevelopmentMode ~ err:', err);
 	let statusCode = err.statusCode || 500;
 
 	if (err && err.message.startsWith('E11000 duplicate key')) {
@@ -23,7 +23,7 @@ const sendErrorDevelopmentMode = (err, res) => {
 			secure: true,
 		});
 	} else {
-		console.error(chalk.red(err.message));
+		// console.error(chalk.red(err.message));
 	}
 	return res.status(statusCode).json({
 		statusCode,
@@ -70,6 +70,6 @@ const sendErrorProductionMode = (err, res) => {
 
 // eslint-disable-next-line no-unused-vars
 export default (err, req, res, next) => {
-	if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') sendErrorDevelopmentMode(err, res);
+	if (process.env.NODE_ENV === 'development') sendErrorDevelopmentMode(err, res);
 	else sendErrorProductionMode(err, res);
 };

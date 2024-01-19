@@ -20,7 +20,7 @@ class PostValidator {
 				Joi.number().min(-90).max(90).required(),
 				Joi.number().min(-180).max(180).required()
 			),
-			parameters: Joi.object(),
+			parameters: Joi.object().min(1).required(),
 		});
 		return schema.validate(data);
 	};
