@@ -61,7 +61,7 @@ const secondParameterDto = {
 	title: 'سال',
 	key: 'year',
 	type: 'number',
-	enum: ['1400', '1401', '1402'],
+	enum: [1400, 1401, 1402],
 	guide: 'Select the year',
 };
 

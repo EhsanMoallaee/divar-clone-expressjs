@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 
 const sendErrorDevelopmentMode = (err, res) => {
-	// console.log('🚀 ~ sendErrorDevelopmentMode ~ err:', err);
 	let statusCode = err.statusCode || 500;
 
 	if (err && err.message.startsWith('E11000 duplicate key')) {
