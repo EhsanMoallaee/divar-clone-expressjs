@@ -4,9 +4,9 @@ import request from 'supertest';
 import app from '../../src/app.js';
 import authErrorMessages from '../../src/modules/user/authModule/messages/auth.errorMessages.js';
 import authSuccessMessages from '../../src/modules/user/authModule/messages/auth.successMessages.js';
-import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import redisSingletonInstance from '../../src/modules/redisClient/redis.client.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
+import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import { createUser, getRequestWithAuth } from '../../src/common/testsFunctions/request.withAuth.js';
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 

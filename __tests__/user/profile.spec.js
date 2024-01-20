@@ -2,10 +2,10 @@ import request from 'supertest';
 
 import app from '../../src/app.js';
 import authErrorMessages from '../../src/modules/user/authModule/messages/auth.errorMessages.js';
-import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
-import { createUser, getRequestWithAuth } from '../../src/common/testsFunctions/request.withAuth.js';
 import profileErrorMessages from '../../src/modules/user/profileModule/messages/profile.errorMessages.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
+import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
+import { createUser, getRequestWithAuth } from '../../src/common/testsFunctions/request.withAuth.js';
 
 beforeAll(async () => {
 	new ConnectMongodb();

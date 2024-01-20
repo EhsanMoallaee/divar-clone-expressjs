@@ -73,6 +73,11 @@ export const patchRequestWithAuth = async (data, userId, url) => {
 	return response;
 };
 
+export const patchRequestWithoutAuth = async (data, url) => {
+	const response = await request(app).patch(url).send(data);
+	return response;
+};
+
 export const postRequestWithAuth = async (data, userId, url, image) => {
 	const xAuthToken = await generateToken({ id: userId });
 	const response = await request(app)

@@ -1,7 +1,7 @@
 import categoryErrorMessages from '../../src/modules/category/messages/category.errorMessages.js';
 import CategoryModel from '../../src/modules/category/model/category.model.js';
-import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
+import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import { createUser, postRequestWithAuth } from '../../src/common/testsFunctions/request.withAuth.js';
 
 beforeAll(async () => {

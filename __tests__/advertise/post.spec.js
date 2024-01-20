@@ -1,7 +1,12 @@
-import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
+import authenticationErrorMessages from '../../src/guards/messages/authentication.errorMessages.js';
+import authorizationErrorMessages from '../../src/guards/messages/authorization.errorMessages.js';
 import CategoryModel from '../../src/modules/category/model/category.model';
 import ParameterModel from '../../src/modules/advertise/parameterModule/model/parameter.model.js';
+import postErrorMessages from '../../src/modules/advertise/postModule/messages/post.errorMessages.js';
+import PostModel from '../../src/modules/advertise/postModule/model/post.model.js';
+import postSuccessMessages from '../../src/modules/advertise/postModule/messages/post.successMessages.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
+import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import {
 	createUser,
 	deleteRequestWithAuth,
@@ -12,11 +17,6 @@ import {
 	postRequestWithoutAuth,
 	userData,
 } from '../../src/common/testsFunctions/request.withAuth';
-import PostModel from '../../src/modules/advertise/postModule/model/post.model.js';
-import postErrorMessages from '../../src/modules/advertise/postModule/messages/post.errorMessages.js';
-import authorizationErrorMessages from '../../src/guards/messages/authorization.errorMessages.js';
-import authenticationErrorMessages from '../../src/guards/messages/authentication.errorMessages.js';
-import postSuccessMessages from '../../src/modules/advertise/postModule/messages/post.successMessages.js';
 
 beforeAll(async () => {
 	new ConnectMongodb();

@@ -1,15 +1,22 @@
-import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
+import authenticationErrorMessages from '../../src/guards/messages/authentication.errorMessages.js';
+import authorizationErrorMessages from '../../src/guards/messages/authorization.errorMessages.js';
 import CategoryModel from '../../src/modules/category/model/category.model';
 import parameterErrorMessages from '../../src/modules/advertise/parameterModule/messages/parameter.errorMessages.js';
-import parameterSuccessMessages from '../../src/modules/advertise/parameterModule/messages/parameter.successMessages.js';
 import ParameterModel from '../../src/modules/advertise/parameterModule/model/parameter.model.js';
+import parameterSuccessMessages from '../../src/modules/advertise/parameterModule/messages/parameter.successMessages.js';
 import UserModel from '../../src/modules/user/model/user.model.js';
+import { ConnectMongodb, disconnectMongodb } from '../../src/dataAccessLayer/connect.database.js';
 import {
 	createUser,
 	deleteRequestWithAuth,
+	deleteRequestWithoutAuth,
 	getRequestWithAuth,
+	getRequestWithoutAuth,
 	patchRequestWithAuth,
+	patchRequestWithoutAuth,
 	postRequestWithAuth,
+	postRequestWithoutAuth,
+	userData,
 } from '../../src/common/testsFunctions/request.withAuth.js';
 
 beforeAll(async () => {
@@ -97,6 +104,28 @@ describe('Create advertise parameter module tests', () => {
 		expect(response.body.parameter.key).toBe(correctParameterDto.key);
 	});
 
+	it('Create parameter: returns 401 for request by unauthenticated user', async () => {
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		const response = await postRequestWithoutAuth(parameterDTO, baseParameterUrl);
+		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+	});
+
+	it('Create parameter: returns 403 for request by unauthorized user', async () => {
+		const user = await createUser(userData);
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		const response = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		expect(response.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
+		expect(response.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
+	});
+
 	it('Create parameter: returns 400 for request with empty title', async () => {
 		const user = await createUser();
 		const userId = user._id;
@@ -168,6 +197,7 @@ describe('Create advertise parameter module tests', () => {
 		const categoryId = category._id;
 		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		await ParameterModel.create(parameterDTO);
+
 		const parameterWithDuplicateCatAndKey = JSON.parse(JSON.stringify(parameterDTO));
 		parameterWithDuplicateCatAndKey.title = 'new title';
 		parameterWithDuplicateCatAndKey.enum = ['new enum1', 'new enum2'];
@@ -185,9 +215,38 @@ describe('Find advertise parameter module tests', () => {
 		const categoryId = category._id;
 		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameter = await ParameterModel.create(parameterDTO);
+
 		const url = `${findParameterByIdUrl}/${parameter._id}`;
 		const response = await getRequestWithAuth(userId, {}, url);
 		expect(response.status).toBe(200);
+	});
+
+	it('Find parameter: returns 401 for find by parameter id with request by unauthenticated user', async () => {
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		const parameter = await ParameterModel.create(parameterDTO);
+
+		const url = `${findParameterByIdUrl}/${parameter._id}`;
+		const response = await getRequestWithoutAuth({}, url);
+		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+	});
+
+	it('Find parameter: returns 403 for find by parameter id request by unauthorized user', async () => {
+		const user = await createUser(userData);
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		const parameter = await ParameterModel.create(parameterDTO);
+		const url = `${findParameterByIdUrl}/${parameter._id}`;
+
+		const response = await getRequestWithAuth(userId, {}, url);
+		expect(response.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
+		expect(response.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
 	});
 
 	it('Find parameter: returns 404 for find parameter with wrong id/doesnt exist', async () => {
@@ -197,8 +256,9 @@ describe('Find advertise parameter module tests', () => {
 		const categoryId = category._id;
 		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameter = await ParameterModel.create(parameterDTO);
+		await ParameterModel.findByIdAndDelete(parameter._id);
+
 		const url = `${findParameterByIdUrl}/${parameter._id}`;
-		await ParameterModel.deleteOne({ _id: parameter._id });
 		const response = await getRequestWithAuth(userId, {}, url);
 		expect(response.status).toBe(parameterErrorMessages.ParameterNotFound.statusCode);
 		expect(response.body.message).toBe(parameterErrorMessages.ParameterNotFound.message);
@@ -211,9 +271,37 @@ describe('Find advertise parameter module tests', () => {
 		const categoryId = category._id;
 		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		await ParameterModel.create(parameterDTO);
+
 		const url = `${findParameterByCategoryIdUrl}/${categoryId}`;
 		const response = await getRequestWithAuth(userId, {}, url);
 		expect(response.status).toBe(200);
+	});
+
+	it('Find parameter: returns 401 for find by category id with request by unauthenticated user', async () => {
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		await ParameterModel.create(parameterDTO);
+
+		const url = `${findParameterByCategoryIdUrl}/${categoryId}`;
+		const response = await getRequestWithoutAuth({}, url);
+		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+	});
+
+	it('Find parameter: returns 403 for find by category id with request by unauthorized user', async () => {
+		const user = await createUser(userData);
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		await ParameterModel.create(parameterDTO);
+
+		const url = `${findParameterByCategoryIdUrl}/${categoryId}`;
+
+		const response = await getRequestWithAuth(userId, {}, url);
+		expect(response.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
+		expect(response.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
 	});
 
 	it('Find parameter: returns 404 for find parameter with wrong category id/doesnt exist', async () => {
@@ -241,6 +329,34 @@ describe('Find advertise parameter module tests', () => {
 		expect(response.status).toBe(200);
 	});
 
+	it('Find parameter: returns 401 for find by category slug with request by unauthenticated user', async () => {
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		await ParameterModel.create(parameterDTO);
+
+		const url = `${findParameterByCategorySlugUrl}/${category.slug}`;
+
+		const response = await getRequestWithoutAuth({}, url);
+		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+	});
+
+	it('Find parameter: returns 403 for find by category slug with request by unauthorized user', async () => {
+		const user = await createUser(userData);
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		await ParameterModel.create(parameterDTO);
+
+		const url = `${findParameterByCategorySlugUrl}/${category.slug}`;
+
+		const response = await getRequestWithAuth(userId, {}, url);
+		expect(response.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
+		expect(response.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
+	});
+
 	it('Find parameter: returns 404 for find parameter with wrong category slug/doesnt exist', async () => {
 		const user = await createUser();
 		const userId = user._id;
@@ -265,6 +381,30 @@ describe('Find advertise parameter module tests', () => {
 		expect(response.status).toBe(200);
 		expect(response.body.parameters.length).toBe(1);
 		expect(response.body.parameters[0].title).toBe(parameter.title);
+	});
+
+	it('Find parameter: returns 401 for find all parameters with request by unauthenticated user', async () => {
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		await ParameterModel.create(parameterDTO);
+
+		const response = await getRequestWithoutAuth({}, baseParameterUrl);
+		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+	});
+
+	it('Find parameter: returns 403 for find all parameters with request by unauthorized user', async () => {
+		const user = await createUser(userData);
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		await ParameterModel.create(parameterDTO);
+
+		const response = await getRequestWithAuth(userId, {}, baseParameterUrl);
+		expect(response.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
+		expect(response.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
 	});
 
 	it('Find parameter: returns 404 for dont find any parameter in fetch all route', async () => {
@@ -296,6 +436,36 @@ describe('Update advertise parameter module tests', () => {
 		const response = await patchRequestWithAuth(updateParameterDto, userId, url);
 		expect(response.status).toBe(200);
 		expect(response.body.updatedParameter.key).toBe(updateParameterDto.key);
+	});
+
+	it('Update parameter: returns 401 for find all parameters with request by unauthenticated user', async () => {
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		const parameter = await ParameterModel.create(parameterDTO);
+
+		const updateParameterDto = await createParameterData(correctUpdateParameterDto, categoryId);
+		const url = `${baseParameterUrl}/${parameter._id}`;
+
+		const response = await patchRequestWithoutAuth(updateParameterDto, url);
+		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+	});
+
+	it('Update parameter: returns 403 for find all parameters with request by unauthorized user', async () => {
+		const user = await createUser(userData);
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		const parameter = await ParameterModel.create(parameterDTO);
+
+		const updateParameterDto = await createParameterData(correctUpdateParameterDto, categoryId);
+		const url = `${baseParameterUrl}/${parameter._id}`;
+
+		const response = await patchRequestWithAuth(updateParameterDto, userId, url);
+		expect(response.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
+		expect(response.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
 	});
 
 	it('Update parameter: returns 409 for update a parameter with duplicate key and category vlaues', async () => {
@@ -413,10 +583,37 @@ describe('Delete advertise parameter module tests', () => {
 		const categoryId = category._id;
 		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		const parameter = await ParameterModel.create(parameterDTO);
+
 		const url = `${baseParameterUrl}/${parameter._id}`;
 		const response = await deleteRequestWithAuth(userId, url);
 		expect(response.status).toBe(parameterSuccessMessages.ParameterDeletedSuccessfully.statusCode);
 		expect(response.body.message).toBe(parameterSuccessMessages.ParameterDeletedSuccessfully.message);
+	});
+
+	it('Delete parameter: returns 401 for find all parameters with request by unauthenticated user', async () => {
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		const parameter = await ParameterModel.create(parameterDTO);
+
+		const url = `${baseParameterUrl}/${parameter._id}`;
+		const response = await deleteRequestWithoutAuth(url);
+		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+	});
+
+	it('Delete parameter: returns 403 for find all parameters with request by unauthorized user', async () => {
+		const user = await createUser(userData);
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
+		const parameter = await ParameterModel.create(parameterDTO);
+
+		const url = `${baseParameterUrl}/${parameter._id}`;
+		const response = await deleteRequestWithAuth(userId, url);
+		expect(response.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
+		expect(response.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
 	});
 
 	it('Delete parameter: returns 404 for delete a parameter with wrong id', async () => {
@@ -426,6 +623,7 @@ describe('Delete advertise parameter module tests', () => {
 		const categoryId = category._id;
 		const parameterDTO = await createParameterData(correctParameterDto, categoryId);
 		await ParameterModel.create(parameterDTO);
+
 		const url = `${baseParameterUrl}/${userId}`;
 		const response = await deleteRequestWithAuth(userId, url);
 		expect(response.status).toBe(parameterErrorMessages.ParameterNotFound.statusCode);

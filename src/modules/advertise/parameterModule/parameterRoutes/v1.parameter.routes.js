@@ -38,6 +38,10 @@ parameterRouter_v1.patch(
 	[authenticationGuard, authorizationGuard([Roles.SUPERADMIN, Roles.ADMIN])],
 	parameterController.update
 );
-parameterRouter_v1.get('/by-category-slug/:categorySlug', parameterController.findByCategorySlug);
+parameterRouter_v1.get(
+	'/by-category-slug/:categorySlug',
+	[authenticationGuard, authorizationGuard([Roles.SUPERADMIN, Roles.ADMIN])],
+	parameterController.findByCategorySlug
+);
 
 export default parameterRouter_v1;
