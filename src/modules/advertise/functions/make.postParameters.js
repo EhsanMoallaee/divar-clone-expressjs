@@ -12,9 +12,6 @@ export default async function makePostParameters(parameters, parametersInData) {
 			});
 		}
 	});
-
-	console.log('🚀 ~ makePostParameters ~ postParameters:', postParameters);
-
 	if (postParameters.length == 0)
 		throw new AppError(
 			postErrorMessages.ParameterIsNotAllowed.message,
