@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import unlinkFiles from './unlink.files.js';
 
 const sendErrorDevelopmentMode = (err, res) => {
 	let statusCode = err.statusCode || 500;
@@ -22,7 +23,7 @@ const sendErrorDevelopmentMode = (err, res) => {
 			secure: true,
 		});
 	} else {
-		// console.error(chalk.red(err.message));
+		console.error(chalk.red(err.message));
 	}
 	return res.status(statusCode).json({
 		statusCode,
@@ -68,7 +69,8 @@ const sendErrorProductionMode = (err, res) => {
 };
 
 // eslint-disable-next-line no-unused-vars
-export default (err, req, res, next) => {
+export default async (err, req, res, next) => {
+	if (req?.files && req?.files.length > 0) await unlinkFiles(req.files);
 	if (process.env.NODE_ENV === 'development') sendErrorDevelopmentMode(err, res);
 	else sendErrorProductionMode(err, res);
 };

@@ -5,7 +5,6 @@ export default async function checkKeysAreAllowed(parametersInData, allowedParam
 	const containAllowedKeys = parametersInData.every((key) => {
 		return allowedParametersKeys.indexOf(key) !== -1;
 	});
-
 	if (!containAllowedKeys)
 		throw new AppError(
 			postErrorMessages.ParameterIsNotAllowed.message,
