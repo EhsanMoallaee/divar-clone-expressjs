@@ -135,6 +135,11 @@ const postErrorMessages = {
 		message: 'مشخصهء ارسال شده برای این آگهی مجاز نمیباشد',
 		statusCode: 400,
 	},
+	ParameterValueIsIncorrect: {
+		message:
+			'مقدار یا نوع مشخصهء ارسال شده صحیح نمیباشد،اگر لیست پیش فرض وجود دارد لطفا از آن لیست مقدار مربوطه را انتخاب نمایید',
+		statusCode: 400,
+	},
 	ProvinceIsMissing: {
 		message: 'لطفا استان مورد نظر را ارسال بفرمایید',
 		statusCode: 400,

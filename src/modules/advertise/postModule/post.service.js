@@ -60,7 +60,7 @@ class PostService {
 		const allowedParametersKeys = parameters.map((param) => param.key);
 		const parametersKeysInData = [...Object.keys(data.parameters)];
 		await checkKeysAreAllowed(parametersKeysInData, allowedParametersKeys);
-		await checkIncludesRequiredKeys(parameters, data);
+		await checkIncludesRequiredKeys(parameters, data.parameters);
 		const postParameters = await makePostParameters(parameters, data.parameters);
 
 		const postDTO = {
