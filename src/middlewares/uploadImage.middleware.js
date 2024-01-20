@@ -2,7 +2,7 @@ import multer from 'multer';
 import gracefulFs from 'graceful-fs';
 import gregorianToJalali from '../common/dateConverters/gregorianToJalali.dateConverter.js';
 import uploadImageErrorMessages from './messages/uploadImage.ErrorMessages.js';
-import UploadFieldNames from '../common/constants/uploadFile.enum.js';
+import UploadFileEnum from '../common/constants/uploadFile.enum.js';
 
 const { year, month } = gregorianToJalali();
 const storage = multer.diskStorage({
@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 	},
 	filename: (req, file, cb) => {
 		let originalname = file.originalname.replace(/[^A-Za-z0-9.]/g, '-');
-		const filename = UploadFieldNames.FILE_NAME_PREFIX + Date.now() + '-' + originalname;
+		const filename = UploadFileEnum.FILE_NAME_PREFIX + Date.now() + '-' + originalname;
 		cb(null, filename);
 	},
 });
@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const uploadMiddleware = (req, res, next) => {
-	upload.array(UploadFieldNames.FIELD_NAME, UploadFieldNames.MAX_ALLOWED_FILES_COUNT)(req, res, (err) => {
+	upload.array(UploadFileEnum.FIELD_NAME, UploadFileEnum.MAX_ALLOWED_FILES_COUNT)(req, res, (err) => {
 		if (err) {
 			if (err.message == 'Unexpected field') {
 				return res
