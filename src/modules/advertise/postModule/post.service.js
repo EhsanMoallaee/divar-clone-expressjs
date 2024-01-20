@@ -2,6 +2,8 @@ import AppError from '../../errorHandling/app.error.js';
 import CategoryService from '../../category/category.service.js';
 import checkIncludesRequiredKeys from '../functions/checkIncludes.requiredKeys.js';
 import checkKeysAreAllowed from '../functions/checkKeys.areAllowed.js';
+import makeImagesUrlArray from '../functions/make.imagesUrlArray.js';
+import makePostParameters from '../functions/make.postParameters.js';
 import ParameterService from '../parameterModule/parameter.service.js';
 import postErrorMessages from './messages/post.errorMessages.js';
 import PostRepository from './model/post.repository.js';
@@ -41,13 +43,6 @@ class PostService {
 				);
 			}
 		}
-		let imagesUrl = [];
-		if (files && files.length > 0) {
-			imagesUrl = files.map((file) => {
-				return { url: file.path };
-			});
-		}
-
 		const category = await this.#CategoryService.findById(data.categoryId);
 		if (!category)
 			throw new AppError(
@@ -60,16 +55,19 @@ class PostService {
 			slug: category.slug,
 		};
 
+		const imagesUrlArray = await makeImagesUrlArray(files);
 		const parameters = await this.#ParameterService.findByCategoryId(category._id);
 		const allowedParametersKeys = parameters.map((param) => param.key);
-		const parametersInData = [...Object.keys(data.parameters)];
-		await checkKeysAreAllowed(parametersInData, allowedParametersKeys);
+		const parametersKeysInData = [...Object.keys(data.parameters)];
+		await checkKeysAreAllowed(parametersKeysInData, allowedParametersKeys);
 		await checkIncludesRequiredKeys(parameters, data);
+		const postParameters = await makePostParameters(parameters, data.parameters);
 
 		const postDTO = {
 			...data,
 			directCategory,
-			imagesGallery: imagesUrl,
+			imagesGallery: imagesUrlArray,
+			parameters: postParameters,
 		};
 		delete postDTO.categoryId;
 		const advertisePost = await this.#PostRepository.create(postDTO);

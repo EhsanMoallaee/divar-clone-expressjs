@@ -23,7 +23,7 @@ const postSchema = new Schema(
 				_id: false,
 			},
 		],
-		parameters: { type: Object, default: {} },
+		parameters: [{ type: Object, default: {} }],
 	},
 	{ versionKey: false, timestamps: true }
 );
