@@ -17,6 +17,7 @@ import {
 	postRequestWithoutAuth,
 	userData,
 } from '../../src/common/testsFunctions/request.withAuth';
+import postRepository from '../../src/modules/advertise/postModule/model/post.repository.js';
 
 beforeAll(async () => {
 	new ConnectMongodb();
@@ -828,7 +829,9 @@ describe('Find advertise post tests', () => {
 			[parameter.key]: firstParameterDto.enum[0],
 		};
 		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
-		await postRequestWithAuth(postDto, userId, basePostUrl);
+		const { body } = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = body.advertisePost._id;
+		await postRepository.update(postId, { isConfirmed: true });
 
 		const url = `${findPostByCategorySlugUrl}/${category.slug}`;
 		const findPostResponse = await getRequestWithAuth(userId, {}, url);
@@ -851,7 +854,9 @@ describe('Find advertise post tests', () => {
 			[parameter.key]: firstParameterDto.enum[0],
 		};
 		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
-		await postRequestWithAuth(postDto, userId, basePostUrl);
+		const { body } = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = body.advertisePost._id;
+		await postRepository.update(postId, { isConfirmed: true });
 
 		const url = `${findPostByCategorySlugUrl}/wrong-slug`;
 		const findPostResponse = await getRequestWithAuth(userId, {}, url);
@@ -883,7 +888,9 @@ describe('Find advertise post tests', () => {
 			[parameter.key]: firstParameterDto.enum[0],
 		};
 		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
-		await postRequestWithAuth(postDto, userId, basePostUrl);
+		const { body } = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = body.advertisePost._id;
+		await postRepository.update(postId, { isConfirmed: true });
 
 		const url = `${findPostByAddresUrl}?province=${postDto.province}&city=${postDto.city}`;
 		const findPostResponse = await getRequestWithAuth(userId, {}, url);
@@ -948,7 +955,9 @@ describe('Find advertise post tests', () => {
 			[parameter.key]: firstParameterDto.enum[0],
 		};
 		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
-		await postRequestWithAuth(postDto, userId, basePostUrl);
+		const { body } = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = body.advertisePost._id;
+		await postRepository.update(postId, { isConfirmed: true });
 
 		const url = `${findPostByCategorySlugAndAddresUrl}?categorySlug=${category.slug}&province=${postDto.province}&city=${postDto.city}`;
 		const findPostResponse = await getRequestWithAuth(userId, {}, url);
