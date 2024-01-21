@@ -113,12 +113,12 @@ class PostService {
 				postErrorMessages.ProvinceIsMissing.message,
 				postErrorMessages.ProvinceIsMissing.statusCode
 			);
-		const filterQuery = {
+		const conditions = {
 			province,
 		};
-		if (city) filterQuery.city = city;
-		if (city && district) filterQuery.district = district;
-		const advertisePosts = await this.#PostRepository.find(filterQuery, { updatedAt: 0 });
+		if (city) conditions.city = city;
+		if (city && district) conditions.district = district;
+		const advertisePosts = await this.findAdvertisePosts([], conditions);
 		if (!advertisePosts || advertisePosts.length === 0)
 			throw new AppError(
 				postErrorMessages.AdvertisePostsNotFound.message,
@@ -142,6 +142,16 @@ class PostService {
 		const categoryIds = await this.findRelatedNoChildCategoryIds(category);
 		const conditions = { province, city, district };
 		const advertisePosts = await this.findAdvertisePosts(categoryIds, conditions);
+		if (!advertisePosts || advertisePosts.length === 0)
+			throw new AppError(
+				postErrorMessages.AdvertisePostsNotFound.message,
+				postErrorMessages.AdvertisePostsNotFound.statusCode
+			);
+		return advertisePosts;
+	};
+
+	fetchAll = async () => {
+		const advertisePosts = await this.#PostRepository.find();
 		if (!advertisePosts || advertisePosts.length === 0)
 			throw new AppError(
 				postErrorMessages.AdvertisePostsNotFound.message,
@@ -211,7 +221,7 @@ class PostService {
 	};
 
 	findAdvertisePosts = async (categoryIds, conditions) => {
-		const advertisePosts = [];
+		let advertisePosts = [];
 		let filterQuery = {};
 		if (conditions) {
 			Object.keys(conditions).forEach((key) => conditions[key] == null && delete conditions[key]);
@@ -219,10 +229,15 @@ class PostService {
 				...conditions,
 			};
 		}
-		for (const id of categoryIds) {
-			filterQuery['directCategory.id'] = id;
-			const posts = await this.#PostRepository.find(filterQuery, { updatedAt: 0 });
-			if (posts && posts.length > 0) advertisePosts.push(...posts);
+		filterQuery.isConfirmed = true;
+		if (categoryIds && categoryIds.length > 0) {
+			for (const id of categoryIds) {
+				filterQuery['directCategory.id'] = id;
+				const posts = await this.#PostRepository.find(filterQuery, { updatedAt: 0 });
+				if (posts && posts.length > 0) advertisePosts.push(...posts);
+			}
+		} else {
+			advertisePosts = await this.#PostRepository.find(filterQuery, { updatedAt: 0 });
 		}
 		return advertisePosts;
 	};

@@ -45,6 +45,11 @@ class PostController {
 		return res.status(200).json({ advertisePosts });
 	});
 
+	fetchAll = catchAsyncErrors(async (req, res) => {
+		const posts = await this.#PostService.fetchAll();
+		return res.status(200).json({ posts });
+	});
+
 	myPosts = catchAsyncErrors(async (req, res) => {
 		const user = req.user;
 		const posts = await this.#PostService.myPosts(user);

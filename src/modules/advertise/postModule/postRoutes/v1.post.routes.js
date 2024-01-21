@@ -16,6 +16,11 @@ postRouter_v1.post(
 	[authenticationGuard, mediaStoragePathCheck(UploadFieldNames.FIELD_NAME), uploadMiddleware],
 	postController.create
 );
+postRouter_v1.get(
+	'/',
+	[authenticationGuard, authorizationGuard([Roles.SUPERADMIN, Roles.ADMIN])],
+	postController.fetchAll
+);
 postRouter_v1.delete(
 	'/:postId',
 	[authenticationGuard, authorizationGuard([Roles.SUPERADMIN, Roles.ADMIN])],
