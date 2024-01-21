@@ -21,6 +21,7 @@ postRouter_v1.delete(
 	[authenticationGuard, authorizationGuard([Roles.SUPERADMIN, Roles.ADMIN])],
 	postController.delete
 );
+postRouter_v1.get('/my-posts', authenticationGuard, postController.myPosts);
 postRouter_v1.get('/by-id/:postId', postController.findByPostId);
 postRouter_v1.get('/by-category-slug/:categorySlug', postController.findByCategorySlug);
 postRouter_v1.get('/by-address', postController.findByAddress);

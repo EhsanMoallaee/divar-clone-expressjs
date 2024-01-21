@@ -150,6 +150,18 @@ class PostService {
 		return advertisePosts;
 	};
 
+	myPosts = async (user) => {
+		const userId = user._id;
+		const filterQuery = { 'user.id': userId };
+		const posts = await this.#PostRepository.find(filterQuery);
+		if (!posts || posts.length === 0)
+			throw new AppError(
+				postErrorMessages.YouHaveNotAnyRegisteredPost.message,
+				postErrorMessages.YouHaveNotAnyRegisteredPost.statusCode
+			);
+		return posts;
+	};
+
 	delete = async (postId) => {
 		if (!isValidObjectId(postId))
 			throw new AppError(postErrorMessages.WrongPostId.message, postErrorMessages.WrongPostId.statusCode);

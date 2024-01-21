@@ -160,6 +160,10 @@ const postErrorMessages = {
 		message: 'آی دی آگهی ارسال شده صحیح نمیباشد',
 		statusCode: 400,
 	},
+	YouHaveNotAnyRegisteredPost: {
+		message: 'در حال حاضر آگهی ثبت‌ شده ندارید',
+		statusCode: 404,
+	},
 };
 
 export default postErrorMessages;
