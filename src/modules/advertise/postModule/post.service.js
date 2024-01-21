@@ -20,7 +20,7 @@ class PostService {
 		this.#PostRepository = PostRepository;
 	}
 
-	create = async (data, files) => {
+	create = async (data, files, user) => {
 		const { error } = PostValidator.createPostValidator(data);
 		if (error) {
 			const errorMessage = error.message;
@@ -65,6 +65,10 @@ class PostService {
 
 		const postDTO = {
 			...data,
+			user: {
+				id: user._id,
+				mobile: user.mobile,
+			},
 			directCategory,
 			imagesGallery: imagesUrlArray,
 			parameters: postParameters,

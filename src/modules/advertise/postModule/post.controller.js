@@ -11,7 +11,8 @@ class PostController {
 	create = catchAsyncErrors(async (req, res) => {
 		const files = req.files;
 		const postData = req.body;
-		const advertisePost = await this.#PostService.create(postData, files);
+		const user = req.user;
+		const advertisePost = await this.#PostService.create(postData, files, user);
 		return res.status(201).json({ advertisePost });
 	});
 
