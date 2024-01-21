@@ -816,7 +816,7 @@ describe('Find advertise post tests', () => {
 		expect(findPostResponse.body.message).toBe(postErrorMessages.WrongPostId.message);
 	});
 
-	it('Find Post: returns 200 for finding post by category slug', async () => {
+	it('Find Post: returns 200 for finding confirmed post by category slug', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -839,6 +839,27 @@ describe('Find advertise post tests', () => {
 		expect(findPostResponse.body.advertisePosts[0].title).toBe(postDto.title);
 		expect(findPostResponse.body.advertisePosts[0].province).toBe(postDto.province);
 		expect(findPostResponse.body.advertisePosts[0].city).toBe(postDto.city);
+	});
+
+	it('Find Post: returns 200 for finding unconfirmed post by category slug', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByCategorySlugUrl}/${category.slug}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.AdvertisePostsNotFound.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostsNotFound.message);
 	});
 
 	it('Find Post: returns 404 for finding post by category slug which doesnt exist', async () => {
@@ -875,7 +896,7 @@ describe('Find advertise post tests', () => {
 		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostsNotFound.message);
 	});
 
-	it('Find Post: returns 200 for finding post by address in query(province is required, city and district is optional)', async () => {
+	it('Find Post: returns 200 for finding confirmed post by address in query(province is required, city and district is optional)', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -898,6 +919,27 @@ describe('Find advertise post tests', () => {
 		expect(findPostResponse.body.advertisePosts[0].title).toBe(postDto.title);
 		expect(findPostResponse.body.advertisePosts[0].province).toBe(postDto.province);
 		expect(findPostResponse.body.advertisePosts[0].city).toBe(postDto.city);
+	});
+
+	it('Find Post: returns 404 for finding unconfirmed post by address in query(province is required, city and district is optional)', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const url = `${findPostByAddresUrl}?province=${postDto.province}&city=${postDto.city}`;
+		const findPostResponse = await getRequestWithAuth(userId, {}, url);
+		expect(findPostResponse.status).toBe(postErrorMessages.AdvertisePostsNotFound.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostsNotFound.message);
 	});
 
 	it('Find Post: returns 400 for finding post by address in query without province', async () => {
@@ -942,7 +984,7 @@ describe('Find advertise post tests', () => {
 		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostsNotFound.message);
 	});
 
-	it('Find Post: returns 200 for finding post by category slug and address in query(province is required, city and district is optional)', async () => {
+	it('Find Post: returns 200 for finding confirmed post by category slug and address in query(province is required, city and district is optional)', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
