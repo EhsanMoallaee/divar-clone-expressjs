@@ -24,6 +24,14 @@ class PostValidator {
 		});
 		return schema.validate(data);
 	};
+
+	confirmPostValidator = (data) => {
+		const schema = Joi.object({
+			postId: joiObjectId().required(),
+			isConfirmed: Joi.boolean().required(),
+		});
+		return schema.validate(data);
+	};
 }
 
 export default new PostValidator();

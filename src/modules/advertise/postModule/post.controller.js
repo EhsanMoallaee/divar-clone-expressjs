@@ -51,6 +51,19 @@ class PostController {
 		return res.status(200).json({ posts });
 	});
 
+	confirmPost = catchAsyncErrors(async (req, res) => {
+		const { postId } = req.params;
+		const { isConfirmed } = req.body;
+		const confirmData = {
+			postId,
+			isConfirmed,
+		};
+		await this.#PostService.confirmPost(confirmData);
+		return res
+			.status(postSuccessMessages.PostUpdatedSuccessfully.statusCode)
+			.json({ message: postSuccessMessages.PostUpdatedSuccessfully.message });
+	});
+
 	delete = catchAsyncErrors(async (req, res) => {
 		const { postId } = req.params;
 		await this.#PostService.delete(postId);

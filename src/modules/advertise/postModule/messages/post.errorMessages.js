@@ -67,6 +67,10 @@ const postErrorMessages = {
 		message: 'مقدار نام منطقه یا خیابان محل آگهی نمیتواند رشته خالی باشد',
 		statusCode: 400,
 	},
+	'"isConfirmed" must be a boolean': {
+		message: 'مقدار فیلد وضعیت آگهی باید از نوع بولین باشد',
+		statusCode: 400,
+	},
 	'"parameters" is required': {
 		message: 'ارسال حداقل یک مشخصه برای آگهی الزامیست',
 		statusCode: 400,
@@ -77,6 +81,10 @@ const postErrorMessages = {
 	},
 	'"parameters" must have at least 1 key': {
 		message: 'مشخصات آگهی باید به صورت یک آبجکت و دارای حداقل یک عضو باشد',
+		statusCode: 400,
+	},
+	'"postId" is required': {
+		message: 'ارسال آی دی پست الزامیست',
 		statusCode: 400,
 	},
 	'"province" is required': {

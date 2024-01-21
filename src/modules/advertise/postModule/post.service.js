@@ -162,6 +162,32 @@ class PostService {
 		return posts;
 	};
 
+	confirmPost = async (confirmData) => {
+		const { error } = PostValidator.confirmPostValidator(confirmData);
+		if (error) {
+			const errorMessage = error.message;
+			if (errorMessage.startsWith('"postId" with value')) {
+				throw new AppError(postErrorMessages.WrongPostId.message, postErrorMessages.WrongPostId.statusCode);
+			} else if (postErrorMessages[errorMessage]) {
+				throw new AppError(postErrorMessages[errorMessage].message, postErrorMessages[errorMessage].statusCode);
+			} else {
+				throw new AppError(
+					postErrorMessages.ExceptionError.message,
+					postErrorMessages.ExceptionError.statusCode
+				);
+			}
+		}
+		const postId = confirmData.postId;
+		const isConfirmed = confirmData.isConfirmed;
+		const result = await this.#PostRepository.update(postId, { isConfirmed });
+		if (!result)
+			throw new AppError(
+				postErrorMessages.AdvertisePostNotFound.message,
+				postErrorMessages.AdvertisePostNotFound.statusCode
+			);
+		return true;
+	};
+
 	delete = async (postId) => {
 		if (!isValidObjectId(postId))
 			throw new AppError(postErrorMessages.WrongPostId.message, postErrorMessages.WrongPostId.statusCode);
