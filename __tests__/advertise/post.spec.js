@@ -12,6 +12,7 @@ import {
 	deleteRequestWithAuth,
 	deleteRequestWithoutAuth,
 	getRequestWithAuth,
+	patchRequestWithAuth,
 	postRequestWithAuth,
 	postRequestWithAuthAndFile,
 	postRequestWithoutAuth,
@@ -103,6 +104,7 @@ const findPostByIdUrl = '/api/v1/advertise/post/by-id';
 const findPostByCategorySlugUrl = '/api/v1/advertise/post/by-category-slug';
 const findPostByAddresUrl = '/api/v1/advertise/post/by-address';
 const findPostByCategorySlugAndAddresUrl = '/api/v1/advertise/post/by-categorySlug-address';
+const confirmPosrUrl = '/api/v1/advertise/post/confirm-post';
 const baseParameterUrl = '/api/v1/advertise/parameter';
 
 describe('Create advertise post tests', () => {
@@ -841,7 +843,7 @@ describe('Find advertise post tests', () => {
 		expect(findPostResponse.body.advertisePosts[0].city).toBe(postDto.city);
 	});
 
-	it('Find Post: returns 200 for finding unconfirmed post by category slug', async () => {
+	it('Find Post: returns 404 for finding unconfirmed post by category slug', async () => {
 		const user = await createUser();
 		const userId = user._id;
 		const category = await createCategory(correctCategory);
@@ -1060,6 +1062,57 @@ describe('Find advertise post tests', () => {
 		const findPostResponse = await getRequestWithAuth(userId, {}, url);
 		expect(findPostResponse.status).toBe(postErrorMessages.AdvertisePostsNotFound.statusCode);
 		expect(findPostResponse.body.message).toBe(postErrorMessages.AdvertisePostsNotFound.message);
+	});
+});
+
+describe('Update advertise post tests', () => {
+	it('Update Post: returns 200 for confirm unconfirmed post by admin/super admin', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		const { body } = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = body.advertisePost._id;
+		const updateDto = { isConfirmed: true };
+
+		const url = `${confirmPosrUrl}/${postId}`;
+		const findPostResponse = await patchRequestWithAuth(updateDto, userId, url);
+		expect(findPostResponse.status).toBe(postSuccessMessages.PostUpdatedSuccessfully.statusCode);
+		expect(findPostResponse.body.message).toBe(postSuccessMessages.PostUpdatedSuccessfully.message);
+	});
+
+	it('Update Post: returns 403 for confirm unconfirmed post by user', async () => {
+		const adminUser = await createUser();
+		const adminUserId = adminUser._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, adminUserId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+		const user = await createUser(userData);
+		const userId = user._id;
+		const { body } = await postRequestWithAuth(postDto, userId, basePostUrl);
+		const postId = body.advertisePost._id;
+		const updateDto = { isConfirmed: true };
+
+		const url = `${confirmPosrUrl}/${postId}`;
+		const findPostResponse = await patchRequestWithAuth(updateDto, userId, url);
+		expect(findPostResponse.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
+		expect(findPostResponse.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
 	});
 });
 
