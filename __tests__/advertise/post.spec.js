@@ -12,6 +12,7 @@ import {
 	deleteRequestWithAuth,
 	deleteRequestWithoutAuth,
 	getRequestWithAuth,
+	getRequestWithoutAuth,
 	patchRequestWithAuth,
 	postRequestWithAuth,
 	postRequestWithAuthAndFile,
@@ -104,7 +105,8 @@ const findPostByIdUrl = '/api/v1/advertise/post/by-id';
 const findPostByCategorySlugUrl = '/api/v1/advertise/post/by-category-slug';
 const findPostByAddresUrl = '/api/v1/advertise/post/by-address';
 const findPostByCategorySlugAndAddresUrl = '/api/v1/advertise/post/by-categorySlug-address';
-const confirmPosrUrl = '/api/v1/advertise/post/confirm-post';
+const confirmPostUrl = '/api/v1/advertise/post/confirm-post';
+const myPostsUrl = '/api/v1/advertise/post/my-posts';
 const baseParameterUrl = '/api/v1/advertise/parameter';
 
 describe('Create advertise post tests', () => {
@@ -776,6 +778,44 @@ describe('Find advertise post tests', () => {
 		expect(findPostResponse.body.advertisePost.city).toBe(postDto.city);
 	});
 
+	it('Find Post: returns 200 for finding user own posts', async () => {
+		const user = await createUser();
+		const userId = user._id;
+		const category = await createCategory(correctCategory);
+		const categoryId = category._id;
+
+		const parameterDTO = await createParameterData(firstParameterDto, categoryId);
+		const parameterResponse = await postRequestWithAuth(parameterDTO, userId, baseParameterUrl);
+		const parameter = parameterResponse.body.parameter;
+		const parameters = {
+			[parameter.key]: firstParameterDto.enum[0],
+		};
+		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
+
+		await postRequestWithAuth(postDto, userId, basePostUrl);
+
+		const findPostResponse = await getRequestWithAuth(userId, {}, myPostsUrl);
+		expect(findPostResponse.status).toBe(200);
+		expect(findPostResponse.body.advertisePosts[0].title).toBe(postDto.title);
+		expect(findPostResponse.body.advertisePosts[0].province).toBe(postDto.province);
+		expect(findPostResponse.body.advertisePosts[0].city).toBe(postDto.city);
+	});
+
+	it('Find Post: returns 404 for finding user own posts who has not any post', async () => {
+		const user = await createUser();
+		const userId = user._id;
+
+		const findPostResponse = await getRequestWithAuth(userId, {}, myPostsUrl);
+		expect(findPostResponse.status).toBe(postErrorMessages.YouHaveNotAnyRegisteredPost.statusCode);
+		expect(findPostResponse.body.message).toBe(postErrorMessages.YouHaveNotAnyRegisteredPost.message);
+	});
+
+	it('Find Post: returns 401 for finding user own posts who not logged in', async () => {
+		const findPostResponse = await getRequestWithoutAuth({}, myPostsUrl);
+		expect(findPostResponse.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
+		expect(findPostResponse.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+	});
+
 	it('Find Post: returns 404 for finding post by wrong id/doesnt exist', async () => {
 		const user = await createUser();
 		const userId = user._id;
@@ -1083,7 +1123,7 @@ describe('Update advertise post tests', () => {
 		const postId = body.advertisePost._id;
 		const updateDto = { isConfirmed: true };
 
-		const url = `${confirmPosrUrl}/${postId}`;
+		const url = `${confirmPostUrl}/${postId}`;
 		const findPostResponse = await patchRequestWithAuth(updateDto, userId, url);
 		expect(findPostResponse.status).toBe(postSuccessMessages.PostUpdatedSuccessfully.statusCode);
 		expect(findPostResponse.body.message).toBe(postSuccessMessages.PostUpdatedSuccessfully.message);
@@ -1109,7 +1149,7 @@ describe('Update advertise post tests', () => {
 		const postId = body.advertisePost._id;
 		const updateDto = { isConfirmed: true };
 
-		const url = `${confirmPosrUrl}/${postId}`;
+		const url = `${confirmPostUrl}/${postId}`;
 		const findPostResponse = await patchRequestWithAuth(updateDto, userId, url);
 		expect(findPostResponse.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
 		expect(findPostResponse.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
