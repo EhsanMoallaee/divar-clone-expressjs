@@ -19,7 +19,7 @@
  *                  example: "parameter type"
  *              guide:
  *                  type: string
- *                  example: "parameter type"
+ *                  example: "parameter guide"
  *              category:
  *                  type: string
  *                  example: "parameter related category id"
