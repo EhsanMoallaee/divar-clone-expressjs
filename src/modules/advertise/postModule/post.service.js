@@ -97,7 +97,7 @@ class PostService {
 				postErrorMessages.CategorySlugIsMissing.statusCode
 			);
 		const category = await this.#CategoryService.findBySlug(categorySlug);
-		const categoryIds = await this.findRelatedNoChildCategoryIds(category);
+		const categoryIds = await this.findRelatedHasNoChildrenCategoryIds(category);
 		const advertisePosts = await this.findAdvertisePosts(categoryIds);
 		if (!advertisePosts || advertisePosts.length === 0)
 			throw new AppError(
@@ -139,7 +139,7 @@ class PostService {
 				postErrorMessages.ProvinceIsMissing.statusCode
 			);
 		const category = await this.#CategoryService.findBySlug(categorySlug);
-		const categoryIds = await this.findRelatedNoChildCategoryIds(category);
+		const categoryIds = await this.findRelatedHasNoChildrenCategoryIds(category);
 		const conditions = { province, city, district };
 		const advertisePosts = await this.findAdvertisePosts(categoryIds, conditions);
 		if (!advertisePosts || advertisePosts.length === 0)
@@ -210,7 +210,7 @@ class PostService {
 		return result;
 	};
 
-	findRelatedNoChildCategoryIds = async (category) => {
+	findRelatedHasNoChildrenCategoryIds = async (category) => {
 		let categoryIds = [];
 		if (!category.hasChildren) {
 			categoryIds.push(category._id);
@@ -223,7 +223,7 @@ class PostService {
 	findAdvertisePosts = async (categoryIds, conditions) => {
 		let advertisePosts = [];
 		let filterQuery = {};
-		if (conditions) {
+		if (conditions && Object.keys(conditions).length > 0) {
 			Object.keys(conditions).forEach((key) => conditions[key] == null && delete conditions[key]);
 			filterQuery = {
 				...conditions,
