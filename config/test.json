@@ -1,5 +1,6 @@
 {
-	"tokenOption": { "expiresIn": 600000 },
+	"accessTokenOption": { "expiresIn": "15m" },
+	"refreshTokenOption": { "expiresIn": "30d" },
 	"cookieOptions": {
 		"login": {
 			"maxAge": 86400000,

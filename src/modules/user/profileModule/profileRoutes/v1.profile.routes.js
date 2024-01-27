@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import authorizationGuard from '../../../../guards/authorization.guard.js';
+import authorizationGuard from '../../authModule/guards/authorization.guard.js';
 import profileController from '../profile.controller.js';
 import { Roles } from '../../model/user.model.js';
 

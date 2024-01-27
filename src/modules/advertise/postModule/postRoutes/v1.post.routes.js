@@ -1,12 +1,12 @@
 import { Router } from 'express';
 
-import authenticationGuard from '../../../../guards/authentication.guard.js';
-import authorizationGuard from '../../../../guards/authorization.guard.js';
+import authenticationGuard from '../../../user/authModule/guards/authentication.guard.js';
+import authorizationGuard from '../../../user/authModule/guards/authorization.guard.js';
 import mediaStoragePathCheck from '../../../../middlewares/mediaPathCheck.middleware.js';
 import postController from '../post.controller.js';
 import { Roles } from '../../../user/model/user.model.js';
-import uploadMiddleware from '../../../../middlewares/uploadImage.middleware.js';
 import UploadFieldNames from '../../../../common/constants/uploadFile.enum.js';
+import uploadMiddleware from '../../../../middlewares/uploadImage.middleware.js';
 
 const postRouter_v1 = Router();
 

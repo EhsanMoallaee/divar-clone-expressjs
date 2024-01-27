@@ -1,8 +1,16 @@
 {
-	"tokenOption": { "expiresIn": 600000 },
+	"accessTokenOptions": { "expiresIn": "5s" },
+	"refreshTokenOptions": { "expiresIn": "30d" },
 	"cookieOptions": {
-		"login": {
-			"maxAge": 86400000,
+		"AccessCookie": {
+			"maxAge": "604800000",
+			"secure": true,
+			"httpOnly": true,
+			"signed": true,
+			"sameSite": "none"
+		},
+		"RefreshCookie": {
+			"maxAge": "2592000000",
 			"secure": true,
 			"httpOnly": true,
 			"signed": true,

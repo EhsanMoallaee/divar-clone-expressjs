@@ -3,3 +3,6 @@ documents
 secrets
 static
 .VSCoceCounter
+.env
+.env.*
+.txt

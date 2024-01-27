@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import helmet from 'helmet';
 import path from 'path';
+import useragent from 'express-useragent';
 
 import errorController from './modules/errorHandling/error.controller.js';
 import mainRouter from './routes/main.routes.js';
@@ -18,6 +19,7 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.disable('x-powered-by');
+app.use(useragent.express());
 app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

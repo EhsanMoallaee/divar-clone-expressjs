@@ -26,10 +26,10 @@ export const userAdminData = {
 };
 
 const generateToken = async (payload) => {
-	const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
+	const tokenSecretKey = process.env.ACCESS_TOKEN_SECRET_KEY;
 	const tokenOptions = { expiresIn: 300000 };
-	const xAuthToken = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
-	return xAuthToken;
+	const accessToken = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
+	return accessToken;
 };
 
 export const createUser = async (userData = userAdminData) => {
@@ -38,11 +38,11 @@ export const createUser = async (userData = userAdminData) => {
 };
 
 export const getRequestWithAuth = async (userId, filterQuery = {}, url) => {
-	const xAuthToken = await generateToken({ id: userId });
+	const accessToken = await generateToken({ id: userId });
 	const response = await request(app)
 		.get(url)
 		.query(filterQuery)
-		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+		.set('Cookie', `${CookieNames.AccessCookie}=s:${sign(accessToken, cookieSecretKey)}`);
 	return response;
 };
 
@@ -52,10 +52,10 @@ export const getRequestWithoutAuth = async (filterQuery = {}, url) => {
 };
 
 export const deleteRequestWithAuth = async (userId, url) => {
-	const xAuthToken = await generateToken({ id: userId });
+	const accessToken = await generateToken({ id: userId });
 	const response = await request(app)
 		.delete(url)
-		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+		.set('Cookie', `${CookieNames.AccessCookie}=s:${sign(accessToken, cookieSecretKey)}`);
 	return response;
 };
 
@@ -65,11 +65,11 @@ export const deleteRequestWithoutAuth = async (url) => {
 };
 
 export const patchRequestWithAuth = async (data, userId, url) => {
-	const xAuthToken = await generateToken({ id: userId });
+	const accessToken = await generateToken({ id: userId });
 	const response = await request(app)
 		.patch(url)
 		.send(data)
-		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+		.set('Cookie', `${CookieNames.AccessCookie}=s:${sign(accessToken, cookieSecretKey)}`);
 	return response;
 };
 
@@ -79,12 +79,12 @@ export const patchRequestWithoutAuth = async (data, url) => {
 };
 
 export const postRequestWithAuth = async (data, userId, url, image) => {
-	const xAuthToken = await generateToken({ id: userId });
+	const accessToken = await generateToken({ id: userId });
 	const response = await request(app)
 		.post(url)
 		.send(data)
 		.attach('images', image)
-		.set('Cookie', `${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}`);
+		.set('Cookie', `${CookieNames.AccessCookie}=s:${sign(accessToken, cookieSecretKey)}`);
 	return response;
 };
 
@@ -94,15 +94,15 @@ export const postRequestWithoutAuth = async (data, url, image) => {
 };
 
 export const postRequestWithAuthAndFile = async (data, userId, url, image) => {
-	const xAuthToken = await generateToken({ id: userId });
-	const requestInString = await makeRequestInString(data, xAuthToken, image);
+	const accessToken = await generateToken({ id: userId });
+	const requestInString = await makeRequestInString(data, accessToken, image);
 	const myRequest = Function('return await' + requestInString)();
 
 	const response = await myRequest(request, app, url);
 	return response;
 };
 
-async function makeRequestInString(data, xAuthToken, image) {
+async function makeRequestInString(data, accessToken, image) {
 	let str = 'sendData = async(request, app, url) => { return await request(app).post(url)';
 
 	for (const key in data) {
@@ -117,6 +117,6 @@ async function makeRequestInString(data, xAuthToken, image) {
 			str += `.field('${[key]}', '${data[key]}')`;
 		}
 	}
-	str += `.attach('images', '${image}').set('Cookie', '${CookieNames.XAuthToken}=s:${sign(xAuthToken, cookieSecretKey)}')}`;
+	str += `.attach('images', '${image}').set('Cookie', '${CookieNames.AccessCookie}=s:${sign(accessToken, cookieSecretKey)}')}`;
 	return str;
 }

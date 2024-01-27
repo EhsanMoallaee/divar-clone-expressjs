@@ -1,5 +1,6 @@
 const CookieNames = Object.freeze({
-	XAuthToken: 'x-auth-token',
+	AccessCookie: 'divar_access_token',
+	RefreshCookie: 'divar_refresh_token',
 });
 
 export default CookieNames;

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import authenticationGuard from '../../../guards/authentication.guard.js';
-import authorizationGuard from '../../../guards/authorization.guard.js';
+import authenticationGuard from '../../user/authModule/guards/authentication.guard.js';
+import authorizationGuard from '../../user/authModule/guards/authorization.guard.js';
 import categoryController from '../category.controller.js';
 import { Roles } from '../../user/model/user.model.js';
 

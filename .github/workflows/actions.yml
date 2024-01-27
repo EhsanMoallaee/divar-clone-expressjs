@@ -19,7 +19,8 @@ jobs:
             NODE_ENV: 'test'
             DB_URL: ${{secrets.DB_URL}}
             COOKIE_SECRET_KEY: ${{secrets.COOKIE_SECRET_KEY}}
-            TOKEN_SECRET_KEY: ${{secrets.TOKEN_SECRET_KEY}}
+            ACCESS_TOKEN_SECRET_KEY: ${{secrets.ACCESS_TOKEN_SECRET_KEY}}
+            REFRESH_TOKEN_SECRET_KEY: ${{secrets.REFRESH_TOKEN_SECRET_KEY}}
             KAVENEGAR_API_KEY: ${{secrets.KAVENEGAR_API_KEY}}
         steps:
             - uses: actions/checkout@v4

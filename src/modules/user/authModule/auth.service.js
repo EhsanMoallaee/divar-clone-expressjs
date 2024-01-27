@@ -52,7 +52,7 @@ class AuthService {
 		throw new AppError(authErrorMessages.DuplicateMobile.message, authErrorMessages.DuplicateMobile.statusCode);
 	};
 
-	register = async (data) => {
+	register = async (data, userAgent) => {
 		const { mobile, otpCode } = data;
 		const getRedisValue = JSON.parse(await redisSingletonInstance.getData(mobile));
 		if (!getRedisValue)
@@ -61,6 +61,7 @@ class AuthService {
 			const userExist = await this.checkUserExist(mobile);
 			if (userExist)
 				throw new AppError(authErrorMessages.SpamAttack.message, authErrorMessages.SpamAttack.statusCode);
+
 			const userData = {
 				firstname: getRedisValue.firstname,
 				lastname: getRedisValue.lastname,
@@ -69,18 +70,26 @@ class AuthService {
 				role: Roles.USER,
 			};
 			const user = await this.#UserRepository.create(userData);
-			const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
-			const tokenOptions = config.get('tokenOption');
-			const payload = {
-				mobile,
-				id: user._id,
-			};
-			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
+
+			const accessToken = await tokenGenerator(
+				{ id: user._id, mobile: user.mobile },
+				process.env.ACCESS_TOKEN_SECRET_KEY,
+				config.get('accessTokenOptions')
+			);
+			const refreshToken = await tokenGenerator(
+				{ id: user._id },
+				process.env.REFRESH_TOKEN_SECRET_KEY,
+				config.get('refreshTokenOptions')
+			);
+
+			await this.updateUserRefreshTokens(user._id, refreshToken, userAgent);
+
 			await redisSingletonInstance.deleteData(mobile);
 			return {
 				message: authSuccessMessages.RegisteredSuccessfully.message,
 				statusCode: authSuccessMessages.RegisteredSuccessfully.statusCode,
-				token,
+				accessToken,
+				refreshToken,
 			};
 		}
 		throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
@@ -118,7 +127,7 @@ class AuthService {
 		};
 	};
 
-	login = async (data) => {
+	login = async (data, userAgent) => {
 		const { mobile, otpCode } = data;
 		const getRedisValue = JSON.parse(await redisSingletonInstance.getData(mobile));
 		if (!getRedisValue)
@@ -127,27 +136,62 @@ class AuthService {
 			const userExist = await this.checkUserExist(mobile);
 			if (!userExist)
 				throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
-			const tokenSecretKey = process.env.TOKEN_SECRET_KEY;
-			const tokenOptions = config.get('tokenOption');
-			const payload = {
-				mobile,
-				id: userExist._id,
-			};
-			const token = await tokenGenerator(payload, tokenSecretKey, tokenOptions);
+
+			const accessToken = await tokenGenerator(
+				{ id: userExist._id, mobile: userExist.mobile },
+				process.env.ACCESS_TOKEN_SECRET_KEY,
+				config.get('accessTokenOptions')
+			);
+			const refreshToken = await tokenGenerator(
+				{ id: userExist._id },
+				process.env.REFRESH_TOKEN_SECRET_KEY,
+				config.get('refreshTokenOptions')
+			);
+
+			await this.removeUserRefreshTokenByUserAgent(userExist._id, userAgent);
+			await this.updateUserRefreshTokens(userExist._id, refreshToken, userAgent);
 			await redisSingletonInstance.deleteData(mobile);
 			return {
 				message: authSuccessMessages.LoggedInSuccessfully.message,
 				statusCode: authSuccessMessages.OTPSentSuccessfully.statusCode,
-				token,
+				accessToken,
+				refreshToken,
 			};
 		}
 		throw new AppError(authErrorMessages.WrongOtpCode.message, authErrorMessages.WrongOtpCode.statusCode);
 	};
 
-	async checkUserExist(mobile) {
+	checkUserExist = async (mobile) => {
 		const user = await this.#UserRepository.findOne({ mobile });
 		return user;
-	}
+	};
+
+	removeUserRefreshTokenByUserAgent = async (userId, userAgent) => {
+		const filterQuery = {
+			$pull: {
+				refreshTokens: { ...userAgent },
+			},
+		};
+		await this.#UserRepository.update(userId, filterQuery);
+	};
+
+	removeUserRefreshTokenByRefreshToken = async (userId, refreshToken) => {
+		const filterQuery = {
+			$pull: {
+				refreshTokens: { refreshToken },
+			},
+		};
+		await this.#UserRepository.update(userId, filterQuery);
+	};
+
+	updateUserRefreshTokens = async (userId, refreshToken, userAgent) => {
+		const refreshTokenData = {
+			refreshToken,
+			...userAgent,
+		};
+		const updateQuery = { $push: { refreshTokens: refreshTokenData } };
+		await this.#UserRepository.update(userId, updateQuery);
+	};
 }
 
 export default new AuthService();

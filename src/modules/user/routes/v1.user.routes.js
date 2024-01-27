@@ -1,7 +1,7 @@
 import { Router } from 'express';
+import authenticationGuard from '../authModule/guards/authentication.guard.js';
 import authRouter_v1 from '../authModule/authRoutes/v1.auth.routes.js';
 import profileRouter_v1 from '../profileModule/profileRoutes/v1.profile.routes.js';
-import authenticationGuard from '../../../guards/authentication.guard.js';
 
 const userRouter_v1 = Router();
 

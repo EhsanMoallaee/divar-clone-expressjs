@@ -1,5 +1,5 @@
-import authenticationErrorMessages from '../../src/guards/messages/authentication.errorMessages.js';
-import authorizationErrorMessages from '../../src/guards/messages/authorization.errorMessages.js';
+import authenticationGuardErrorMessages from '../../src/modules/user/authModule/guards/messages/authenticationGuard.errorMessages.js';
+import authorizationGuardErrorMessages from '../../src/modules/user/authModule/guards/messages/authorizationGuard.errorMessages.js';
 import CategoryModel from '../../src/modules/category/model/category.model';
 import ParameterModel from '../../src/modules/advertise/parameterModule/model/parameter.model.js';
 import postErrorMessages from '../../src/modules/advertise/postModule/messages/post.errorMessages.js';
@@ -176,8 +176,8 @@ describe('Create advertise post tests', () => {
 		const postDto = await createPostData(correctPostBaseDto, categoryId, parameters);
 
 		const response = await postRequestWithoutAuth(postDto, basePostUrl);
-		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
-		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+		expect(response.status).toBe(authenticationGuardErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationGuardErrorMessages.UnAuthenticated.message);
 	});
 
 	it('Create Post: returns 400 for sending request without title', async () => {
@@ -812,8 +812,8 @@ describe('Find advertise post tests', () => {
 
 	it('Find Post: returns 401 for finding user own posts who not logged in', async () => {
 		const findPostResponse = await getRequestWithoutAuth({}, myPostsUrl);
-		expect(findPostResponse.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
-		expect(findPostResponse.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+		expect(findPostResponse.status).toBe(authenticationGuardErrorMessages.UnAuthenticated.statusCode);
+		expect(findPostResponse.body.message).toBe(authenticationGuardErrorMessages.UnAuthenticated.message);
 	});
 
 	it('Find Post: returns 404 for finding post by wrong id/doesnt exist', async () => {
@@ -1151,8 +1151,8 @@ describe('Update advertise post tests', () => {
 
 		const url = `${confirmPostUrl}/${postId}`;
 		const findPostResponse = await patchRequestWithAuth(updateDto, userId, url);
-		expect(findPostResponse.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
-		expect(findPostResponse.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
+		expect(findPostResponse.status).toBe(authorizationGuardErrorMessages.UnAuthorized.statusCode);
+		expect(findPostResponse.body.message).toBe(authorizationGuardErrorMessages.UnAuthorized.message);
 	});
 });
 
@@ -1199,8 +1199,8 @@ describe('Delete advertise post tests', () => {
 
 		const url = `${basePostUrl}/${postId}`;
 		const response = await deleteRequestWithoutAuth(url);
-		expect(response.status).toBe(authenticationErrorMessages.UnAuthenticated.statusCode);
-		expect(response.body.message).toBe(authenticationErrorMessages.UnAuthenticated.message);
+		expect(response.status).toBe(authenticationGuardErrorMessages.UnAuthenticated.statusCode);
+		expect(response.body.message).toBe(authenticationGuardErrorMessages.UnAuthenticated.message);
 	});
 
 	it('Delete Post: returns 403 for request by unauthorized user', async () => {
@@ -1224,8 +1224,8 @@ describe('Delete advertise post tests', () => {
 
 		const url = `${basePostUrl}/${postId}`;
 		const response = await deleteRequestWithAuth(userId, url);
-		expect(response.status).toBe(authorizationErrorMessages.UnAuthorized.statusCode);
-		expect(response.body.message).toBe(authorizationErrorMessages.UnAuthorized.message);
+		expect(response.status).toBe(authorizationGuardErrorMessages.UnAuthorized.statusCode);
+		expect(response.body.message).toBe(authorizationGuardErrorMessages.UnAuthorized.message);
 	});
 
 	it('Delete Post: returns 404 for deleting post by wrong id/doesnt exist', async () => {
