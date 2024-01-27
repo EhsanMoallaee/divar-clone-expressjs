@@ -41,7 +41,9 @@ in the root of the project folder and then add the following environment variabl
 
 `COOKIE_SECRET_KEY`
 
-`TOKEN_SECRET_KEY`
+`ACCESS_TOKEN_SECRET_KEY`
+
+`REFRESH_TOKEN_SECRET_KEY`
 
 `KAVENEGAR_API_KEY`
 
