@@ -7,7 +7,7 @@ import makePostParameters from '../functions/make.postParameters.js';
 import ParameterService from '../parameterModule/parameter.service.js';
 import postErrorMessages from './messages/post.errorMessages.js';
 import PostRepository from './model/post.repository.js';
-import PostValidator from './validations/post.validator.js';
+import PostValidator from './validators/post.validator.js';
 import { isValidObjectId } from 'mongoose';
 
 class PostService {

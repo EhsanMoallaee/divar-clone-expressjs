@@ -9,6 +9,7 @@ import redisSingletonInstance from '../../redisClient/redis.client.js';
 import tokenGenerator from '../functions/jwtToken/jwtToken.generator.js';
 import UserRepository from '../model/user.repository.js';
 import { Roles } from '../model/user.model.js';
+import authValidator from './validators/auth.validator.js';
 
 class AuthService {
 	#UserRepository;
@@ -17,6 +18,28 @@ class AuthService {
 	}
 
 	registerationRequest = async (userData) => {
+		const { error } = authValidator.registerationRequestValidator(userData);
+		if (error) {
+			const errorMessage = error.message;
+			if (errorMessage.endsWith('is not allowed')) {
+				throw new AppError(
+					authErrorMessages.FieldIsNotAllowed.message,
+					authErrorMessages.FieldIsNotAllowed.statusCode
+				);
+			} else if (errorMessage?.startsWith('"mobile" with value')) {
+				throw new AppError(
+					authErrorMessages.WrongMobileFormat.message,
+					authErrorMessages.WrongMobileFormat.statusCode
+				);
+			} else if (authErrorMessages[errorMessage]) {
+				throw new AppError(authErrorMessages[errorMessage].message, authErrorMessages[errorMessage].statusCode);
+			} else {
+				throw new AppError(
+					authErrorMessages.ExceptionError.message,
+					authErrorMessages.ExceptionError.statusCode
+				);
+			}
+		}
 		const { mobile, firstname, lastname } = userData;
 		const user = await this.checkUserExist(mobile);
 		if (!user) {
@@ -53,6 +76,28 @@ class AuthService {
 	};
 
 	register = async (data, userAgent) => {
+		const { error } = authValidator.registerValidator(data);
+		if (error) {
+			const errorMessage = error.message;
+			if (errorMessage.endsWith('is not allowed')) {
+				throw new AppError(
+					authErrorMessages.FieldIsNotAllowed.message,
+					authErrorMessages.FieldIsNotAllowed.statusCode
+				);
+			} else if (errorMessage?.startsWith('"mobile" with value')) {
+				throw new AppError(
+					authErrorMessages.WrongMobileFormat.message,
+					authErrorMessages.WrongMobileFormat.statusCode
+				);
+			} else if (authErrorMessages[errorMessage]) {
+				throw new AppError(authErrorMessages[errorMessage].message, authErrorMessages[errorMessage].statusCode);
+			} else {
+				throw new AppError(
+					authErrorMessages.ExceptionError.message,
+					authErrorMessages.ExceptionError.statusCode
+				);
+			}
+		}
 		const { mobile, otpCode } = data;
 		const getRedisValue = JSON.parse(await redisSingletonInstance.getData(mobile));
 		if (!getRedisValue)
@@ -96,6 +141,28 @@ class AuthService {
 	};
 
 	loginRequest = async (mobile) => {
+		const { error } = authValidator.loginRequestValidator({ mobile });
+		if (error) {
+			const errorMessage = error.message;
+			if (errorMessage.endsWith('is not allowed')) {
+				throw new AppError(
+					authErrorMessages.FieldIsNotAllowed.message,
+					authErrorMessages.FieldIsNotAllowed.statusCode
+				);
+			} else if (errorMessage?.startsWith('"mobile" with value')) {
+				throw new AppError(
+					authErrorMessages.WrongMobileFormat.message,
+					authErrorMessages.WrongMobileFormat.statusCode
+				);
+			} else if (authErrorMessages[errorMessage]) {
+				throw new AppError(authErrorMessages[errorMessage].message, authErrorMessages[errorMessage].statusCode);
+			} else {
+				throw new AppError(
+					authErrorMessages.ExceptionError.message,
+					authErrorMessages.ExceptionError.statusCode
+				);
+			}
+		}
 		const user = await this.checkUserExist(mobile);
 		if (!user)
 			throw new AppError(authErrorMessages.RegisterFirst.message, authErrorMessages.RegisterFirst.statusCode);
@@ -128,6 +195,28 @@ class AuthService {
 	};
 
 	login = async (data, userAgent) => {
+		const { error } = authValidator.loginValidator(data);
+		if (error) {
+			const errorMessage = error.message;
+			if (errorMessage.endsWith('is not allowed')) {
+				throw new AppError(
+					authErrorMessages.FieldIsNotAllowed.message,
+					authErrorMessages.FieldIsNotAllowed.statusCode
+				);
+			} else if (errorMessage?.startsWith('"mobile" with value')) {
+				throw new AppError(
+					authErrorMessages.WrongMobileFormat.message,
+					authErrorMessages.WrongMobileFormat.statusCode
+				);
+			} else if (authErrorMessages[errorMessage]) {
+				throw new AppError(authErrorMessages[errorMessage].message, authErrorMessages[errorMessage].statusCode);
+			} else {
+				throw new AppError(
+					authErrorMessages.ExceptionError.message,
+					authErrorMessages.ExceptionError.statusCode
+				);
+			}
+		}
 		const { mobile, otpCode } = data;
 		const getRedisValue = JSON.parse(await redisSingletonInstance.getData(mobile));
 		if (!getRedisValue)

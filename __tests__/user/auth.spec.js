@@ -38,7 +38,13 @@ const correctCredentials = {
 const incorrectCredentials = {
 	firstname: 'firstname',
 	lastname: 'lastname',
-	mobile: '123456',
+	mobile: '09111111111',
+};
+
+const incorrectShortLengthMobile = {
+	firstname: 'firstname',
+	lastname: 'lastname',
+	mobile: '09111',
 };
 
 const registerationRequestURL = '/api/v1/users/auth/registeration-request';
@@ -54,10 +60,10 @@ describe('Authentication Register tests', () => {
 		expect(response.body.message).toBe(authSuccessMessages.OTPSentSuccessfully.message);
 	});
 
-	it('Registeration request: returns 400 with incorrect mobile', async () => {
-		const response = await request(app).post(registerationRequestURL).send(incorrectCredentials);
-		expect(response.status).toBe(authErrorMessages.WrongMobileNumber.statusCode);
-		expect(response.body.message).toBe(authErrorMessages.WrongMobileNumber.message);
+	it('Registeration request: returns 400 with incorrect short length mobile', async () => {
+		const response = await request(app).post(registerationRequestURL).send(incorrectShortLengthMobile);
+		expect(response.status).toBe(authErrorMessages['"mobile" length must be 11 characters long'].statusCode);
+		expect(response.body.message).toBe(authErrorMessages['"mobile" length must be 11 characters long'].message);
 	});
 
 	it('Registeration request: returns 400 if user sends request again before the otpCode is expired', async () => {
@@ -104,7 +110,7 @@ describe('Authentication Login tests', () => {
 	});
 
 	it('Login request: returns 400 if user doesnt exist', async () => {
-		const response = await request(app).post(loginRequestURL).send(incorrectCredentials.mobile);
+		const response = await request(app).post(loginRequestURL).send({ mobile: incorrectCredentials.mobile });
 		expect(response.status).toBe(authErrorMessages.RegisterFirst.statusCode);
 		expect(response.body.message).toBe(authErrorMessages.RegisterFirst.message);
 	});
