@@ -1,3 +1,4 @@
+import config from 'config';
 import multer from 'multer';
 import gracefulFs from 'graceful-fs';
 import gregorianToJalali from '../common/dateConverters/gregorianToJalali.dateConverter.js';
@@ -20,7 +21,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 const uploadMiddleware = (req, res, next) => {
-	upload.array(UploadFileEnum.FIELD_NAME, UploadFileEnum.MAX_ALLOWED_FILES_COUNT)(req, res, (err) => {
+	upload.array(UploadFileEnum.FIELD_NAME, config.get('imageUpload.maxAllowedCount'))(req, res, (err) => {
 		if (err) {
 			if (err.message == 'Unexpected field') {
 				return res
@@ -36,7 +37,7 @@ const uploadMiddleware = (req, res, next) => {
 		if (files && files.length > 0) {
 			files.forEach((file) => {
 				const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/svg'];
-				const maxSize = 3 * 1024 * 1024; // 3MB
+				const maxSize = config.get('imageUpload.maxAllowedSize') * 1024 * 1024;
 
 				if (!allowedTypes.includes(file.mimetype)) {
 					errors.push(`${file.originalname} :${uploadImageErrorMessages.WrongImageFileFormat.message}`);

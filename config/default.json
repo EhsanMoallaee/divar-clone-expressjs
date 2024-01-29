@@ -1,5 +1,5 @@
 {
-	"accessTokenOptions": { "expiresIn": "5s" },
+	"accessTokenOptions": { "expiresIn": "5m" },
 	"refreshTokenOptions": { "expiresIn": "30d" },
 	"cookieOptions": {
 		"AccessCookie": {
@@ -20,5 +20,9 @@
 	"authOTPCode": {
 		"validDuration": "120"
 	},
-	"kaveNegarSenderNumber": 10008663
+	"kaveNegarSenderNumber": 10008663,
+	"imageUpload": {
+		"maxAllowedCount": 5,
+		"maxAllowedSize": 3
+	}
 }
